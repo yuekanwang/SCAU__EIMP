@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="root" prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.Controller.WindowMainController">
+   <children>
+      <VBox layoutX="26.4" layoutY="48.8" prefHeight="176.0" prefWidth="797.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane fx:id="top" prefHeight="100.0" prefWidth="878.0" />
+            <AnchorPane fx:id="mid" prefHeight="600.0" prefWidth="878.0">
+               <children>
+                  <AnchorPane fx:id="tree" layoutX="1.0" prefHeight="434.0" prefWidth="183.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="700.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <TreeView fx:id="treeView" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="thumbnail" layoutX="167.2" layoutY="27.0" prefHeight="550.0" prefWidth="711.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="bottom" prefHeight="100.0" prefWidth="900.0" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

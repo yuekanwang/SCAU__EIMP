@@ -11,6 +11,9 @@ module com.eimp {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
 
+    opens com.eimp.Controller to javafx.fxml;
+    exports com.eimp.Controller; // 可选，如果其他模块需要访问
+
     opens com.eimp to javafx.fxml;
     exports com.eimp;
 }
