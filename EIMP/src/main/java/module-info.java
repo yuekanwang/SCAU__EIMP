@@ -10,6 +10,7 @@ module com.eimp {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires java.desktop;
 
     opens com.eimp.Controller to javafx.fxml;
     exports com.eimp.Controller; // 可选，如果其他模块需要访问
