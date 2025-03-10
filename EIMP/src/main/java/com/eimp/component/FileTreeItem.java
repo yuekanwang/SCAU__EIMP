@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 
 import javax.sound.midi.spi.MidiFileReader;
+import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.*;
@@ -31,7 +32,7 @@ public class FileTreeItem extends TreeItem<String> {
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public FileTreeItem(File directory,Callable<List<? extends TreeItem<String>>> callable) {
-        super(directory.getName());
+        super(FileSystemView.getFileSystemView().getSystemDisplayName(directory));
         this.directory = directory;
         this.callable = callable;
         super.getChildren().add(new TreeItem<>());
