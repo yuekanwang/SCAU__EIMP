@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 
 import javax.swing.filechooser.FileSystemView;
@@ -33,8 +34,16 @@ public class WindowMainController implements Initializable {
     @FXML
     public TreeView<String> treeView;//树视图，用于做目录树
 
+    @FXML
+    public ScrollPane Thumbnail_ScrollPane;//滚动面板，他是网格容器的上级，他能起到滚轮条的作用
+    @FXML
+    public GridPane Thumbnail_GridPane;//网格容器，用于显示你的缩略图
+    @FXML
+    public Label ImageSize_Label;//左下次角显示图片大小信息
+
     // 树形目录占位符
     public static final String HOLDER_TEXT = "Loading...";
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

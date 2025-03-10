@@ -13,7 +13,8 @@ module com.eimp {
     requires java.desktop;
 
     opens com.eimp.Controller to javafx.fxml;
-    exports com.eimp.Controller; // 可选，如果其他模块需要访问
+    exports com.eimp.Controller;
+
 
     opens com.eimp to javafx.fxml;
     exports com.eimp;
