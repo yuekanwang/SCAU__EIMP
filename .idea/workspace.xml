@@ -4,31 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="Changes">
-      <change afterPath="$PROJECT_DIR$/.idea/EIMP.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/SlideWindow.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/CloseFilled.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/FullScreen.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/MinusFilled.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/MoreMenu.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/Recover.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/arrow-left-circle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/arrow-right-circle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/ashbin.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/original.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/play.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/prompt.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/rotate.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/share.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/zoom-in.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/zoom-out.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/Slide_test.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/Slide_testW.java" afterDir="false" />
-    </list>
+    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="修改幻灯片UI,大部分已修改,缩略图UI待确定" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -84,7 +60,7 @@
     &quot;应用程序.App.executor&quot;: &quot;Run&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.Slide_testW">
+  <component name="RunManager" selected="Application.SlideWindow">
     <configuration name="JavaFx" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="22" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -94,8 +70,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Slide_testW" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.eimp.Slide_testW" />
+    <configuration name="SlideWindow" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.eimp.SlideWindow" />
       <module name="EIMP" />
       <extension name="coverage">
         <pattern>
@@ -122,7 +98,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Slide_testW" />
+        <item itemvalue="Application.SlideWindow" />
       </list>
     </recent_temporary>
   </component>
@@ -156,8 +132,17 @@
       <workItem from="1742024272093" duration="13301000" />
       <workItem from="1742088472055" duration="63317000" />
       <workItem from="1742285121257" duration="30344000" />
-      <workItem from="1742383817151" duration="3511000" />
+      <workItem from="1742383817151" duration="3865000" />
     </task>
+    <task id="LOCAL-00001" summary="修改幻灯片UI,大部分已修改,缩略图UI待确定">
+      <option name="closed" value="true" />
+      <created>1742387682241</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1742387682241</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -176,5 +161,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="修改幻灯片UI,大部分已修改,缩略图UI待确定" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改幻灯片UI,大部分已修改,缩略图UI待确定" />
   </component>
 </project>
