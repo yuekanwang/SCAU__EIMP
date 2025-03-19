@@ -5,8 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="Changes">
+      <change afterPath="$PROJECT_DIR$/.idea/EIMP.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/SlideWindow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/CloseFilled.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/FullScreen.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/MinusFilled.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/MoreMenu.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/Recover.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/arrow-left-circle.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/arrow-right-circle.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/ashbin.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/original.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/play.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/prompt.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/rotate.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/share.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/zoom-in.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/zoom-out.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/FileTreeItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/FileTreeItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/Slide_test.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/Slide_testW.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,7 +37,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="FxmlFile" />
         <option value="Class" />
+        <option value="CSS File" />
       </list>
     </option>
   </component>
@@ -27,34 +50,63 @@
   &quot;associatedIndex&quot;: 5
 }</component>
   <component name="ProjectId" id="2u1TEXSu4zgxhCEzTp466mBO6YF" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
-    <option name="showMembers" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Maven.EIMP [clean].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/code/GitHub项目/EIMP",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "模块",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "File.Encoding",
-    "vue.rearranger.settings.migration": "true",
-    "应用程序.App.executor": "Run"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Application.JavaFx.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Slide_test.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Slide_testW.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.EIMP [clean].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/code/GitHub项目/EIMP&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;File.Encoding&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
+    &quot;应用程序.App.executor&quot;: &quot;Run&quot;
   }
-}]]></component>
-  <component name="RunManager">
+}</component>
+  <component name="RunManager" selected="Application.Slide_testW">
+    <configuration name="JavaFx" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="22" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="com.eimp.App" />
+      <module name="EIMP" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Slide_testW" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.eimp.Slide_testW" />
+      <module name="EIMP" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.eimp.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="-glcx" />
       <method v="2">
@@ -68,6 +120,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Slide_testW" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -81,10 +146,35 @@
       <workItem from="1741415238474" duration="78000" />
       <workItem from="1741415322781" duration="817000" />
       <workItem from="1741416163186" duration="15000" />
+      <workItem from="1741533717237" duration="91000" />
+      <workItem from="1741534242268" duration="59000" />
+      <workItem from="1741534601248" duration="636000" />
+      <workItem from="1741584919889" duration="1722000" />
+      <workItem from="1741589409844" duration="2593000" />
+      <workItem from="1741594378150" duration="3074000" />
+      <workItem from="1741616219711" duration="1567000" />
+      <workItem from="1742024272093" duration="13301000" />
+      <workItem from="1742088472055" duration="63317000" />
+      <workItem from="1742285121257" duration="30344000" />
+      <workItem from="1742383817151" duration="3511000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
 </project>
