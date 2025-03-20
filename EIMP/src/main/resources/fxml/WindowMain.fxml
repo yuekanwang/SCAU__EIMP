@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="761.0" prefWidth="1190.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="761.0" prefWidth="1190.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.Controller.WindowMainController">
    <children>
       <AnchorPane prefHeight="923.0" prefWidth="1407.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -33,7 +33,7 @@
                   <TreeView fx:id="treeView" prefHeight="200.0" prefWidth="200.0" />
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <AnchorPane fx:id="mid" prefHeight="46.0" prefWidth="870.0" style="-fx-background-color: write; -fx-background-size: cover;" />
+                        <AnchorPane fx:id="mid" prefHeight="46.0" prefWidth="870.0" style="-fx-background-size: cover;" />
                         <ScrollPane fx:id="imagePreviewScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="425.0" prefWidth="618.0" style="-fx-background-size: cover;" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets />

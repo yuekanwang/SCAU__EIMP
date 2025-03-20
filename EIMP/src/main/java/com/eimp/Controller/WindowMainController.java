@@ -2,8 +2,8 @@ package com.eimp.Controller;
 
 import com.eimp.component.DirectoryLoader;
 import com.eimp.component.FileTreeItem;
+import com.eimp.component.PreviewFlowPane;
 
-import com.eimp.component.PriviewFlowPane;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -40,11 +40,12 @@ public class WindowMainController implements Initializable {
     public static final String HOLDER_TEXT = "Loading...";
 
     // 缩略图展示面板
-    public PriviewFlowPane priviewFlowPane;
+    public PreviewFlowPane previewFlowPane;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initFileTreeView();
+        initPreviewPane();
     }
 
     /**
@@ -104,11 +105,21 @@ public class WindowMainController implements Initializable {
         // 更新图片预览面板
         treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldvalue, newvalue) -> {
             if (newvalue instanceof FileTreeItem) {
-                priviewFlowPane.update(((FileTreeItem) newvalue).getDirectory());
+                previewFlowPane.update(((FileTreeItem) newvalue).getDirectory());
             }
         });
 
         treeView.setRoot(treeItem);
         treeView.setShowRoot(false);
+    }
+
+    /**
+     * 初始化缩略图面板
+     *
+     * @author Cyberangel2023
+     */
+    public void initPreviewPane() {
+        previewFlowPane = new PreviewFlowPane();
+        imagePreviewPane.getChildren().setAll(previewFlowPane);
     }
 }
