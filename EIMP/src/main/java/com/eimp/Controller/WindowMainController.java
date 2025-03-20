@@ -3,11 +3,12 @@ package com.eimp.Controller;
 import com.eimp.component.DirectoryLoader;
 import com.eimp.component.FileTreeItem;
 
+import com.eimp.component.PriviewFlowPane;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 
 import javax.swing.filechooser.FileSystemView;
@@ -25,25 +26,21 @@ public class WindowMainController implements Initializable {
     @FXML
     public AnchorPane mid;
     @FXML
-    public AnchorPane tree;
-    @FXML
-    public AnchorPane thumbnail;
-    @FXML
     public AnchorPane bottom;//这些AnchorPane是布局框
-
     @FXML
     public TreeView<String> treeView;//树视图，用于做目录树
-
     @FXML
-    public ScrollPane Thumbnail_ScrollPane;//滚动面板，他是网格容器的上级，他能起到滚轮条的作用
+    public ScrollPane imagePreviewScrollPane;//滚动面板，能起到滚轮条的作用
     @FXML
-    public GridPane Thumbnail_GridPane;//网格容器，用于显示你的缩略图
+    public Pane imagePreviewPane;//用于显示缩略图的面板
     @FXML
-    public Label ImageSize_Label;//左下次角显示图片大小信息
+    public Label imageSize_Label;//左下次角显示图片大小信息
 
     // 树形目录占位符
     public static final String HOLDER_TEXT = "Loading...";
 
+    // 缩略图展示面板
+    public PriviewFlowPane priviewFlowPane;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -103,6 +100,13 @@ public class WindowMainController implements Initializable {
                 }
             }
         }
+
+        // 更新图片预览面板
+        treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldvalue, newvalue) -> {
+            if (newvalue instanceof FileTreeItem) {
+                priviewFlowPane.update(((FileTreeItem) newvalue).getDirectory());
+            }
+        });
 
         treeView.setRoot(treeItem);
         treeView.setShowRoot(false);
