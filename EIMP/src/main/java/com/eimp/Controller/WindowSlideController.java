@@ -19,22 +19,106 @@ public class WindowSlideController implements Initializable {
 
     private Stage stage;
 
+    /**
+     * 主照片视图
+     */
     @FXML private ImageView mainImageView;
+    /**
+     * 图片缩略图栏容器
+     */
     @FXML private HBox thumbnailContainer;
+    /**
+     * 图片缩小按钮
+     */
     @FXML private Button zoomIn;
+    /**
+     * 图片放大按钮
+     */
     @FXML private Button zoomOut;
+    /**
+     * 恢复图片原始比例按钮
+     */
     @FXML private Button originalScale;
+    /**
+     * 窗口关闭按钮
+     */
     @FXML private Button closeBtn;
+    /**
+     * 窗口最小化按钮
+     */
     @FXML private Button minBtn;
+    /**
+     * 全屏按钮
+     */
     @FXML private Button maxBtn;
     private URL location;
     private ResourceBundle resources;
+    /**
+     * 顶部主功能按钮栏,动态伸缩
+     */
     @FXML private HBox dynamicButtonContainer;
+    /**
+     * ID与图标映射关系
+     */
     private Map<String,String> urlMap = new HashMap<>();
+    /**
+     * ID与提示文本映射关系
+     */
     private Map<String,String> textMap = new HashMap<>();
+    /**
+     * 更多功能按钮
+      */
     @FXML
     private Button moreMenuButton;
 
+    /**
+     * 窗口布局初始化,对fxml布局组件初始化
+     * @param location
+     * @param resources
+     */
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.location = location;
+        this.resources = resources;
+        this.initMap();
+        this.initImageView();
+        this.initMoreMenuButton();
+        this.setUpDynamicButtonContainerListener();
+        this.initButtonStyle();
+    }
+
+    /**
+     * 延迟初始化方法，在场景加载完成后调用
+     */
+    public void notifyPreloader() {
+        // 获取当前Stage
+        stage = (Stage) closeBtn.getScene().getWindow();
+        // 设置窗口最小尺寸
+        stage.setMinWidth(590);
+        stage.setMinHeight(580);
+
+        this.setUpWindowControls();
+    }
+
+    /**
+     * 图片显示自适应窗口大小
+     */
+    private void initImageView(){
+
+        // 图片尺寸绑定
+        // 绑定ImageView尺寸到StackPane可用空间
+        mainImageView.fitWidthProperty().bind(
+                ((StackPane)mainImageView.getParent()).widthProperty()
+        );
+        mainImageView.fitHeightProperty().bind(
+                ((StackPane)mainImageView.getParent()).heightProperty()
+        );
+
+    }
+
+    /**
+     * 初始化图标url和提示文本映射关系
+     */
     private void initMap(){
         urlMap.put("moreMenuButton", "/icon/MoreMenu.png");
         urlMap.put("rotate", "/icon/rotate.png");
@@ -69,29 +153,9 @@ public class WindowSlideController implements Initializable {
         textMap.put("item3","选项3");
     }
 
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        this.location = location;
-        this.resources = resources;
-        this.initMap();
-
-        // 图片尺寸绑定
-        // 绑定ImageView尺寸到StackPane可用空间
-        mainImageView.fitWidthProperty().bind(
-                ((StackPane)mainImageView.getParent()).widthProperty()
-        );
-        mainImageView.fitHeightProperty().bind(
-                ((StackPane)mainImageView.getParent()).heightProperty()
-        );
-
-
-        this.initMoreMenuButton();
-        this.setUpDynamicButtonContainerListener();
-
-
-    }
-
+    /**
+     * 初始化顶部功能按钮样式,添加鼠标悬停文本提示,
+     */
     private void initButtonStyle(){
         Tooltip[] tooltips = {
                 new Tooltip("更多功能"),
@@ -110,9 +174,11 @@ public class WindowSlideController implements Initializable {
                 new Tooltip("关闭"),
         };
 
+        // 文本提示弹窗延时
         for(Tooltip tooltip : tooltips){
             tooltip.setShowDelay(javafx.util.Duration.millis(500));
         }
+
         ObservableList<Node> children = dynamicButtonContainer.getChildren();
         int size = children.size();
         for (int i=0; i < size; i++) {
@@ -126,7 +192,7 @@ public class WindowSlideController implements Initializable {
             btn.setTooltip(tooltips[i]);
         }
 
-
+        // 基本固定不动的按钮,手动设置样式和文本提示
         zoomIn.setStyle(String.format(
                 "-fx-background-image: url('%s');-fx-background-size: 20,20",
                 getClass().getResource(urlMap.get("zoomIn")).toExternalForm()
@@ -147,19 +213,9 @@ public class WindowSlideController implements Initializable {
         closeBtn.setTooltip(tooltips[13]);
     }
 
-    // 延迟初始化方法，在场景加载完成后调用
-    public void notifyPreloader() {
-        // 获取当前Stage
-        stage = (Stage) closeBtn.getScene().getWindow();
-        // 设置窗口最小尺寸
-        stage.setMinWidth(590);
-        stage.setMinHeight(580);
-
-        this.initButtonStyle();
-        this.setupWindowControls();
-        this.adjustVisibleButtons();
-    }
-    // 窗口最大化切换
+    /**
+     * 窗口最大化切换
+     */
     private void toggleMaximize() {
         stage.setMaximized(!stage.isMaximized());
         if(stage.isMaximized()) {
@@ -206,6 +262,19 @@ public class WindowSlideController implements Initializable {
         item.setHideOnClick(true);
         return item;
     }
+
+    /**
+     *  窗口控制逻辑
+     */
+    private void setUpWindowControls() {
+        this.setUpResizeListeners();
+        maxBtn.getStyleClass().add("maxBtn-full");
+        // 窗口控制按钮事件
+        closeBtn.setOnAction(e -> stage.close());
+        minBtn.setOnAction(e -> stage.setIconified(true));
+        maxBtn.setOnAction(e -> toggleMaximize());
+    }
+
     /**
      * 在菜单按钮下方打开菜单
      */
@@ -223,33 +292,40 @@ public class WindowSlideController implements Initializable {
 
 
     // TODO 有精力再改进顶部信息栏地动态显示
-    
+
+    /**
+     * 设置顶部功能按钮栏宽度监听器,用于动态显示功能按钮
+     */
     private void setUpDynamicButtonContainerListener(){
         dynamicButtonContainer.widthProperty().addListener((observableValue, oldValue, newValue) -> {this.adjustVisibleButtons();});
     }
 
 
-
-
     // TODO 修复BUG动态按钮被隐藏的时候再按全屏会出现顺序打乱的bug,改进算法,后续支持增加菜单按钮的默认按钮
-     private void adjustVisibleButtons()  {
-        int MAX_BUTTON_NUM = 7;
 
-        // 计算可用宽度（容器宽度 - 菜单按钮宽度 - 边距）
+    /**
+     * 计算当前宽度下可以显示的按钮数量显示出来,多的隐藏到更多功能菜单里,后续能显示了再恢复出来
+     */
+     private void adjustVisibleButtons()  {
+        // 最多显示按钮数量
+         int MAX_BUTTON_NUM = 7;
+
+        // 计算可用宽度（容器宽度 - 菜单按钮宽度 - 边距-左右填充）
         double availableWidth = dynamicButtonContainer.getWidth()
                 - moreMenuButton.getWidth()
                 - dynamicButtonContainer.getPadding().getLeft()
                 - dynamicButtonContainer.getPadding().getRight()
                 - dynamicButtonContainer.getSpacing();
-
+        // 每个按钮显示需要的宽度
         double reqiredWidth =moreMenuButton.getPrefWidth() + dynamicButtonContainer.getSpacing();
-        List<Button> visibleButtons = new ArrayList<>();
-        List<Button> hiddenButtons = new ArrayList<>();
-        List<Button> preButtons = new ArrayList<>();
+        List<Button> visibleButtons = new ArrayList<>();    // 放可以显示的按钮
+        List<Button> hiddenButtons = new ArrayList<>(); // 放需要隐藏的按钮
+        List<Button> preButtons = new ArrayList<>(); // 放初始时从菜单里转出来的按钮
         double usedWidth = 0;
 
         List<Node> actionButtons = dynamicButtonContainer.getChildren().subList(1, dynamicButtonContainer.getChildren().size());
 
+        // 先把更多功能菜单的菜单项导出来转成按钮,再进行后续处理
         ObservableList<MenuItem> items = moreMenu.getItems();
 
         if(items != null) {
@@ -273,6 +349,7 @@ public class WindowSlideController implements Initializable {
             }
         }
 
+        // 如果可以显示更多按钮则从菜单项拉出来的按钮再添加进去
         if (usedWidth < availableWidth && visibleButtons.size() < MAX_BUTTON_NUM && !preButtons.isEmpty()) {
             actionButtons.clear();
             actionButtons.addAll(preButtons);
@@ -288,7 +365,7 @@ public class WindowSlideController implements Initializable {
             }
 
         }
-
+        // 对可以显示的按钮进行样式绑定
         for(Button btn : visibleButtons){
             String id = btn.getId();
             btn.getStyleClass().add("funtionalButton");
@@ -325,42 +402,77 @@ public class WindowSlideController implements Initializable {
 
     }
 
-    // TODO 菜单显示
-
-
+    /**
+     * 窗口大小拖拽放缩逻辑
+     */
 
     /**
-     * 窗口大小拖拽放缩类
+     * 窗口拖拽时的初始横坐标
      */
-//    private Stage stage;
-//    private double xOffset = 0;
-//    private double yOffset = 0;
-//    private double resizeDelta = 5;
-    private double startX, startY;
-    private double startWidth, startHeight;
+    private double startX;
+    /**
+     * 窗口拖拽时的初始纵坐标
+     */
+    private double startY;
+    /**
+     * 窗口拖拽前宽度
+     */
+    private double startWidth;
+    /**
+     * 窗口拖拽前高度
+     */
+    private double startHeight;
 
+    /**
+     * 顶部调节窗口大小指示区域
+     */
     @FXML
     private Region topResize;
+    /**
+     * 底部调节窗口大小指示区域
+     */
     @FXML
     private Region bottomResize;
+    /**
+     * 左边调节窗口大小指示区域
+     */
     @FXML
     private Region leftResize;
+    /**
+     * 右边调节窗口大小指示区域
+     */
     @FXML
     private Region rightResize;
+    /**
+     * 左上角调节窗口大小指示区域
+     */
     @FXML
     private Region leftTopResize;
+    /**
+     * 右上角调节窗口大小指示区域
+     */
     @FXML
     private Region rightTopResize;
+    /**
+     * 左下角调节窗口大小指示区域
+     */
     @FXML
     private Region leftBottomResize;
+    /**
+     * 右下角调节窗口大小指示区域
+     */
     @FXML
     private Region rightBottomResize;
-
+    /**
+     * 根面板,锚定其他组件
+     */
     @FXML
     private AnchorPane rootPane;
 
-
-    private void setupResizeListeners() {
+    /**
+     * 设置所有可调节窗口大小指示区域的监听器
+     */
+    private void setUpResizeListeners() {
         // 左侧调整
         setupResizeHandler(leftResize, ResizeDirection.LEFT);
         // 右侧调整
@@ -379,11 +491,20 @@ public class WindowSlideController implements Initializable {
         setupResizeHandler(rightBottomResize, ResizeDirection.RIGHT_BOTTOM);
     }
 
+    /**
+     * 鼠标拖拽事件分发处理逻辑
+     * @param region 调节区域
+     * @param direction 调节方向
+     */
     private void setupResizeHandler(Region region, ResizeDirection direction) {
         region.setOnMousePressed(event -> startResize(event));
         region.setOnMouseDragged(event -> handleResize(event, direction));
     }
 
+    /**
+     * 记录鼠标初始坐标,窗口初始大小
+     * @param event
+     */
     private void startResize(MouseEvent event) {
         startX = event.getScreenX();
         startY = event.getScreenY();
@@ -392,6 +513,11 @@ public class WindowSlideController implements Initializable {
         event.consume();
     }
 
+    /**
+     * 主要处理事件分发逻辑
+     * @param event
+     * @param direction 调节方向
+     */
     private void handleResize(MouseEvent event, ResizeDirection direction) {
         double deltaX = event.getScreenX() - startX;
         double deltaY = event.getScreenY() - startY;
@@ -429,6 +555,10 @@ public class WindowSlideController implements Initializable {
         event.consume();
     }
 
+    /**
+     * 原子调节操作,窗口在左边区域放缩
+     * @param deltaX x坐标偏移量
+     */
     private void handleLeftResize(double deltaX) {
         double newWidth = startWidth - deltaX;
         if (newWidth > stage.getMinWidth()) {
@@ -437,6 +567,10 @@ public class WindowSlideController implements Initializable {
         }
     }
 
+    /**
+     * 原子调节操作,窗口在右边区域放缩
+     * @param deltaX x坐标偏移量
+     */
     private void handleRightResize(double deltaX) {
         double newWidth = startWidth + deltaX;
         if (newWidth > stage.getMinWidth()) {
@@ -444,6 +578,10 @@ public class WindowSlideController implements Initializable {
         }
     }
 
+    /**
+     * 原子调节操作,窗口在顶部区域放缩
+     * @param deltaY y坐标偏移量
+     */
     private void handleTopResize(double deltaY) {
         double newHeight = startHeight - deltaY;
         if (newHeight > stage.getMinHeight()) {
@@ -452,6 +590,10 @@ public class WindowSlideController implements Initializable {
         }
     }
 
+    /**
+     * 原子调节操作,窗口在底部区域放缩
+     * @param deltaY y坐标偏移量
+     */
     private void handleBottomResize(double deltaY) {
         double newHeight = startHeight + deltaY;
         if (newHeight > stage.getMinHeight()) {
@@ -459,14 +601,20 @@ public class WindowSlideController implements Initializable {
         }
     }
 
-
+    /**
+     * 调节方向枚举值
+     */
     private enum ResizeDirection {
         LEFT, RIGHT, TOP, BOTTOM,
         LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM
     }
+
+
     private double xOffset = 0;
     private double yOffset = 0;
-    // 鼠标拖拽事件处理
+    /**
+     * 鼠标拖拽窗口事件处理,记录鼠标初始位置
+     */
     @FXML
     private void handleMousePressed(MouseEvent event) {
         // 仅当点击在空白区域时记录坐标
@@ -476,6 +624,10 @@ public class WindowSlideController implements Initializable {
         }
     }
 
+    /**
+     * 鼠标拖拽窗口事件处理,窗口跟随鼠标拖拽位置
+     * @param event
+     */
     @FXML
     private void handleMouseDragged(MouseEvent event) {
         // 仅当初始点击在顶部功能栏上时执行拖拽
@@ -485,12 +637,19 @@ public class WindowSlideController implements Initializable {
         }
     }
 
-    // 图片切换方法
+    /**
+     * 切换上一张图片
+     * @param event
+     */
     @FXML
     private void prevImage(ActionEvent event) {
         // 加载前一张图片逻辑
     }
 
+    /**
+     * 切换下一张图片
+     * @param event
+     */
     @FXML
     private void nextImage(ActionEvent event) {
         // 加载下一张图片逻辑
@@ -501,15 +660,7 @@ public class WindowSlideController implements Initializable {
 
 
 
-    // 窗口控制逻辑（同前）
-    private void setupWindowControls() {
-        setupResizeListeners();
-        maxBtn.getStyleClass().add("maxBtn-full");
-        // 窗口控制按钮事件
-        closeBtn.setOnAction(e -> stage.close());
-        minBtn.setOnAction(e -> stage.setIconified(true));
-        maxBtn.setOnAction(e -> toggleMaximize());
-    }
+
 
 //    private static final int MAX_VISIBLE_THUMBNAILS = 10;
 //    private static final double THUMBNAIL_WIDTH = 120;

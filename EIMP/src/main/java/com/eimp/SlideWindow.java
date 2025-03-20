@@ -18,11 +18,10 @@ import java.io.IOException;
 public class SlideWindow extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-
-
-        //根据屏幕大小自适应设置长宽
+        // 默认窗口大小
         double width = 900;
         double height = 700;
+        // 根据屏幕大小自适应设置长宽
         try {
             Rectangle2D bounds = Screen.getScreens().get(0).getBounds();
             width = bounds.getWidth() / 1.6;
@@ -39,7 +38,7 @@ public class SlideWindow extends Application {
 
         // 获取控制器实例
         WindowSlideController controller = fxmlLoader.getController();
-        // 延迟操作
+        // 窗口布局初始化后再次设置样式
         Platform.runLater(() -> {
             controller.notifyPreloader();
         });

@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="修改幻灯片UI,大部分已修改,缩略图UI待确定" />
+    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="修改幻灯片UI,大部分已修改,缩略图UI待确定">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/Controller/WindowSlideController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/Controller/WindowSlideController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/SlideWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/SlideWindow.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -38,6 +42,7 @@
     &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
     &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;Application.JavaFx.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SlideWindow.executor&quot;: &quot;Run&quot;,
     &quot;Application.Slide_test.executor&quot;: &quot;Run&quot;,
     &quot;Application.Slide_testW.executor&quot;: &quot;Run&quot;,
     &quot;Maven.EIMP [clean].executor&quot;: &quot;Run&quot;,
@@ -132,7 +137,8 @@
       <workItem from="1742024272093" duration="13301000" />
       <workItem from="1742088472055" duration="63317000" />
       <workItem from="1742285121257" duration="30344000" />
-      <workItem from="1742383817151" duration="3865000" />
+      <workItem from="1742383817151" duration="5567000" />
+      <workItem from="1742470433842" duration="3808000" />
     </task>
     <task id="LOCAL-00001" summary="修改幻灯片UI,大部分已修改,缩略图UI待确定">
       <option name="closed" value="true" />
@@ -142,7 +148,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742387682241</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="修改幻灯片UI,大部分已修改,缩略图UI待确定">
+      <option name="closed" value="true" />
+      <created>1742387769800</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1742387769800</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
