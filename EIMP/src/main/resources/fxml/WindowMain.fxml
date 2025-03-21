@@ -1,20 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="761.0" prefWidth="1190.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.Controller.WindowMainController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="941.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.Controller.WindowMainController">
    <children>
-      <AnchorPane prefHeight="923.0" prefWidth="1407.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane minHeight="500" minWidth="200" prefHeight="923.0" prefWidth="1407.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane fx:id="top" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="84.0" prefWidth="1190.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <AnchorPane fx:id="top" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="84.0" prefWidth="1190.0" style="-fx-background-color: #CECECE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <HBox layoutX="106.0" layoutY="-8.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Button fx:id="Left_Button" mnemonicParsing="false" prefHeight="46.0" prefWidth="51.0" text="《" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button fx:id="Right_Button" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="46.0" prefWidth="51.0" text="》">
+                           <HBox.margin>
+                              <Insets bottom="20.0" right="20.0" top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                        <TextField fx:id="File_URL" prefHeight="44.0" prefWidth="475.0" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets bottom="20.0" right="40.0" top="20.0" />
+                           </HBox.margin>
+                        </TextField>
+                        <TextField fx:id="Search_Path" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="89.0" prefWidth="162.0">
+                           <HBox.margin>
+                              <Insets bottom="20.0" right="20.0" top="20.0" />
+                           </HBox.margin>
+                        </TextField>
+                        <Button fx:id="SearchButton" mnemonicParsing="false" prefHeight="44.0" prefWidth="54.0" text="Q">
+                           <HBox.margin>
+                              <Insets bottom="20.0" right="20.0" top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children></AnchorPane>
             <AnchorPane fx:id="buttom" layoutY="872.0" maxHeight="51.0" maxWidth="1407.0" minHeight="24.0" minWidth="853.0" prefHeight="25.0" prefWidth="853.0" style="-fx-background-size: auto;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
                   <Label fx:id="imageSize_Label" layoutY="12.8" maxHeight="51.0" maxWidth="1407.0" minHeight="11.0" minWidth="853.0" prefHeight="11.0" prefWidth="853.0" text="Label" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -26,14 +62,26 @@
             </AnchorPane>
          </children>
       </AnchorPane>
-      <VBox layoutY="84.0" prefHeight="652.0" prefWidth="1190.0" style="-fx-background-size: cover;" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="84.0">
+      <VBox layoutY="84.0" minHeight="500" minWidth="200" prefHeight="652.0" prefWidth="1190.0" style="-fx-background-size: cover;" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="84.0">
          <children>
             <SplitPane fx:id="splitPane" dividerPositions="0.2647979510529311" prefHeight="796.0" prefWidth="1407.0" style="-fx-background-size: cover;" VBox.vgrow="ALWAYS">
                <items>
-                  <TreeView fx:id="treeView" prefHeight="200.0" prefWidth="200.0" />
+                  <TreeView fx:id="treeView" maxWidth="400.0" minWidth="150.0" />
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <AnchorPane fx:id="mid" prefHeight="46.0" prefWidth="870.0" style="-fx-background-size: cover;" />
+                        <AnchorPane fx:id="mid" prefHeight="46.0" prefWidth="870.0" style="-fx-background-color: write; -fx-background-size: cover;">
+                           <children>
+                              <MenuButton fx:id="SortMenu" layoutX="14.0" layoutY="12.0" mnemonicParsing="false" text="排序方式" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0">
+                                <items>
+                                  <MenuItem fx:id="Sort_Name" mnemonicParsing="false" text="按名字递增排序" />
+                                  <MenuItem fx:id="Sort_SIze" mnemonicParsing="false" text="按文件大小递增排序" />
+                                    <MenuItem fx:id="Sort_Time" mnemonicParsing="false" text="按时间递增顺序" />
+                                    <MenuItem fx:id="SortOrder_Name" mnemonicParsing="false" text="按名字递减排序" />
+                                    <MenuItem fx:id="SortOrder_Size" mnemonicParsing="false" text="按文件大小递减排序" />
+                                    <MenuItem fx:id="SortOrder_Time" mnemonicParsing="false" text="按时间递减排序" />
+                                </items>
+                              </MenuButton>
+                           </children></AnchorPane>
                         <ScrollPane fx:id="imagePreviewScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="425.0" prefWidth="618.0" style="-fx-background-size: cover;" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets />

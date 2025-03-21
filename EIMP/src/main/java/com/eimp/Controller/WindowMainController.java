@@ -42,6 +42,34 @@ public class WindowMainController implements Initializable {
     // 缩略图展示面板
     public PreviewFlowPane previewFlowPane;
 
+    @FXML//这些都是排序功能的
+    public MenuButton SortMenu;//排序菜单
+    @FXML
+    public MenuItem SortOrder_Time;//按时间倒序
+    @FXML
+    public MenuItem SortOrder_Size;//按大小倒序
+    @FXML
+    public MenuItem SortOrder_Name;//按名字倒序
+    @FXML
+    public MenuItem Sort_Time;//按时间顺序
+    @FXML
+    public MenuItem Sort_SIze;//按大小顺序
+    @FXML
+    public MenuItem Sort_Name;//按名字顺序
+
+    @FXML//顶部的部分
+    public Button Left_Button;//路径后退按钮
+    @FXML
+    public Button Right_Button;//路径前进按钮
+    @FXML
+    public TextField File_URL;//文件路径条
+    @FXML
+    public TextField Search_Path;//搜索条
+    @FXML
+    public Button SearchButton;//搜索键
+
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initFileTreeView();
