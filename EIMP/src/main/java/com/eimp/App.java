@@ -15,7 +15,7 @@ public class App extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 1100, 700);
         stage.setTitle("电子图片管理系统");
         stage.setMinHeight(400);
-        stage.setMinWidth(400);
+        stage.setMinWidth(900);
         stage.setScene(scene);
         stage.show();
     }
