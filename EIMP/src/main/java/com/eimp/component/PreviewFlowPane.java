@@ -14,15 +14,14 @@ import java.util.List;
  * @author Cyberangel2023
  */
 public class PreviewFlowPane extends FlowPane {
-    /**
-     * 图片列表
-     */
+    // 图片列表
     private final List<ThumbnailPanel> thumbnailPanels = new ArrayList<>();
-
-    /**
-     * 当前展示的文件夹
-     */
+    // 当前展示的文件夹
     private File directory;
+    // 被选中图片数组
+    private final List<ThumbnailPanel> newSelected = new ArrayList<>();
+    // 提供回撤
+    private final List<ThumbnailPanel> oldSelected = new ArrayList<>();
 
     public File getDirectory() {
         return directory;
@@ -33,6 +32,10 @@ public class PreviewFlowPane extends FlowPane {
         // 设置间隔
         setVgap(5);
         setHgap(5);
+    }
+
+    public List<ThumbnailPanel> getThumbnailPanels() {
+        return thumbnailPanels;
     }
 
     public void update(File directory) {
@@ -47,5 +50,33 @@ public class PreviewFlowPane extends FlowPane {
             }
         }
         getChildren().setAll(thumbnailPanels);
+    }
+
+    /**
+     * 添加选中
+     */
+    public void addSelectedtoList(Object obj) {
+        ThumbnailPanel img = (ThumbnailPanel) obj;
+        oldSelected.clear();
+        oldSelected.addAll(newSelected);
+        newSelected.add(img);
+        img.selected();
+    }
+
+    public void addSelected(ThumbnailPanel pane) {
+        newSelected.add(pane);
+        pane.selected();
+    }
+
+    /**
+     * 清空选中
+     */
+    public void clearSelected() {
+        oldSelected.clear();
+        oldSelected.addAll(newSelected);
+        for (ThumbnailPanel pane : newSelected) {
+            pane.removeSelected();
+        }
+        newSelected.clear();
     }
 }

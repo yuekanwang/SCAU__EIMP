@@ -4,11 +4,15 @@ import com.eimp.component.DirectoryLoader;
 import com.eimp.component.FileTreeItem;
 import com.eimp.component.PreviewFlowPane;
 
+import com.eimp.component.ThumbnailPanel;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
 
 import javax.swing.filechooser.FileSystemView;
@@ -41,6 +45,7 @@ public class WindowMainController implements Initializable {
 
     // 缩略图展示面板
     public PreviewFlowPane previewFlowPane;
+    private Rectangle rectangle;
 
     @FXML//这些都是排序功能的
     public MenuButton SortMenu;//排序菜单
@@ -149,7 +154,11 @@ public class WindowMainController implements Initializable {
      */
     public void initPreviewPane() {
         previewFlowPane = new PreviewFlowPane();
-        imagePreviewPane.getChildren().setAll(previewFlowPane);
+        rectangle = new Rectangle();
+        rectangle.setFill(Color.rgb(70, 170, 227, 0.6));
+        rectangle.setVisible(false);
+        imagePreviewPane.getChildren().setAll(previewFlowPane, rectangle);
+        addHandle();
 
         previewFlowPane.heightProperty()
                 .addListener((observable, oldValue, newValue) -> imagePreviewPane.setMinHeight(previewFlowPane.getHeight()));
@@ -161,5 +170,52 @@ public class WindowMainController implements Initializable {
                         previewFlowPane.setPrefHeight(imagePreviewScrollPane.getHeight());
                     }
                 });
+
+        rectangle.setVisible(false);
+    }
+
+    /**
+     * 鼠标事件处理
+     *
+     * @author Cyberangel2023
+     */
+    // 鼠标x，y坐标
+    private double x;
+    private double y;
+    // 右键弹窗菜单
+    private final Menu menu = new Menu();
+
+    public void addHandle() {
+        // 对previewFlowPane进行鼠标监听
+        previewFlowPane.setOnMousePressed(event -> {
+            x = event.getX();
+            y = event.getY();
+            menu.hide();
+
+            // 处理点击空白区域后已选择的图片
+            if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1 && !event.isControlDown()) {
+                if (previewFlowPane.equals(event.getPickResult().getIntersectedNode())) {
+                    previewFlowPane.clearSelected();
+                }
+            }
+
+            // 右键菜单
+            if (event.getButton() == MouseButton.SECONDARY) {
+                menu.show();
+            }
+        });
+    }
+
+    /**
+     * 根据矩形选择图片
+     */
+    public void imageSelected() {
+        previewFlowPane.clearSelected();
+        for (ThumbnailPanel pane : previewFlowPane.getThumbnailPanels()) {
+            if (rectangle.intersects(pane.getBoundsInParent())) {
+                previewFlowPane.addSelected(pane);
+            }
+
+        }
     }
 }
