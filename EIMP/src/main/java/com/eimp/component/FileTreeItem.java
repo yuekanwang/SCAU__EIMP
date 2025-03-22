@@ -1,8 +1,10 @@
 package com.eimp.component;
 
+import com.eimp.Util.FileUtil;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
+import javafx.scene.image.ImageView;
 
 import javax.sound.midi.spi.MidiFileReader;
 import javax.swing.filechooser.FileSystemView;
@@ -32,7 +34,7 @@ public class FileTreeItem extends TreeItem<String> {
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public FileTreeItem(File directory,Callable<List<? extends TreeItem<String>>> callable) {
-        super(FileSystemView.getFileSystemView().getSystemDisplayName(directory));
+        super(FileUtil.getFileName(directory), FileUtil.getFileIcon(directory));
         this.directory = directory;
         this.callable = callable;
         super.getChildren().add(new TreeItem<>());
@@ -43,7 +45,7 @@ public class FileTreeItem extends TreeItem<String> {
      * 展开监听器
      */
     private void addExpandedListener() {
-        this.expandedProperty().addListener((observableValue, oldValue, newValue) -> {
+        expandedProperty().addListener((obserVable, oldValue, newValue) -> {
             // 如果该节点被折叠
             if (!newValue) {
                 isInit = false;

@@ -10,7 +10,7 @@ import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 /**
- * Cyberangel2023
+ * @author Cyberangel2023
  */
 public class DirectoryLoader implements Callable<List<? extends TreeItem<String>>> {
     private final File directory;

@@ -98,6 +98,7 @@ public class WindowMainController implements Initializable {
                             setText(HOLDER_TEXT);
                         } else {
                             setText(item);
+                            setGraphic(getTreeItem().getGraphic());
                         }
                     }
                 };
@@ -131,9 +132,9 @@ public class WindowMainController implements Initializable {
         }
 
         // 更新图片预览面板
-        treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldvalue, newvalue) -> {
-            if (newvalue instanceof FileTreeItem) {
-                previewFlowPane.update(((FileTreeItem) newvalue).getDirectory());
+        treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue instanceof FileTreeItem) {
+                previewFlowPane.update(((FileTreeItem) newValue).getDirectory());
             }
         });
 
@@ -149,5 +150,16 @@ public class WindowMainController implements Initializable {
     public void initPreviewPane() {
         previewFlowPane = new PreviewFlowPane();
         imagePreviewPane.getChildren().setAll(previewFlowPane);
+
+        previewFlowPane.heightProperty()
+                .addListener((observable, oldValue, newValue) -> imagePreviewPane.setMinHeight(previewFlowPane.getHeight()));
+
+        imagePreviewScrollPane.viewportBoundsProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    previewFlowPane.setPrefWidth(newValue.getWidth());
+                    if (previewFlowPane.getHeight() < imagePreviewScrollPane.getHeight()) {
+                        previewFlowPane.setPrefHeight(imagePreviewScrollPane.getHeight());
+                    }
+                });
     }
 }
