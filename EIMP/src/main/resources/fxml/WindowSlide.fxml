@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" minHeight="580.0" minWidth="590.0" prefHeight="700.0" prefWidth="900.0" stylesheets="@../css/test.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.Controller.WindowSlideController">
+<AnchorPane fx:id="rootPane" minHeight="580.0" minWidth="590.0" prefHeight="700.0" prefWidth="900.0" stylesheets="@../css/Slide.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.Controller.WindowSlideController">
    <children>
       <HBox fx:id="topFunctionalColumn" alignment="CENTER_LEFT" layoutX="13.0" layoutY="5.0" maxHeight="35.0" minHeight="35.0" minWidth="500.0" onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" scaleShape="false" spacing="10.0" style="-fx-cursor: move; -fx-background-color: #3c3f41;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="260.0" AnchorPane.topAnchor="0.0">
 

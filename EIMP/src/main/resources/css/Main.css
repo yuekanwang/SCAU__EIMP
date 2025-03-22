@@ -1,0 +1,77 @@
+
+.image-Left_Button/*路径回退键*/
+{
+    -fx-background-image:url("../icon2/arrow-left-circle.png");/*图片引用*/
+    -fx-background-color:transparent;   /*按钮背景透明*/
+    -fx-background-size: contain;       /*图片大小自动适应按钮大小*/
+    -fx-background-repeat: no-repeat;   /* 禁止重复 */
+    -fx-background-position: center;    /* 图片居中 */
+}
+
+.image-Left_Button:hover
+{
+    -fx-background-color:#2CBED4;       /*按钮背景颜色改为深银色*/
+    -fx-cursor: hand;                   /* 改变鼠标手势 */
+}
+.image-Left_Button:pressed
+{
+    -fx-min-height: 54px;
+    /*-fx-min-height或width能用按钮大小的最小值*/
+    -fx-min-width: 54px;
+    /*原本按钮的大小是略小于：54px 54px，在这里用了这个，会使得按钮点击的时候，巧妙得发生弹动*/
+}
+/* 路径回退键 */
+
+/*下面的前进键同上*/
+.image-Right_Button/*路径前进键*/
+{
+    -fx-background-image:url("../icon2/arrow-right-circle.png");
+    -fx-background-color:transparent;
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.image-Right_Button:hover
+{
+    -fx-background-color:#2CBED4;
+    -fx-cursor: hand;
+}
+
+.image-Right_Button:pressed
+{
+    -fx-min-height: 54px;
+    -fx-min-width: 54px;
+}
+/*路径前进键*/
+
+/*搜索键*/
+.Search
+{
+    -fx-background-image:url("../icon2/Search_Image.png");/*图片引用*/
+    -fx-background-color:transparent;   /*按钮背景透明*/
+    -fx-background-size: 25;       /*图片大小自动适应按钮大小*/
+    -fx-background-repeat: no-repeat;   /* 禁止重复 */
+    -fx-background-position: center;    /* 图片居中 */
+}
+
+.Search:hover
+{
+    -fx-background-size: 30;
+    -fx-cursor: hand;                   /* 改变鼠标手势 */
+}
+
+.Search:pressed
+{
+    -fx-background-size: 26;
+}
+/*搜索键*/
+
+/*路径的条*/
+.ULR_Path
+{
+    -fx-font-size: 20px;        /*字体大小*/
+    -fx-background-radius: 12;  /*边角的弧度*/
+}
+/*路径条*/
+

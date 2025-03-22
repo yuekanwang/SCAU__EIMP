@@ -15,37 +15,37 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="941.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.Controller.WindowMainController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="941.0" stylesheets="@../css/Main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.Controller.WindowMainController">
    <children>
       <AnchorPane minHeight="500" minWidth="200" prefHeight="923.0" prefWidth="1407.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane fx:id="top" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="84.0" prefWidth="1190.0" style="-fx-background-color: #CECECE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane fx:id="top" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="84.0" prefWidth="1190.0" style="-fx-background-color: #3BCCE2" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <HBox layoutX="106.0" layoutY="-8.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button fx:id="Left_Button" mnemonicParsing="false" prefHeight="46.0" prefWidth="51.0" text="《" HBox.hgrow="ALWAYS">
+                        <Button fx:id="Left_Button" mnemonicParsing="false" prefHeight="54.0" prefWidth="54.0" styleClass="image-Left_Button" HBox.hgrow="ALWAYS">
                            <HBox.margin>
-                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                              <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="Right_Button" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="46.0" prefWidth="51.0" text="》">
+                        <Button fx:id="Right_Button" mnemonicParsing="false" prefHeight="54.0" prefWidth="54.0" styleClass="image-Right_Button">
                            <HBox.margin>
-                              <Insets bottom="20.0" right="20.0" top="20.0" />
+                              <Insets bottom="15.0" right="10.0" top="15.0" />
                            </HBox.margin>
                         </Button>
-                        <TextField fx:id="File_URL" prefHeight="44.0" prefWidth="475.0" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="File_URL" prefHeight="44.0" prefWidth="475.0" styleClass="ULR_Path" HBox.hgrow="ALWAYS">
                            <HBox.margin>
-                              <Insets bottom="20.0" right="40.0" top="20.0" />
+                              <Insets bottom="20.0" left="5.0" right="40.0" top="20.0" />
                            </HBox.margin>
                         </TextField>
-                        <TextField fx:id="Search_Path" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="89.0" prefWidth="162.0">
+                        <TextField fx:id="Search_Path" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="89.0" prefWidth="162.0" styleClass="ULR_Path" HBox.hgrow="ALWAYS">
                            <HBox.margin>
-                              <Insets bottom="20.0" right="20.0" top="20.0" />
+                              <Insets bottom="20.0" right="5.0" top="20.0" />
                            </HBox.margin>
                         </TextField>
-                        <Button fx:id="SearchButton" mnemonicParsing="false" prefHeight="44.0" prefWidth="54.0" text="Q">
+                        <Button fx:id="SearchButton" prefHeight="30.0" prefWidth="30.0" styleClass="Search">
                            <HBox.margin>
-                              <Insets bottom="20.0" right="20.0" top="20.0" />
+                              <Insets bottom="20.0" right="20.0" top="28.0" />
                            </HBox.margin>
                         </Button>
                      </children>
