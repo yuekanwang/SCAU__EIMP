@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="主窗口双击进入幻灯片接口完成,可以左右切换图片,其他功能待实现">
+    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="修改动态功能栏bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/SlideWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/SlideWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/css/Slide.css" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/css/Slide.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowSlide.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowSlide.fxml" afterDir="false" />
@@ -149,7 +148,7 @@
       <workItem from="1742285121257" duration="30344000" />
       <workItem from="1742383817151" duration="5567000" />
       <workItem from="1742470433842" duration="3808000" />
-      <workItem from="1742719823386" duration="9309000" />
+      <workItem from="1742719823386" duration="12792000" />
     </task>
     <task id="LOCAL-00001" summary="修改幻灯片UI,大部分已修改,缩略图UI待确定">
       <option name="closed" value="true" />
@@ -175,7 +174,23 @@
       <option name="project" value="LOCAL" />
       <updated>1742724409529</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="修改动态功能栏bug">
+      <option name="closed" value="true" />
+      <created>1742740132715</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1742740132715</updated>
+    </task>
+    <task id="LOCAL-00005" summary="修改动态功能栏bug">
+      <option name="closed" value="true" />
+      <created>1742741665115</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1742741665115</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -196,6 +211,7 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="修改幻灯片UI,大部分已修改,缩略图UI待确定" />
     <MESSAGE value="主窗口双击进入幻灯片接口完成,可以左右切换图片,其他功能待实现" />
-    <option name="LAST_COMMIT_MESSAGE" value="主窗口双击进入幻灯片接口完成,可以左右切换图片,其他功能待实现" />
+    <MESSAGE value="修改动态功能栏bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改动态功能栏bug" />
   </component>
 </project>

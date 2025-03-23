@@ -117,9 +117,8 @@
             <Label fx:id="zoomScale" minWidth="20.0" prefHeight="26.0" prefWidth="31.0" style="-fx-min-width: 40; -fx-text-fill: #ffffff;" text="100%" textFill="WHITE" />
             <Button id="originalScale" fx:id="originalScale" maxHeight="28.0" maxWidth="28.0" minHeight="28.0" minWidth="28.0" prefHeight="28.0" prefWidth="28.0" styleClass="funtionalButton" />
             <Separator orientation="VERTICAL" />
-            <Button id="minBtn" fx:id="minBtn" graphicTextGap="0.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 999; -fx-min-width: 20; -fx-min-height: 20; -fx-background-color: #a0a0a0;" text="-" />
-
-            <Button id="maxBtn" fx:id="maxBtn" graphicTextGap="0.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 999; -fx-min-width: 20; -fx-min-height: 20; -fx-background-color: #a0a0a0;" text="最大化" />
-            <Button id="closeBtn" fx:id="closeBtn" graphicTextGap="0.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 999; -fx-min-width: 20; -fx-min-height: 20; -fx-background-color: #ff4444;" text="关闭" />
+            <Button id="minBtn" fx:id="minBtn" graphicTextGap="0.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 999; -fx-min-width: 20; -fx-min-height: 20; -fx-background-color: #a0a0a0;"  />
+            <Button id="maxBtn" fx:id="maxBtn" graphicTextGap="0.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 999; -fx-min-width: 20; -fx-min-height: 20; -fx-background-color: #a0a0a0;"  />
+            <Button id="closeBtn" fx:id="closeBtn" graphicTextGap="0.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 999; -fx-min-width: 20; -fx-min-height: 20; -fx-background-color: #ff4444;"  />
       </HBox>
 </AnchorPane>

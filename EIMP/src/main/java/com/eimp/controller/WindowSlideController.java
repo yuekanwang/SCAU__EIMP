@@ -501,6 +501,7 @@ public class WindowSlideController implements Initializable {
         content.setAlignment(Pos.CENTER_LEFT);
         content.setSpacing(10);
         CustomMenuItem item = new CustomMenuItem(content);
+        content.setPrefWidth(180);
         item.setHideOnClick(true);
         return item;
     }

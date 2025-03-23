@@ -142,6 +142,7 @@
 .menu-item {
     -fx-background-color: transparent; /* 默认透明背景 */
     -fx-padding: 5px 20px 5px 10px;    /* 调整内边距 */
+    -fx-min-width: 180px;
 }
 
 /* 悬停时的 MenuItem 样式 */
@@ -161,37 +162,10 @@
     -fx-padding: 2px 0;                /* 分隔线内边距 */
 }
 
-/* 子菜单箭头图标样式（如果存在） */
-.menu-item .arrow {
-    -fx-background-color: #E0E0E0;     /* 箭头颜色 */
-}
-.menu-item .arrow {
-    -fx-shape: "M 0 0 L 5 5 L 0 10 Z"; /* 自定义形状 */
-}
 
 /*.icon-standard {*/
 /*    -fx-pref-width: 20px;*/
 /*    -fx-pref-height: 20px;*/
-/*}*/
-/* 定义菜单样式 */
-/*.context-menu {*/
-/*    -fx-background-color: #f0f0f0;*/
-/*    -fx-border-color: #ccc;*/
-/*}*/
-
-/*!* 定义菜单项样式 *!*/
-/*.menu-item {*/
-/*    -fx-text-fill: #333;*/
-/*}*/
-
-/*.menu-item:hover {*/
-/*    -fx-background-color: #ddd;*/
-/*}*/
-
-
-/*!* 图片查看区域 *!*/
-/*.image-viewer {*/
-/*    -fx-background-color: #333;*/
 /*}*/
 
 /*!* 缩略图滚动条 *!*/
