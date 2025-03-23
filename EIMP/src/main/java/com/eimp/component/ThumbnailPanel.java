@@ -11,6 +11,13 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 
+/**
+ * 初始化目录树
+ *
+ * @author Cyberangel2023
+ * @author shanmu
+ */
+
 public class ThumbnailPanel extends BorderPane {
     // 图片能展示的最长名字
     private static final int MAX_NAME = 20;
@@ -43,14 +50,48 @@ public class ThumbnailPanel extends BorderPane {
                     SlideWindow.main(this.imageUtil,SlideWindow.LaunchMethodEnum.CLICK);
                 });
             }
-            // 单击选中图片
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
                 PreviewFlowPane parent = (PreviewFlowPane) this.getParent();
-                if (isSelected) {
-                    parent.clearSelected();
-                } else {
-                    parent.clearSelected();
-                    parent.addSelectedtoList(this);
+                // 按住ctrl多选时
+                if (event.isControlDown()) {
+                    // 图片已被选中
+                    if (getSelected()) {
+                        parent.deleteSelectedtoList(this);
+                        parent.setIsShift(true);
+                        parent.setFrom(parent.getThumbnailPanels().indexOf(this));
+                    }
+                    // 图片未被选中
+                    else {
+                        parent.setIsShift(true);
+                        parent.setFrom(parent.getThumbnailPanels().indexOf(this));
+                        parent.addSelectedtoList(this);
+                    }
+                }
+                // 按住shift多选时
+                else if (event.isShiftDown()) {
+                    if (!parent.isShift()) {
+                        parent.setIsShift(true);
+                        parent.setFrom(parent.getThumbnailPanels().indexOf(this));
+                    }
+                    parent.setTo(parent.getThumbnailPanels().indexOf(this));
+                    parent.shiftSelected();
+                }
+                // 单击选中图片
+                else {
+                    if (parent.newSelectedSize() > 1) {
+                        parent.clearSelected();
+                        parent.addSelectedtoList(this);
+                        parent.setIsShift(true);
+                        parent.setFrom(parent.getThumbnailPanels().indexOf(this));
+                    } else if (parent.newSelectedSize() == 1 && isSelected) {
+                        parent.clearSelected();
+                        parent.setIsShift(false);
+                    } else {
+                        parent.clearSelected();
+                        parent.addSelectedtoList(this);
+                        parent.setIsShift(true);
+                        parent.setFrom(parent.getThumbnailPanels().indexOf(this));
+                    }
                 }
             }
         });
@@ -71,5 +112,9 @@ public class ThumbnailPanel extends BorderPane {
 
     public ImageUtil getImageUtil() {
         return imageUtil;
+    }
+
+    public boolean getSelected() {
+        return isSelected;
     }
 }
