@@ -14,7 +14,7 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 
 public class SlideWindow extends Application {
-    private static WindowSlideController controller;
+    private WindowSlideController controller;
     private static Stage stage;
     /**
      * 从主窗口导入的图片所属信息工具
@@ -27,9 +27,9 @@ public class SlideWindow extends Application {
     /**
      * 从主窗口打开幻灯片的方式枚举值
      */
-    public static enum LaunchMethodEnum{
+    public enum LaunchMethodEnum{
         PLAY(1), CLICK(2);
-        int num;
+        final int num;
         LaunchMethodEnum(int num){
             this.num = num;
         }
@@ -45,7 +45,7 @@ public class SlideWindow extends Application {
         double height = 700;
         // 根据屏幕大小自适应设置长宽
         try {
-            Rectangle2D bounds = Screen.getScreens().get(0).getBounds();
+            Rectangle2D bounds = Screen.getScreens().getFirst().getBounds();
             width = bounds.getWidth() / 1.6;
             height = bounds.getHeight() / 1.4;
         } catch (Exception e){

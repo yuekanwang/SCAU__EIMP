@@ -186,7 +186,7 @@ public class WindowSlideController implements Initializable {
             }
         }
 
-        this.image = new Image(imageUtil.getURL().toString());
+        this.image = new Image(imageUtil.getURL());
         this.updateMainImageView();
     }
 
@@ -270,7 +270,7 @@ public class WindowSlideController implements Initializable {
             this.stopTimerLine(event);
         }
         this.imageUtil = this.imageUtilList.get(this.currentIndex);
-        this.image = new Image(imageUtil.getURL().toString());
+        this.image = new Image(imageUtil.getURL());
         this.updateMainImageView();
     }
 
@@ -300,7 +300,7 @@ public class WindowSlideController implements Initializable {
             this.stopTimerLine(event);
         }
         this.imageUtil = this.imageUtilList.get(this.currentIndex);
-        this.image = new Image(imageUtil.getURL().toString());
+        this.image = new Image(imageUtil.getURL());
         this.updateMainImageView();
     }
 
@@ -636,9 +636,7 @@ public class WindowSlideController implements Initializable {
 
     }
 
-    /**
-     * 窗口大小拖拽放缩逻辑
-     */
+
 
     /**
      * 窗口拖拽时的初始横坐标

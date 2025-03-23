@@ -13,15 +13,11 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="rootPane" minHeight="580.0" minWidth="590.0" prefHeight="700.0" prefWidth="900.0" stylesheets="@../css/Slide.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.controller.WindowSlideController">
-   <children>
       <HBox fx:id="topFunctionalColumn" alignment="CENTER_LEFT" layoutX="13.0" layoutY="5.0" maxHeight="35.0" minHeight="35.0" minWidth="500.0" onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" scaleShape="false" spacing="10.0" style=" -fx-background-color: #3c3f41;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="260.0" AnchorPane.topAnchor="0.0">
-
-         <children>
             <HBox alignment="CENTER_LEFT" fillHeight="false" maxHeight="35.0" maxWidth="400.0" minHeight="35.0" minWidth="280.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="35.0" prefWidth="280.0" scaleShape="false" spacing="2" style="-fx-padding: 0; -fx-background-color: #3c3f41;" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
-               <children>
                   <Label fx:id="imageName" maxWidth="300.0" minWidth="75.0" prefHeight="21.0" style="-fx-font-weight: bold; -fx-text-fill: #ffffff; -fx-background-color: #3c3f41;" text="粤砍王.png" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets left="5.0" />
@@ -34,7 +30,6 @@
                      <padding>
                         <Insets bottom="3.0" top="2.0" />
                      </padding>
-                     <children>
                         <Button fx:id="orderNum" graphicTextGap="0.0" prefHeight="21.0" prefWidth="64.0" style="-fx-background-color: transparent; -fx-text-fill: #666; -fx-border-insets: 0; -fx-padding: 0;" text="21/58" textAlignment="CENTER" HBox.hgrow="NEVER">
                            <font>
                               <Font size="5.0" />
@@ -52,15 +47,11 @@
                               <Font size="5.0" />
                            </font>
                         </Button>
-                     </children>
                   </HBox>
-               </children>
             </HBox>
             <HBox alignment="CENTER" fillHeight="false" minHeight="35.0" onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" prefHeight="35.0" scaleShape="false" style="-fx-background-color: #3c3f41;" HBox.hgrow="ALWAYS">
-               <children>
                   <HBox fx:id="dynamicButtonContainer" alignment="CENTER" fillHeight="false" focusTraversable="true" maxHeight="30.0" minHeight="30.0" minWidth="35.0" prefHeight="30.0" prefWidth="401.0" scaleShape="false" spacing="2.0" style="-fx-background-color: #3c3f41;" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Button id="moreMenuButton" fx:id="moreMenuButton" alignment="CENTER" maxWidth="30.0" minWidth="30.0" prefHeight="25.0" prefWidth="30.0" style="-fx-background-image: url(&quot;../icon/MoreMenu.png&quot;);" styleClass="funtionalButton">
+                        <Button id="moreMenuButton" fx:id="moreMenuButton" alignment="CENTER" maxWidth="30.0" minWidth="30.0" prefHeight="25.0" prefWidth="30.0" styleClass="funtionalButton">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -96,43 +87,31 @@
                            </HBox.margin>
                         </Button>
                         <Button id="share" fx:id="share" maxWidth="30.0" minWidth="30.0" prefHeight="25.0" prefWidth="30.0" styleClass="funtionalButton" HBox.hgrow="ALWAYS" />
-                     </children>
                   </HBox>
-               </children>
             </HBox>
             <HBox fx:id="topFillHbox" maxWidth="140.0" minWidth="0.0" style="-fx-background-color: #3c3f41;" HBox.hgrow="ALWAYS" />
-         </children>
       </HBox>
       <StackPane fx:id="stackPane" layoutX="204.0" layoutY="303.0" style="-fx-background-color: #1e1f22;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
-         <children>
             <ImageView fx:id="mainImageView" fitHeight="664.0" fitWidth="900.0" preserveRatio="true" />
             <AnchorPane fx:id="secondaryPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;">
-               <children>
-                  <ScrollPane fx:id="scrollPane" fitToHeight="true" hbarPolicy="AS_NEEDED" layoutX="164.0" layoutY="555.0" prefHeight="96.0" prefWidth="571.0" style="-fx-background-color: #3c3f41;" vbarPolicy="NEVER" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0">
-                     <content>
+                  <ScrollPane fx:id="scrollPane"  hbarPolicy="AS_NEEDED" layoutX="164.0" layoutY="555.0" prefHeight="96.0" prefWidth="571.0" style="-fx-background-color: #3c3f41;" vbarPolicy="NEVER" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0">
                         <HBox fx:id="thumbnailContainer" alignment="CENTER" prefHeight="93.0" prefWidth="353.0" spacing="5" style="-fx-padding: 0; -fx-background-color: #3c3f41;">
-                           <children>
                               <ImageView fitHeight="90" preserveRatio="true" />
                               <ImageView fitHeight="90" preserveRatio="true" />
-                           </children>
                         </HBox>
-                     </content>
                   </ScrollPane>
-               </children>
             </AnchorPane>
-         </children>
       </StackPane>
-      <Region fx:id="leftResize" prefWidth="5.0" styleClass="resize-left" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="35" />
-      <Region fx:id="topResize" prefHeight="5.0" styleClass="resize-top" AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5" AnchorPane.topAnchor="0" />
-      <Region fx:id="rightResize" prefWidth="5.0" styleClass="resize-right" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="35" />
-      <Region fx:id="bottomResize" prefHeight="5.0" styleClass="resize-bottom" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5" />
+      <Region fx:id="leftResize" prefWidth="5.0"  AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="35" />
+      <Region fx:id="topResize" prefHeight="5.0"  AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5" AnchorPane.topAnchor="0" />
+      <Region fx:id="rightResize" prefWidth="5.0"  AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="35" />
+      <Region fx:id="bottomResize" prefHeight="5.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5" />
       <!-- 四角调整 -->
-      <Region fx:id="leftTopResize" prefHeight="5" prefWidth="5" styleClass="resize-corner" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
-      <Region fx:id="rightTopResize" prefHeight="5" prefWidth="5" styleClass="resize-corner" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
-      <Region fx:id="leftBottomResize" prefHeight="5" prefWidth="5" styleClass="resize-corner" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" />
-      <Region fx:id="rightBottomResize" prefHeight="5" prefWidth="5" styleClass="resize-corner" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" />
+      <Region fx:id="leftTopResize" prefHeight="5" prefWidth="5" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
+      <Region fx:id="rightTopResize" prefHeight="5" prefWidth="5"  AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
+      <Region fx:id="leftBottomResize" prefHeight="5" prefWidth="5"  AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" />
+      <Region fx:id="rightBottomResize" prefHeight="5" prefWidth="5"  AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" />
       <HBox alignment="CENTER" maxHeight="35.0" maxWidth="260.0" minHeight="35.0" minWidth="260.0" onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" prefHeight="35.0" prefWidth="260.0" scaleShape="false" spacing="8.0" style="-fx-background-color: #3c3f41;" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
             <Button id="zoomIn" fx:id="zoomIn" maxHeight="28.0" maxWidth="28.0" minHeight="28.0" minWidth="28.0" prefHeight="23.0" prefWidth="28.0" styleClass="funtionalButton" />
             <Button id="zoomOut" fx:id="zoomOut" maxHeight="28.0" maxWidth="28.0" minHeight="28.0" minWidth="28.0" prefHeight="28.0" prefWidth="28.0" styleClass="funtionalButton" />
             <Label fx:id="zoomScale" minWidth="20.0" prefHeight="26.0" prefWidth="31.0" style="-fx-min-width: 40; -fx-text-fill: #ffffff;" text="100%" textFill="WHITE" />
@@ -142,7 +121,5 @@
 
             <Button id="maxBtn" fx:id="maxBtn" graphicTextGap="0.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 999; -fx-min-width: 20; -fx-min-height: 20; -fx-background-color: #a0a0a0;" text="最大化" />
             <Button id="closeBtn" fx:id="closeBtn" graphicTextGap="0.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 999; -fx-min-width: 20; -fx-min-height: 20; -fx-background-color: #ff4444;" text="关闭" />
-         </children>
       </HBox>
-   </children>
 </AnchorPane>
