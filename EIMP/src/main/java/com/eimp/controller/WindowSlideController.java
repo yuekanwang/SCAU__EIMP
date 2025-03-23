@@ -5,7 +5,6 @@ import com.eimp.util.ImageUtil;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,7 +18,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.io.File;
 import java.net.URL;
 import java.util.*;
@@ -37,6 +35,13 @@ public class WindowSlideController implements Initializable {
      * 图片缩略图栏容器
      */
     @FXML private HBox thumbnailContainer;
+    @FXML private Button rotate;
+    @FXML private Button delete;
+    @FXML private Button prePage;
+    @FXML private Button nextPage;
+    @FXML private Button play;
+    @FXML private Button info;
+    @FXML private Button share;
     /**
      * 图片缩小按钮
      */
@@ -75,6 +80,10 @@ public class WindowSlideController implements Initializable {
      * ID与提示文本映射关系
      */
     private Map<String,String> textMap = new HashMap<>();
+    /**
+     * ID与顶部功能按钮映射关系
+     */
+    private Map<String,Button> buttonMap = new HashMap<>();
     /**
      * 更多功能按钮
       */
@@ -238,8 +247,6 @@ public class WindowSlideController implements Initializable {
      * 图片显示自适应窗口大小
      */
     private void initImageView(){
-
-        // 图片尺寸绑定
         // 绑定ImageView尺寸到StackPane可用空间
         mainImageView.fitWidthProperty().bind(
                 ((StackPane)mainImageView.getParent()).widthProperty()
@@ -379,6 +386,13 @@ public class WindowSlideController implements Initializable {
         textMap.put("item1","选项1");
         textMap.put("item2","选项2");
         textMap.put("item3","选项3");
+        buttonMap.put("rotate",this.rotate );
+        buttonMap.put("delete", this.delete );
+        buttonMap.put("prePage",this.prePage );
+        buttonMap.put("nextPage", this.nextPage);
+        buttonMap.put("play", this.play);
+        buttonMap.put("info", this.info);
+        buttonMap.put("share", this.share );
     }
 
     /**
@@ -593,23 +607,15 @@ public class WindowSlideController implements Initializable {
             }
 
         }
-        // 对可以显示的按钮进行样式绑定
-        for(Button btn : visibleButtons){
-            String id = btn.getId();
-            btn.getStyleClass().add("funtionalButton");
 
-            String style = String.format(
-                    "-fx-background-image: url('%s');-fx-background-size: 20,20",
-                    getClass().getResource(urlMap.get(id)).toExternalForm()
-            );
-            btn.setStyle(style);
-            btn.setTooltip(new Tooltip(textMap.get(id)));
-            btn.getTooltip().setShowDelay(javafx.util.Duration.millis(500));
-        }
         // 更新容器显示
         dynamicButtonContainer.getChildren().clear();
         dynamicButtonContainer.getChildren().add(moreMenuButton);
-        dynamicButtonContainer.getChildren().addAll(visibleButtons);
+        for(Button btn : visibleButtons){
+            String id = btn.getId();
+            dynamicButtonContainer.getChildren().add(buttonMap.get(id));
+        }
+
 
         // 更新弹出菜单内容
         for(Button btn : hiddenButtons) {

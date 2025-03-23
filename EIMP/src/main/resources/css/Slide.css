@@ -56,7 +56,9 @@
 #closeBtn:hover {
     -fx-background-color: #ff6666 !important;
 }
-
+#fileSize,#imageArea,#orderNum{
+    -fx-cursor: default;
+}
 
 /* 窗口控制按钮 */
 .window-control {
@@ -96,9 +98,13 @@
     -fx-effect: null;                   /* 去除阴影效果 */
 }
 
-/*.funtionalButton:hover {*/
-/*    -fx-opacity: 0.8;*/
-/*}*/
+.funtionalButton:hover {
+    -fx-background-color:#505354 ;
+}
+.funtionalButton:pressed{
+    -fx-background-color:#505354 ;
+    -fx-opacity: 50;
+}
 .maxBtn-full{
     -fx-background-image: url("../icon/FullScreen.png");  /* 图片路径（相对于CSS文件） */
     -fx-background-size: 10px 10px;         /* 图片尺寸 */
