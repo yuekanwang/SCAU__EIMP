@@ -1,17 +1,14 @@
 package com.eimp;
 
-import com.eimp.Controller.ControllerMap;
 import com.eimp.component.ThumbnailPanel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class App extends Application {
     @Override
@@ -24,18 +21,7 @@ public class App extends Application {
         stage.setScene(scene);
         Image Appicon = new Image(getClass().getResourceAsStream("/icon2/EIMP.png"));
         stage.getIcons().add(Appicon);
-        //stage.initStyle(StageStyle.UNDECORATED);
-        stage.show();
-    }
-
-    public static void newStageTo(Object obj) throws IOException {
-        Stage stage = new Stage();
-        ThumbnailPanel img = (ThumbnailPanel) obj;
-        String imgName = img.getImageUtil().getFileName();
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/fxml/WindowSlide.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle(imgName);
-        stage.setScene(scene);
+//        stage.initStyle(StageStyle.UNDECORATED);
         stage.show();
     }
 

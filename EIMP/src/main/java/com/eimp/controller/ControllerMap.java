@@ -1,4 +1,4 @@
-package com.eimp.Controller;
+package com.eimp.controller;
 
 import java.util.HashMap;
 import java.util.Map;

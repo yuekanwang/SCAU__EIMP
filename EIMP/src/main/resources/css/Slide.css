@@ -47,12 +47,6 @@
     -fx-padding: 0 5;
 }
 
-/* 窗口控制按钮 */
-#minBtn, #maxBtn, #closeBtn {
-    -fx-font-family: "Segoe MDL2 Assets";
-    -fx-text-fill: white;
-}
-
 /* 窗口控制按钮悬停效果 */
 .button:hover {
     -fx-opacity: 0.8;

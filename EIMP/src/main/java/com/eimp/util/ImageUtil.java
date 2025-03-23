@@ -1,4 +1,4 @@
-package com.eimp.Util;
+package com.eimp.util;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -16,6 +16,8 @@ public class ImageUtil {
     private static final String DEFAULT_VALUE = "NULL";
     // 文件
     private File file;
+    // 所在文件夹
+    private File directory;
     // 文件名
     private String fileName;
     // 文件类型
@@ -39,7 +41,7 @@ public class ImageUtil {
         this.fileType = this.fileName.toUpperCase().substring(this.fileName.lastIndexOf("."));
         this.absolutePath = file.getAbsolutePath();
         this.sizeOfBytes = file.length();
-
+        this.directory = file.getParentFile();
         try {
             BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
             LocalDateTime creationLocalTime = attr.creationTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -118,6 +120,14 @@ public class ImageUtil {
 
     public void setLastAccessTime(String lastAccessTime) {
         this.lastAccessTime = lastAccessTime;
+    }
+
+    public File getDirectory() {
+        return directory;
+    }
+
+    public void setDirectory(File directory) {
+        this.directory = directory;
     }
 
     public String getURL() {

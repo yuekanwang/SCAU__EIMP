@@ -1,8 +1,8 @@
 package com.eimp.component;
 
 import com.eimp.App;
-import com.eimp.Controller.WindowSlideController;
-import com.eimp.Util.ImageUtil;
+import com.eimp.SlideWindow;
+import com.eimp.util.ImageUtil;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,11 +40,7 @@ public class ThumbnailPanel extends BorderPane {
             // 双击进入图片展示界面
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                 Platform.runLater(() -> {
-                    try {
-                        App.newStageTo(this);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+                    SlideWindow.main(this.imageUtil,SlideWindow.LaunchMethodEnum.CLICK);
                 });
             }
             // 单击选中图片

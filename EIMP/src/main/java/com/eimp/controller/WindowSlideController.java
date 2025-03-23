@@ -1,6 +1,12 @@
-package com.eimp.Controller;
+package com.eimp.controller;
+import com.eimp.SlideWindow;
+import com.eimp.util.FileUtil;
+import com.eimp.util.ImageUtil;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
@@ -12,13 +18,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
+import java.io.File;
 import java.net.URL;
 import java.util.*;
 
 public class WindowSlideController implements Initializable {
-
+    /**
+     * 所属窗口stage
+     */
     private Stage stage;
-
     /**
      * 主照片视图
      */
@@ -70,7 +80,67 @@ public class WindowSlideController implements Initializable {
       */
     @FXML
     private Button moreMenuButton;
-
+    /**
+     * 当前图片的信息工具
+     */
+    private ImageUtil imageUtil;
+    /**
+     * 当前图片
+     */
+    private Image image;
+    /**
+     * 当前文件夹的图片列表
+     */
+    private List<ImageUtil> imageUtilList = new ArrayList<>();
+    /**
+     * 当前图片索引
+     */
+    private int currentIndex = 0;
+    /**
+     * 主窗口控制器
+     */
+    private WindowMainController windowMainController;
+    /**
+     * 用于控制持续触发事件的时间线
+     */
+    private Timeline timeline;
+    /**
+     * 图片放大比例
+     */
+    private int scale = 100;
+    /**
+     * 最大比例
+     */
+    private final static int MAX_SCALE = 1000;
+    /**
+     * 最小比例
+     */
+    private final static int MIN_SCALE = 100;
+    /**
+     * 缩略图栏面板
+     */
+    @FXML
+    private AnchorPane secondaryPane;
+    /**
+     * 图片名标签
+     */
+    @FXML
+    private Label imageName;
+    /**
+     * 图片索引提示按钮
+     */
+    @FXML
+    private Button orderNum;
+    /**
+     * 图片大小提示按钮
+     */
+    @FXML
+    private Button fileSize;
+    /**
+     * 图片尺寸提示按钮
+     */
+    @FXML
+    private Button imageArea;
     /**
      * 窗口布局初始化,对fxml布局组件初始化
      * @param location
@@ -80,26 +150,90 @@ public class WindowSlideController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.location = location;
         this.resources = resources;
+        this.windowMainController = (WindowMainController) ControllerMap.getController(WindowMainController.class);
+        this.stage = SlideWindow.getStage();
         this.initMap();
         this.initImageView();
         this.initMoreMenuButton();
         this.setUpDynamicButtonContainerListener();
         this.initButtonStyle();
+        this.setUpWindowControls();
+        this.secondaryPane.setVisible(false);// 暂时隐藏缩略图栏,待实现
     }
 
     /**
-     * 延迟初始化方法，在场景加载完成后调用
+     * 导入图片及所在文件夹
+     * @param imageUtil 导入的图片信息工具
      */
-    public void notifyPreloader() {
-        // 获取当前Stage
-        stage = (Stage) closeBtn.getScene().getWindow();
-        // 设置窗口最小尺寸
-        stage.setMinWidth(590);
-        stage.setMinHeight(580);
+    public void importImage(ImageUtil imageUtil) {
+        this.imageUtil = imageUtil;
 
-        this.setUpWindowControls();
+        File directory = imageUtil.getDirectory();
+        File[] images = directory.listFiles(FileUtil::isSupportImageFormat);
+        if (images != null) {
+            for (File image : images) {
+                ImageUtil imageFile = new ImageUtil(image);
+                this.imageUtilList.add(imageFile);
+            }
+        }
+
+        this.image = new Image(imageUtil.getURL().toString());
+        this.updateMainImageView();
     }
 
+    /**
+     * 更新当前窗口显示的图片及相关信息
+     */
+    private void updateMainImageView() {
+        this.updateWindowInfo();
+        this.mainImageView.setImage(this.image);
+    }
+
+
+    /**
+     * 更新窗口标题及图片相关信息
+     */
+    private void updateWindowInfo() {
+        String str = this.imageUtil.getFileName();
+        this.stage.setTitle(str);
+        this.imageName.setText(str);
+        this.updateControlTooltip(this.imageName,str,null);
+
+        str = String.format("%d/%d",this.currentIndex+1,this.imageUtilList.size());
+        this.orderNum.setText(str);
+        this.updateControlTooltip(this.orderNum,str,"图片索引:");
+
+        str = FileUtil.getFormatFileSize(this.imageUtil.getSizeOfBytes());
+        this.fileSize.setText(str);
+        this.updateControlTooltip(this.fileSize,str,"图片大小:");
+
+        str = String.format("%d×%d",(int)this.image.getWidth(),(int)this.image.getHeight());
+        this.imageArea.setText(str);
+        this.updateControlTooltip(this.imageArea,str,"图片尺寸:");
+    }
+
+    /**
+     * 更新控制组件的提示词
+     * @param control  控制组件
+     * @param tooltipText   提示文本
+     * @param extraStr  额外文本
+     */
+    private void updateControlTooltip(Control control, String tooltipText,String extraStr){
+        if(control.getTooltip()!=null){
+            if(extraStr!=null){
+                control.getTooltip().setText(extraStr+" "+tooltipText);
+            }else{
+                control.getTooltip().setText(tooltipText);
+            }
+        }else {
+            if(extraStr!=null){
+                control.setTooltip(new Tooltip(extraStr+" "+tooltipText));
+            }else{
+                control.setTooltip(new Tooltip(tooltipText));
+            }
+            control.getTooltip().setShowDelay(javafx.util.Duration.millis(500));
+        }
+    }
     /**
      * 图片显示自适应窗口大小
      */
@@ -115,6 +249,100 @@ public class WindowSlideController implements Initializable {
         );
 
     }
+
+
+    /**
+     * 切换上一张图片
+     * @param event
+     */
+    @FXML
+    private void preImage(Event event) {
+        this.currentIndex--;
+        if(this.currentIndex<0){
+            this.currentIndex=0;
+            this.stopTimerLine(event);
+        }
+        this.imageUtil = this.imageUtilList.get(this.currentIndex);
+        this.image = new Image(imageUtil.getURL().toString());
+        this.updateMainImageView();
+    }
+
+    /**
+     * 持续切换上一张图片
+     * @param event
+     */
+    @FXML
+    private void preImageConstantly(Event event) {
+        if (this.timeline != null)
+            this.timeline.stop();
+        this.timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
+            preImage(event);
+        }));
+        this.timeline.setCycleCount(Timeline.INDEFINITE); // 无限循环
+        this.timeline.play();
+    }
+    /**
+     * 切换下一张图片
+     * @param event
+     */
+    @FXML
+    private void nextImage(Event event) {
+        this.currentIndex++;
+        if(this.currentIndex>=this.imageUtilList.size()){
+            this.currentIndex=this.imageUtilList.size()-1;
+            this.stopTimerLine(event);
+        }
+        this.imageUtil = this.imageUtilList.get(this.currentIndex);
+        this.image = new Image(imageUtil.getURL().toString());
+        this.updateMainImageView();
+    }
+
+    /**
+     * 持续切换下一张图片
+     * @param event
+     */
+    @FXML
+    private void nextImageConstantly(Event event) {
+        if (this.timeline != null)
+            this.timeline.stop();
+        this.timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
+            nextImage(event);
+        }));
+        this.timeline.setCycleCount(Timeline.INDEFINITE); // 无限循环
+        this.timeline.play();
+    }
+    /**
+     * 停止持续事件的时间线
+     * @param event
+     */
+    @FXML
+    private void stopTimerLine(Event event) {
+        if(this.timeline != null){
+            this.timeline.stop();
+        }
+    }
+
+
+
+
+
+//    private static final int MAX_VISIBLE_THUMBNAILS = 10;
+//    private static final double THUMBNAIL_WIDTH = 120;
+//
+//    // 添加缩略图的方法
+//    private void addThumbnail(Image image) {
+//        ImageView thumbnail = new ImageView(image);
+//        thumbnail.setFitHeight(90);
+//        thumbnail.setPreserveRatio(true);
+//        thumbnailContainer.getChildren().add(thumbnail);
+//
+//        // 当超过10个时启用固定宽度
+//        if (thumbnailContainer.getChildren().size() > MAX_VISIBLE_THUMBNAILS) {
+//            thumbnailContainer.setPrefWidth(MAX_VISIBLE_THUMBNAILS * THUMBNAIL_WIDTH);
+//        }
+//    }
+
+
 
     /**
      * 初始化图标url和提示文本映射关系
@@ -306,9 +534,9 @@ public class WindowSlideController implements Initializable {
     /**
      * 计算当前宽度下可以显示的按钮数量显示出来,多的隐藏到更多功能菜单里,后续能显示了再恢复出来
      */
-     private void adjustVisibleButtons()  {
+    private void adjustVisibleButtons()  {
         // 最多显示按钮数量
-         int MAX_BUTTON_NUM = 7;
+        int MAX_BUTTON_NUM = 7;
 
         // 计算可用宽度（容器宽度 - 菜单按钮宽度 - 边距-左右填充）
         double availableWidth = dynamicButtonContainer.getWidth()
@@ -392,13 +620,13 @@ public class WindowSlideController implements Initializable {
             items.add(item);
         }
 
-         for (Button btn : preButtons) {
-             String id = btn.getId();
-             CustomMenuItem item = this.createMenuItem(textMap.get(id),urlMap.get(id));
-             item.setId(id);
-             item.setOnAction(btn.getOnAction());
-             items.add(item);
-         }
+        for (Button btn : preButtons) {
+            String id = btn.getId();
+            CustomMenuItem item = this.createMenuItem(textMap.get(id),urlMap.get(id));
+            item.setId(id);
+            item.setOnAction(btn.getOnAction());
+            items.add(item);
+        }
 
     }
 
@@ -636,49 +864,6 @@ public class WindowSlideController implements Initializable {
             stage.setY(event.getScreenY() - yOffset);
         }
     }
-
-    /**
-     * 切换上一张图片
-     * @param event
-     */
-    @FXML
-    private void prevImage(ActionEvent event) {
-        // 加载前一张图片逻辑
-    }
-
-    /**
-     * 切换下一张图片
-     * @param event
-     */
-    @FXML
-    private void nextImage(ActionEvent event) {
-        // 加载下一张图片逻辑
-    }
-
-
-
-
-
-
-
-
-//    private static final int MAX_VISIBLE_THUMBNAILS = 10;
-//    private static final double THUMBNAIL_WIDTH = 120;
-//
-//    // 添加缩略图的方法
-//    private void addThumbnail(Image image) {
-//        ImageView thumbnail = new ImageView(image);
-//        thumbnail.setFitHeight(90);
-//        thumbnail.setPreserveRatio(true);
-//        thumbnailContainer.getChildren().add(thumbnail);
-//
-//        // 当超过10个时启用固定宽度
-//        if (thumbnailContainer.getChildren().size() > MAX_VISIBLE_THUMBNAILS) {
-//            thumbnailContainer.setPrefWidth(MAX_VISIBLE_THUMBNAILS * THUMBNAIL_WIDTH);
-//        }
-//    }
-
-
 
 
 }

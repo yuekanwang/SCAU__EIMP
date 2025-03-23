@@ -1,7 +1,7 @@
 package com.eimp.component;
 
-import com.eimp.Util.FileUtil;
-import com.eimp.Util.ImageUtil;
+import com.eimp.util.FileUtil;
+import com.eimp.util.ImageUtil;
 import javafx.scene.layout.FlowPane;
 
 import java.io.File;

@@ -12,8 +12,8 @@ module com.eimp {
     requires com.almasb.fxgl.all;
     requires javafx.swing;
 
-    opens com.eimp.Controller to javafx.fxml;
-    exports com.eimp.Controller;
+    opens com.eimp.controller to javafx.fxml;
+    exports com.eimp.controller;
 
 
     opens com.eimp to javafx.fxml;

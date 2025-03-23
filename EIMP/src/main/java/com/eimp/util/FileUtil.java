@@ -1,4 +1,4 @@
-package com.eimp.Util;
+package com.eimp.util;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.ImageView;
@@ -45,5 +45,31 @@ public class FileUtil {
         bufferedImage.createGraphics().drawImage(image, 0, 0, null);
         WritableImage writableImage = SwingFXUtils.toFXImage(bufferedImage, null);
         return new ImageView(writableImage);
+    }
+
+    /**
+     * 常用文件大小单位
+     */
+    private static final double KB = 1024.0;
+    private static final double MB = 1024.0*1024.0;
+    private static final double GB = 1024.0*1024.0*1024.0;
+
+    /**
+     * 获取文件大小格式化字符串
+     * @param fileLength 文件大小
+     * @return 文件大小格式化字符串
+     */
+    public static String getFormatFileSize(long fileLength){
+        String fileStandardSize = null;
+        if (fileLength < KB){
+            fileStandardSize = String.format("%dByte", fileLength);
+        }else if(fileLength < MB){
+            fileStandardSize = String.format("%.2fKB", fileLength/KB);
+        }else if (fileLength < GB){
+            fileStandardSize = String.format("%.2fMB", fileLength/MB);
+        }else {
+            fileStandardSize = String.format("%.2fGB", fileLength/GB);
+        }
+        return fileStandardSize;
     }
 }

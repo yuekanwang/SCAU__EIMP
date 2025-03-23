@@ -1,4 +1,4 @@
-package com.eimp.Controller;
+package com.eimp.controller;
 
 import com.eimp.component.DirectoryLoader;
 import com.eimp.component.FileTreeItem;

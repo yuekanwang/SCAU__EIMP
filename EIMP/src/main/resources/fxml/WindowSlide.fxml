@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" minHeight="580.0" minWidth="590.0" prefHeight="700.0" prefWidth="900.0" stylesheets="@../css/Slide.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.Controller.WindowSlideController">
+<AnchorPane fx:id="rootPane" minHeight="580.0" minWidth="590.0" prefHeight="700.0" prefWidth="900.0" stylesheets="@../css/Slide.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.controller.WindowSlideController">
    <children>
       <HBox fx:id="topFunctionalColumn" alignment="CENTER_LEFT" layoutX="13.0" layoutY="5.0" maxHeight="35.0" minHeight="35.0" minWidth="500.0" onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" scaleShape="false" spacing="10.0" style="-fx-cursor: move; -fx-background-color: #3c3f41;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="260.0" AnchorPane.topAnchor="0.0">
 
@@ -35,19 +35,19 @@
                         <Insets bottom="3.0" top="2.0" />
                      </padding>
                      <children>
-                        <Button graphicTextGap="0.0" prefHeight="21.0" prefWidth="76.0" style="-fx-background-color: transparent; -fx-text-fill: #666; -fx-border-insets: 0; -fx-padding: 0;" text="21/58" textAlignment="CENTER" HBox.hgrow="NEVER">
+                        <Button fx:id="orderNum" graphicTextGap="0.0" prefHeight="21.0" prefWidth="64.0" style="-fx-background-color: transparent; -fx-text-fill: #666; -fx-border-insets: 0; -fx-padding: 0;" text="21/58" textAlignment="CENTER" HBox.hgrow="NEVER">
                            <font>
                               <Font size="5.0" />
                            </font>
                         </Button>
                         <Separator orientation="VERTICAL" prefHeight="21.0" prefWidth="0.0" />
-                        <Button contentDisplay="CENTER" graphicTextGap="0.0" prefHeight="17.0" prefWidth="47.0" style="-fx-background-color: transparent; -fx-text-fill: #666; -fx-padding: 0; -fx-background-insets: 0;" text="6.66MB" textAlignment="CENTER" HBox.hgrow="NEVER">
+                        <Button fx:id="fileSize" contentDisplay="CENTER" graphicTextGap="0.0" prefHeight="17.0" prefWidth="61.0" style="-fx-background-color: transparent; -fx-text-fill: #666; -fx-padding: 0; -fx-background-insets: 0;" text="111.66MB" textAlignment="CENTER" HBox.hgrow="NEVER">
                            <font>
                               <Font size="5.0" />
                            </font>
                         </Button>
                         <Separator orientation="VERTICAL" prefHeight="28.0" prefWidth="0.0" />
-                        <Button contentDisplay="RIGHT" graphicTextGap="0.0" prefHeight="20.0" prefWidth="73.0" style="-fx-background-color: transparent; -fx-text-fill: #666; -fx-background-insets: 0; -fx-padding: 0;" text="9020×1008" textAlignment="CENTER" HBox.hgrow="NEVER">
+                        <Button fx:id="imageArea" contentDisplay="RIGHT" graphicTextGap="0.0" prefHeight="20.0" prefWidth="73.0" style="-fx-background-color: transparent; -fx-text-fill: #666; -fx-background-insets: 0; -fx-padding: 0;" text="9020×1008" textAlignment="CENTER" HBox.hgrow="NEVER">
                            <font>
                               <Font size="5.0" />
                            </font>
@@ -75,12 +75,12 @@
                               <Insets />
                            </HBox.margin>
                         </Button>
-                        <Button id="prePage" fx:id="prePage" maxWidth="30.0" minWidth="30.0" prefHeight="25.0" prefWidth="30.0" styleClass="funtionalButton">
+                        <Button id="prePage" fx:id="prePage" maxWidth="30.0" minWidth="30.0" onAction="#preImage" onMousePressed="#preImageConstantly" onMouseReleased="#stopTimerLine" prefHeight="25.0" prefWidth="30.0" styleClass="funtionalButton">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </Button>
-                        <Button id="nextPage" fx:id="nextPage" maxWidth="30.0" minWidth="30.0" prefHeight="25.0" prefWidth="30.0" styleClass="funtionalButton" HBox.hgrow="ALWAYS">
+                        <Button id="nextPage" fx:id="nextPage" maxWidth="30.0" minWidth="30.0" onAction="#nextImage" onMousePressed="#nextImageConstantly" onMouseReleased="#stopTimerLine" prefHeight="25.0" prefWidth="30.0" styleClass="funtionalButton" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -105,8 +105,8 @@
       </HBox>
       <StackPane fx:id="stackPane" layoutX="204.0" layoutY="303.0" style="-fx-background-color: #1e1f22;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
          <children>
-            <ImageView fx:id="mainImageView" fitHeight="${stackPane.height}" fitWidth="${stackPane.width}" preserveRatio="true" />
-            <AnchorPane fx:id="secondaryPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #1e1f22;">
+            <ImageView fx:id="mainImageView" fitHeight="664.0" fitWidth="900.0" preserveRatio="true" />
+            <AnchorPane fx:id="secondaryPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;">
                <children>
                   <ScrollPane fx:id="scrollPane" fitToHeight="true" hbarPolicy="AS_NEEDED" layoutX="164.0" layoutY="555.0" prefHeight="96.0" prefWidth="571.0" style="-fx-background-color: #3c3f41;" vbarPolicy="NEVER" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0">
                      <content>

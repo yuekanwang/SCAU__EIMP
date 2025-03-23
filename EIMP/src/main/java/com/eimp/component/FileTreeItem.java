@@ -1,13 +1,10 @@
 package com.eimp.component;
 
-import com.eimp.Util.FileUtil;
+import com.eimp.util.FileUtil;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
-import javafx.scene.image.ImageView;
 
-import javax.sound.midi.spi.MidiFileReader;
-import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.*;
