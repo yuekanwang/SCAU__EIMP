@@ -6,7 +6,9 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -20,6 +22,9 @@ public class App extends Application {
         stage.setMinHeight(400);
         stage.setMinWidth(650);
         stage.setScene(scene);
+        Image Appicon = new Image(getClass().getResourceAsStream("/icon2/EIMP.png"));
+        stage.getIcons().add(Appicon);
+        //stage.initStyle(StageStyle.UNDECORATED);
         stage.show();
     }
 

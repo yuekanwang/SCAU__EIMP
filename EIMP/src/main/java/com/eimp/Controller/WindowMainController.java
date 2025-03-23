@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
@@ -45,6 +46,47 @@ public class WindowMainController implements Initializable {
 
     // 缩略图展示面板
     public PreviewFlowPane previewFlowPane;
+
+    /*这些是按钮*/
+    @FXML
+    public Button minBtn;//窗口最小化按钮
+    @FXML
+    public Button maxBtn;//窗口最大化按钮
+    @FXML
+    public Button closeBtn;//窗口关闭按钮
+    @FXML
+    public Button About_Button;//有下角“关于”
+    
+    @FXML
+    public Button SelectAll_Button;//全选按钮
+    @FXML
+    public Button Delete_Button;//删除按钮
+    @FXML
+    public Button Flushed_Button;//刷新按钮
+    @FXML
+    public Button Slideshow_Button;//幻灯片播放按钮
+    @FXML
+    public Button Help_Button;//帮助按钮
+
+    /*这些是主界面的边界控制*/
+    @FXML
+    public Region leftResize;
+    @FXML
+    public Region topResize;
+    @FXML
+    public Region rightResize;
+    @FXML
+    public Region bottomResize;
+    @FXML
+    public Region leftTopResize;
+    @FXML
+    public Region rightTopResize;
+    @FXML
+    public Region leftBottomResize;
+    @FXML
+    public Region rightBottomResize;
+
+
     private Rectangle rectangle;
 
     @FXML//这些都是排序功能的

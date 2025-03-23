@@ -75,3 +75,54 @@
 }
 /*路径条*/
 
+/* 水平调整光标 */
+#leftResize, #rightResize {
+    -fx-cursor: h-resize;
+    -fx-background-color: transparent;
+}
+
+/* 垂直调整光标 */
+#topResize, #bottomResize {
+    -fx-cursor: v-resize;
+    -fx-background-color: transparent;
+}
+
+/* 对角线调整光标 */
+#leftTopResize, #rightBottomResize {
+    -fx-cursor: SE_RESIZE;
+    -fx-background-color: transparent;
+}
+
+#rightTopResize, #leftBottomResize {
+    -fx-cursor: SW_RESIZE;
+    -fx-background-color: transparent;
+}
+/* 对角线调整光标 */
+
+
+#closeBtn {
+    -fx-background-image: url("../icon2/CloseFilled.png");  /* 图片路径（相对于CSS文件） */
+    -fx-background-color:transparent;   /*按钮背景透明*/
+    -fx-background-size: 20;            /*图片大小调整*/
+    -fx-background-repeat: no-repeat;   /* 禁止重复 */
+    -fx-background-position: center;    /* 图片居中 */
+}
+
+#minBtn{
+    -fx-background-image: url("../icon2/MinusFilled.png");  /* 图片路径（相对于CSS文件） */
+    -fx-background-color:transparent;   /*按钮背景透明*/
+    -fx-background-size: 20;            /*图片大小调整*/
+    -fx-background-repeat: no-repeat;   /* 禁止重复 */
+    -fx-background-position: center;    /* 图片居中 */
+}
+#maxBtn{
+    -fx-background-image: url("../icon2/FullScreen.png");  /* 图片路径（相对于CSS文件） */
+    -fx-background-color:transparent;   /*按钮背景透明*/
+    -fx-background-size: 20;            /*图片大小调整*/
+    -fx-background-repeat: no-repeat;   /* 禁止重复 */
+    -fx-background-position: center;    /* 图片居中 */
+}
+
+#closeBtn:hover,#minBtn:hover,#maxBtn:hover {/*给这些按钮的悬停统一改深色*/
+    -fx-background-color:#1AA3B2;
+}

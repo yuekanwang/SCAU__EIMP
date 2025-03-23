@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
@@ -9,26 +10,29 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="941.0" stylesheets="@../css/Main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.Controller.WindowMainController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="659.0" prefWidth="941.0" stylesheets="@../css/Main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.Controller.WindowMainController">
    <children>
-      <AnchorPane minHeight="500" minWidth="200" prefHeight="923.0" prefWidth="1407.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutY="-31.2" minHeight="500" minWidth="200" prefHeight="706.0" prefWidth="941.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane fx:id="top" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="84.0" prefWidth="1190.0" style="-fx-background-color: #3BCCE2" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane fx:id="top" layoutY="-27.2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="115.0" prefWidth="941.0" style="-fx-background-color: #3BCCE2" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <HBox layoutX="106.0" layoutY="-8.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <HBox layoutX="106.0" layoutY="30.4" prefHeight="86.0" prefWidth="941.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
                      <children>
-                        <Button fx:id="Left_Button" mnemonicParsing="false" prefHeight="54.0" prefWidth="54.0" styleClass="image-Left_Button" HBox.hgrow="ALWAYS">
+                        <Button fx:id="Left_Button" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="54.0" prefWidth="54.0" styleClass="image-Left_Button" HBox.hgrow="NEVER">
                            <HBox.margin>
                               <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="Right_Button" mnemonicParsing="false" prefHeight="54.0" prefWidth="54.0" styleClass="image-Right_Button">
+                        <Button fx:id="Right_Button" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="54.0" prefWidth="54.0" styleClass="image-Right_Button" HBox.hgrow="NEVER">
                            <HBox.margin>
                               <Insets bottom="15.0" right="10.0" top="15.0" />
                            </HBox.margin>
@@ -43,44 +47,126 @@
                               <Insets bottom="20.0" right="5.0" top="20.0" />
                            </HBox.margin>
                         </TextField>
-                        <Button fx:id="SearchButton" prefHeight="30.0" prefWidth="30.0" styleClass="Search">
+                        <Button fx:id="SearchButton" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="30.0" styleClass="Search" HBox.hgrow="NEVER">
                            <HBox.margin>
                               <Insets bottom="20.0" right="20.0" top="28.0" />
                            </HBox.margin>
                         </Button>
                      </children>
                   </HBox>
+                  <HBox prefHeight="44.0" prefWidth="941.0" AnchorPane.bottomAnchor="71.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <ImageView fx:id="AppImage" fitHeight="40.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
+                           <HBox.margin>
+                              <Insets bottom="10.0" left="3.0" right="8.0" top="3.0" />
+                           </HBox.margin>
+                           <image>
+                              <Image url="@../icon2/EIMP.png" />
+                           </image>
+                           <viewport>
+                              <Rectangle2D />
+                           </viewport>
+                        </ImageView>
+                        <Label fx:id="AppName" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="138.0" text="电子图片管理系统" HBox.hgrow="NEVER">
+                           <HBox.margin>
+                              <Insets top="5.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Bold" size="17.0" />
+                           </font>
+                        </Label>
+                        <Pane maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="614.0" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="minBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="45.0" HBox.hgrow="NEVER" />
+                        <Button fx:id="maxBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.2" prefWidth="45.0" HBox.hgrow="NEVER" />
+                        <Button fx:id="closeBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.2" prefWidth="45.0" HBox.hgrow="NEVER" />
+                     </children>
+                  </HBox>
                </children></AnchorPane>
-            <AnchorPane fx:id="buttom" layoutY="872.0" maxHeight="51.0" maxWidth="1407.0" minHeight="24.0" minWidth="853.0" prefHeight="25.0" prefWidth="853.0" style="-fx-background-size: auto;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <AnchorPane fx:id="buttom" layoutY="872.0" maxHeight="51.0" maxWidth="1407.0" minHeight="24.0" minWidth="853.0" prefHeight="25.0" prefWidth="853.0" style="-fx-background-color: #3BCCE2;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
                   <Label fx:id="imageSize_Label" layoutY="12.8" maxHeight="51.0" maxWidth="1407.0" minHeight="11.0" minWidth="853.0" prefHeight="11.0" prefWidth="853.0" text="Label" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
+                  <Button fx:id="About_Button" layoutX="886.0" layoutY="1.0" mnemonicParsing="false" text="关于" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Button>
                </children>
             </AnchorPane>
          </children>
       </AnchorPane>
-      <VBox layoutY="84.0" minHeight="500" minWidth="200" prefHeight="652.0" prefWidth="1190.0" style="-fx-background-size: cover;" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="84.0">
+      <VBox layoutY="112.8" minHeight="499.0" minWidth="200" prefHeight="521.0" prefWidth="941.0" style="-fx-background-size: cover;" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="113.0">
          <children>
-            <SplitPane fx:id="splitPane" dividerPositions="0.2647979510529311" prefHeight="796.0" prefWidth="1407.0" style="-fx-background-size: cover;" VBox.vgrow="ALWAYS">
+            <SplitPane fx:id="splitPane" dividerPositions="0.2647979510529311" prefHeight="564.0" prefWidth="942.0" style="-fx-background-size: cover;" VBox.vgrow="ALWAYS">
                <items>
                   <TreeView fx:id="treeView" maxWidth="400.0" minWidth="150.0" />
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
                         <AnchorPane fx:id="mid" prefHeight="46.0" prefWidth="870.0">
                            <children>
-                              <MenuButton fx:id="SortMenu" layoutX="14.0" layoutY="12.0" mnemonicParsing="false" text="排序方式" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0">
-                                <items>
-                                  <MenuItem fx:id="Sort_Name" mnemonicParsing="false" text="按名字递增排序" />
-                                  <MenuItem fx:id="Sort_SIze" mnemonicParsing="false" text="按文件大小递增排序" />
-                                    <MenuItem fx:id="Sort_Time" mnemonicParsing="false" text="按时间递增顺序" />
-                                    <MenuItem fx:id="SortOrder_Name" mnemonicParsing="false" text="按名字递减排序" />
-                                    <MenuItem fx:id="SortOrder_Size" mnemonicParsing="false" text="按文件大小递减排序" />
-                                    <MenuItem fx:id="SortOrder_Time" mnemonicParsing="false" text="按时间递减排序" />
-                                </items>
-                              </MenuButton>
+                              <HBox layoutX="244.0" layoutY="-27.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <MenuButton fx:id="SortMenu" mnemonicParsing="false" prefHeight="40.0" prefWidth="109.0" text="排序方式">
+                                      <items>
+                                        <MenuItem fx:id="Sort_Name" mnemonicParsing="false" text="按名字递增排序" />
+                                        <MenuItem fx:id="Sort_SIze" mnemonicParsing="false" text="按文件大小递增排序" />
+                                          <MenuItem fx:id="Sort_Time" mnemonicParsing="false" text="按时间递增顺序" />
+                                          <MenuItem fx:id="SortOrder_Name" mnemonicParsing="false" text="按名字递减排序" />
+                                          <MenuItem fx:id="SortOrder_Size" mnemonicParsing="false" text="按文件大小递减排序" />
+                                          <MenuItem fx:id="SortOrder_Time" mnemonicParsing="false" text="按时间递减排序" />
+                                      </items>
+                                       <HBox.margin>
+                                          <Insets bottom="3.0" left="10.0" right="60.0" top="3.0" />
+                                       </HBox.margin>
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </MenuButton>
+                                    <Button fx:id="SelectAll_Button" mnemonicParsing="false" prefHeight="37.0" prefWidth="63.0" text="全选">
+                                       <HBox.margin>
+                                          <Insets bottom="3.0" right="30.0" top="3.0" />
+                                       </HBox.margin>
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Button>
+                                    <Button fx:id="Delete_Button" mnemonicParsing="false" prefHeight="37.0" prefWidth="63.0" text="删除">
+                                       <HBox.margin>
+                                          <Insets bottom="3.0" right="30.0" top="3.0" />
+                                       </HBox.margin>
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Button>
+                                    <Button fx:id="Flushed_Button" mnemonicParsing="false" prefHeight="37.0" prefWidth="63.0" text="刷新">
+                                       <HBox.margin>
+                                          <Insets bottom="3.0" right="30.0" top="3.0" />
+                                       </HBox.margin>
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Button>
+                                    <Button fx:id="Slideshow_Button" mnemonicParsing="false" prefHeight="38.0" prefWidth="105.0" text="幻灯片播放">
+                                       <HBox.margin>
+                                          <Insets bottom="3.0" right="30.0" top="3.0" />
+                                       </HBox.margin>
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Button>
+                                    <Button fx:id="Help_Button" mnemonicParsing="false" prefHeight="37.0" prefWidth="63.0" text="帮助">
+                                       <HBox.margin>
+                                          <Insets bottom="3.0" right="10.0" top="3.0" />
+                                       </HBox.margin>
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </HBox>
                            </children></AnchorPane>
                         <ScrollPane fx:id="imagePreviewScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="425.0" prefWidth="618.0" style="-fx-background-size: cover;" VBox.vgrow="ALWAYS">
                            <VBox.margin>
@@ -96,5 +182,14 @@
             </SplitPane>
          </children>
       </VBox>
+      <Region fx:id="leftResize" prefWidth="5.0" styleClass="resize-left" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="5" />
+      <Region fx:id="topResize" prefHeight="5.0" styleClass="resize-top" AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5" AnchorPane.topAnchor="0" />
+      <Region fx:id="rightResize" prefWidth="5.0" styleClass="resize-right" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="5" />
+      <Region fx:id="bottomResize" prefHeight="5.0" styleClass="resize-bottom" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5" />
+      <!-- 四角调整 -->
+      <Region fx:id="leftTopResize" prefHeight="5" prefWidth="5" styleClass="resize-corner" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
+      <Region fx:id="rightTopResize" prefHeight="5" prefWidth="5" styleClass="resize-corner" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
+      <Region fx:id="leftBottomResize" prefHeight="5" prefWidth="5" styleClass="resize-corner" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" />
+      <Region fx:id="rightBottomResize" prefHeight="5" prefWidth="5" styleClass="resize-corner" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" />
    </children>
 </AnchorPane>

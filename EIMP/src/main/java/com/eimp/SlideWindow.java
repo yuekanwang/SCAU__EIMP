@@ -6,15 +6,13 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
-/*
- *
- * @author yuekanwang
- */
+
 public class SlideWindow extends Application {
     @Override
     public void start(Stage stage) throws IOException {
@@ -33,6 +31,8 @@ public class SlideWindow extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(SlideWindow.class.getResource("/fxml/WindowSlide.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), width, height);
         stage.setScene(scene);
+        Image Appicon = new Image(getClass().getResourceAsStream("/icon2/EIMP.png"));
+        stage.getIcons().add(Appicon);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.show();
 
