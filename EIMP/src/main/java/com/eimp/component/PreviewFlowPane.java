@@ -27,6 +27,22 @@ public class PreviewFlowPane extends FlowPane {
         return directory;
     }
 
+    public boolean newSelectedIsEmpty() {
+        return newSelected.isEmpty();
+    }
+
+    public int newSelectedSize() {
+        return newSelected.size();
+    }
+
+    public boolean oldSelectedIsEmpty() {
+        return oldSelected.isEmpty();
+    }
+
+    public int oldSelectedSize() {
+        return oldSelected.size();
+    }
+
     public PreviewFlowPane() {
         setCache(true);
         // 设置间隔
@@ -69,6 +85,17 @@ public class PreviewFlowPane extends FlowPane {
     }
 
     /**
+     * 取消选中
+     */
+    public void deleteSelectedtoList(Object obj) {
+        ThumbnailPanel img = (ThumbnailPanel) obj;
+        oldSelected.clear();
+        oldSelected.addAll(newSelected);
+        img.removeSelected();
+        newSelected.remove(img);
+    }
+
+    /**
      * 清空选中
      */
     public void clearSelected() {
@@ -78,5 +105,49 @@ public class PreviewFlowPane extends FlowPane {
             pane.removeSelected();
         }
         newSelected.clear();
+    }
+
+    /**
+     * shift多选设置
+     */
+    private int from;
+    private int to;
+    // 允许使用shift多选
+    private boolean isShift = false;
+
+    public void setFrom(int from) {
+        this.from = from;
+    }
+
+    public int getFrom() {
+        return from;
+    }
+
+    public void setTo(int to) {
+        this.to = to;
+    }
+
+    public int getTo() {
+        return to;
+    }
+
+    public void setIsShift(boolean isShift) {
+        this.isShift = isShift;
+    }
+
+    public boolean isShift() {
+        return isShift;
+    }
+
+    public void shiftSelected() {
+        clearSelected();
+        if (from > to) {
+            newSelected.addAll(thumbnailPanels.subList(to, from + 1));
+        } else {
+            newSelected.addAll(thumbnailPanels.subList(from, to + 1));
+        }
+        for (ThumbnailPanel pane : newSelected) {
+            pane.selected();
+        }
     }
 }

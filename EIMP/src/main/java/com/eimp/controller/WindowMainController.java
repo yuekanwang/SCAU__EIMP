@@ -238,6 +238,7 @@ public class WindowMainController implements Initializable {
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1 && !event.isControlDown()) {
                 if (previewFlowPane.equals(event.getPickResult().getIntersectedNode())) {
                     previewFlowPane.clearSelected();
+                    previewFlowPane.setIsShift(false);
                 }
             }
 
@@ -246,6 +247,28 @@ public class WindowMainController implements Initializable {
                 menu.show();
             }
         });
+
+        // 鼠标拖拽矩阵选中图片
+        previewFlowPane.setOnMouseDragged(event -> {
+            // 计算矩形大小
+            double x2 = event.getX();
+            double y2 = event.getY();
+            double startX = Math.min(x, x2);
+            double startY = Math.min(y, y2);
+            rectangle.setX(startX);
+            rectangle.setY(startY);
+            double width = Math.abs(x - x2);
+            double height = Math.abs(y - y2);
+            rectangle.setWidth(width);
+            rectangle.setHeight(height);
+            rectangle.setVisible(true);
+            if (width >= 10 && height >= 10){
+                imageSelected();
+            }
+        });
+        previewFlowPane.setOnMouseReleased(event -> {
+            rectangle.setVisible(false);
+        });
     }
 
     /**
@@ -253,11 +276,18 @@ public class WindowMainController implements Initializable {
      */
     public void imageSelected() {
         previewFlowPane.clearSelected();
+        ThumbnailPanel endPane = null;
+        boolean firstSelectedFlag = false;
         for (ThumbnailPanel pane : previewFlowPane.getThumbnailPanels()) {
             if (rectangle.intersects(pane.getBoundsInParent())) {
                 previewFlowPane.addSelected(pane);
+                if (!firstSelectedFlag) {
+                    endPane = pane;
+                    firstSelectedFlag = true;
+                }
             }
-
         }
+        previewFlowPane.setIsShift(true);
+        previewFlowPane.setFrom(previewFlowPane.getThumbnailPanels().indexOf(endPane));
     }
 }
