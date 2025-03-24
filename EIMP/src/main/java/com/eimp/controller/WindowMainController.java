@@ -5,8 +5,12 @@ import com.eimp.component.FileTreeItem;
 import com.eimp.component.PreviewFlowPane;
 
 import com.eimp.component.ThumbnailPanel;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
@@ -15,6 +19,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Callback;
+import javafx.util.Duration;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
@@ -26,12 +31,15 @@ import java.util.ResourceBundle;
 
 public class WindowMainController implements Initializable {
 
+    //这些AnchorPane是布局框
     @FXML
     public AnchorPane top;
     @FXML
     public AnchorPane mid;
     @FXML
-    public AnchorPane bottom;//这些AnchorPane是布局框
+    public AnchorPane buttom;
+
+
     @FXML
     public TreeView<String> treeView;//树视图，用于做目录树
     @FXML
@@ -224,14 +232,44 @@ public class WindowMainController implements Initializable {
     // 鼠标x，y坐标
     private double x;
     private double y;
+    private double mouseScreenY;
+    private double offsetUp;
+    private double offsetDown;
     // 右键弹窗菜单
     private final Menu menu = new Menu();
+    // 用于周期性更新ScrollPane面板
+    private Timeline scrollTimeLine;
 
     public void addHandle() {
+        Platform.runLater(() -> {
+            Point2D positionOfMid = mid.localToScreen(0, 0);
+            offsetUp = positionOfMid.getY() + 46;
+            Point2D positionOfButtom = buttom.localToScreen(0, 0);
+            offsetDown = positionOfButtom.getY();
+        });
+
+        // 初始化Timeline
+        scrollTimeLine = new Timeline(
+                new KeyFrame(Duration.millis(10), event -> {
+                    // 设置滚动速度
+                    if (mouseScreenY < offsetUp) {
+                        imagePreviewScrollPane.setVvalue(imagePreviewScrollPane.getVvalue() +
+                                (mouseScreenY - offsetUp) / 2000);
+                    }
+                    if (mouseScreenY > offsetDown) {
+                        imagePreviewScrollPane.setVvalue(imagePreviewScrollPane.getVvalue() +
+                                (mouseScreenY - offsetDown) / 2000);
+                    }
+                })
+        );
+        // 设置无限循环
+        scrollTimeLine.setCycleCount(Timeline.INDEFINITE);
+
         // 对previewFlowPane进行鼠标监听
         previewFlowPane.setOnMousePressed(event -> {
             x = event.getX();
             y = event.getY();
+            mouseScreenY = event.getScreenY();
             menu.hide();
 
             // 处理点击空白区域后已选择的图片
@@ -265,9 +303,18 @@ public class WindowMainController implements Initializable {
             if (width >= 10 && height >= 10){
                 imageSelected();
             }
+            mouseScreenY = event.getScreenY();
+
+            // 鼠标超出边界时，ScrollPane上滑/下滑
+            if (event.getScreenY() < offsetUp || event.getScreenY() > offsetDown) {
+                scrollTimeLine.play();
+            } else {
+                scrollTimeLine.stop();
+            }
         });
         previewFlowPane.setOnMouseReleased(event -> {
             rectangle.setVisible(false);
+            scrollTimeLine.stop();
         });
     }
 
