@@ -4,10 +4,13 @@ import com.eimp.controller.WindowSlideController;
 import com.eimp.util.ImageUtil;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -61,13 +64,15 @@ public class SlideWindow extends Application {
         Image Appicon = new Image(getClass().getResourceAsStream("/icon2/EIMP.png"));
         stage.getIcons().add(Appicon);
         stage.initStyle(StageStyle.UNDECORATED);
-
+        controller.setUpKeyEvent(scene);
         //导入所选图片的信息工具
         controller.importImage(SlideWindow.imageUtil);
         switch(launchMethodEnum){
             case PLAY: break;
             case CLICK: stage.show(); break;
         }
+
+
     }
 
     public static void main(ImageUtil imageUtil, LaunchMethodEnum launchMethodEnum) {

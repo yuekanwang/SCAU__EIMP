@@ -94,7 +94,7 @@
       <StackPane fx:id="stackPane" layoutX="204.0" layoutY="303.0" style="-fx-background-color: #1e1f22;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
             <ImageView fx:id="mainImageView" fitHeight="664.0" fitWidth="900.0" preserveRatio="true" />
             <AnchorPane fx:id="secondaryPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;">
-                  <ScrollPane fx:id="scrollPane"  hbarPolicy="AS_NEEDED" layoutX="164.0" layoutY="555.0" prefHeight="96.0" prefWidth="571.0" style="-fx-background-color: #3c3f41;" vbarPolicy="NEVER" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0">
+                  <ScrollPane fx:id="scrollPane" hbarPolicy="AS_NEEDED" layoutX="164.0" layoutY="555.0" prefHeight="96.0" prefWidth="571.0" style="-fx-background-color: #3c3f41;" vbarPolicy="NEVER" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0">
                         <HBox fx:id="thumbnailContainer" alignment="CENTER" prefHeight="93.0" prefWidth="353.0" spacing="5" style="-fx-padding: 0; -fx-background-color: #3c3f41;">
                               <ImageView fitHeight="90" preserveRatio="true" />
                               <ImageView fitHeight="90" preserveRatio="true" />
@@ -102,23 +102,23 @@
                   </ScrollPane>
             </AnchorPane>
       </StackPane>
-      <Region fx:id="leftResize" prefWidth="5.0"  AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="35" />
-      <Region fx:id="topResize" prefHeight="5.0"  AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5" AnchorPane.topAnchor="0" />
-      <Region fx:id="rightResize" prefWidth="5.0"  AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="35" />
+      <Region fx:id="leftResize" prefWidth="5.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="35" />
+      <Region fx:id="topResize" prefHeight="5.0" AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5" AnchorPane.topAnchor="0" />
+      <Region fx:id="rightResize" prefWidth="5.0" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="35" />
       <Region fx:id="bottomResize" prefHeight="5.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5" />
       <!-- 四角调整 -->
       <Region fx:id="leftTopResize" prefHeight="5" prefWidth="5" AnchorPane.leftAnchor="0" AnchorPane.topAnchor="0" />
-      <Region fx:id="rightTopResize" prefHeight="5" prefWidth="5"  AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
-      <Region fx:id="leftBottomResize" prefHeight="5" prefWidth="5"  AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" />
-      <Region fx:id="rightBottomResize" prefHeight="5" prefWidth="5"  AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" />
+      <Region fx:id="rightTopResize" prefHeight="5" prefWidth="5" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
+      <Region fx:id="leftBottomResize" prefHeight="5" prefWidth="5" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" />
+      <Region fx:id="rightBottomResize" prefHeight="5" prefWidth="5" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" />
       <HBox alignment="CENTER" maxHeight="35.0" maxWidth="260.0" minHeight="35.0" minWidth="260.0" onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" prefHeight="35.0" prefWidth="260.0" scaleShape="false" spacing="8.0" style="-fx-background-color: #3c3f41;" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Button id="zoomIn" fx:id="zoomIn" maxHeight="28.0" maxWidth="28.0" minHeight="28.0" minWidth="28.0" prefHeight="23.0" prefWidth="28.0" styleClass="funtionalButton" />
             <Button id="zoomOut" fx:id="zoomOut" maxHeight="28.0" maxWidth="28.0" minHeight="28.0" minWidth="28.0" prefHeight="28.0" prefWidth="28.0" styleClass="funtionalButton" />
             <Label fx:id="zoomScale" minWidth="20.0" prefHeight="26.0" prefWidth="31.0" style="-fx-min-width: 40; -fx-text-fill: #ffffff;" text="100%" textFill="WHITE" />
             <Button id="originalScale" fx:id="originalScale" maxHeight="28.0" maxWidth="28.0" minHeight="28.0" minWidth="28.0" prefHeight="28.0" prefWidth="28.0" styleClass="funtionalButton" />
             <Separator orientation="VERTICAL" />
-            <Button id="minBtn" fx:id="minBtn" graphicTextGap="0.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 999; -fx-min-width: 20; -fx-min-height: 20; -fx-background-color: #a0a0a0;"  />
-            <Button id="maxBtn" fx:id="maxBtn" graphicTextGap="0.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 999; -fx-min-width: 20; -fx-min-height: 20; -fx-background-color: #a0a0a0;"  />
-            <Button id="closeBtn" fx:id="closeBtn" graphicTextGap="0.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 999; -fx-min-width: 20; -fx-min-height: 20; -fx-background-color: #ff4444;"  />
+            <Button id="minBtn" fx:id="minBtn" graphicTextGap="0.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 999; -fx-min-width: 20; -fx-min-height: 20; -fx-background-color: #a0a0a0;" />
+            <Button id="maxBtn" fx:id="maxBtn" graphicTextGap="0.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 999; -fx-min-width: 20; -fx-min-height: 20; -fx-background-color: #a0a0a0;" />
+            <Button id="closeBtn" fx:id="closeBtn" graphicTextGap="0.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 999; -fx-min-width: 20; -fx-min-height: 20; -fx-background-color: #ff4444;" />
       </HBox>
 </AnchorPane>

@@ -4,6 +4,11 @@ import com.eimp.util.FileUtil;
 import com.eimp.util.ImageUtil;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -11,13 +16,18 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
+
 import java.io.File;
 import java.net.URL;
 import java.util.*;
@@ -100,11 +110,11 @@ public class WindowSlideController implements Initializable {
     /**
      * 当前文件夹的图片列表
      */
-    private List<ImageUtil> imageUtilList = new ArrayList<>();
+    private ObservableList<ImageUtil> imageUtilList = FXCollections.observableArrayList();
     /**
      * 当前图片索引
      */
-    private int currentIndex = 0;
+    private IntegerProperty currentIndex = new SimpleIntegerProperty(0);
     /**
      * 主窗口控制器
      */
@@ -168,6 +178,7 @@ public class WindowSlideController implements Initializable {
         this.initButtonStyle();
         this.setUpWindowControls();
         this.secondaryPane.setVisible(false);// 暂时隐藏缩略图栏,待实现
+
     }
 
     /**
@@ -188,8 +199,46 @@ public class WindowSlideController implements Initializable {
 
         this.image = new Image(imageUtil.getURL());
         this.updateMainImageView();
+        this.initButtonStatus();
     }
 
+    /**
+     * 初始化并监听左右切换图片按钮禁用状态
+     */
+    private void initButtonStatus(){
+        this.prePage.setDisable(this.currentIndex.get() <= 0);
+        this.nextPage.setDisable(this.currentIndex.get() >= imageUtilList.size() - 1);
+
+        // 待同步功能实现再进一步完善
+        this.currentIndex.addListener((obs,oldvalue,newvalue)->{
+            if(newvalue.intValue()<=0){
+                this.setMenuItemDisable(this.prePage,true);
+                this.setMenuItemDisable(this.nextPage,false);
+            } else if (newvalue.intValue()>=imageUtilList.size()-1) {
+                this.setMenuItemDisable(this.nextPage,true);
+                this.setMenuItemDisable(this.prePage,false);
+            }else{
+                this.setMenuItemDisable(this.prePage,false);
+                this.setMenuItemDisable(this.nextPage,false);
+            }
+        });
+
+    }
+
+    /**
+     * 设置按钮对应的菜单项的禁用状态
+     * @param button 按钮
+     * @param disable 是否禁用
+     */
+    private void setMenuItemDisable(Button button,boolean disable){
+        button.setDisable(disable);
+        for(MenuItem item: this.moreMenu.getItems()){
+            if(item.getId().equals(button.getId())){
+                item.setDisable(disable);
+                break;
+            }
+        }
+    }
     /**
      * 更新当前窗口显示的图片及相关信息
      */
@@ -208,7 +257,7 @@ public class WindowSlideController implements Initializable {
         this.imageName.setText(str);
         this.updateControlTooltip(this.imageName,str,null);
 
-        str = String.format("%d/%d",this.currentIndex+1,this.imageUtilList.size());
+        str = String.format("%d/%d",this.currentIndex.get()+1,this.imageUtilList.size());
         this.orderNum.setText(str);
         this.updateControlTooltip(this.orderNum,str,"图片索引:");
 
@@ -254,7 +303,6 @@ public class WindowSlideController implements Initializable {
         mainImageView.fitHeightProperty().bind(
                 ((StackPane)mainImageView.getParent()).heightProperty()
         );
-
     }
 
 
@@ -264,12 +312,13 @@ public class WindowSlideController implements Initializable {
      */
     @FXML
     private void preImage(Event event) {
-        this.currentIndex--;
-        if(this.currentIndex<0){
-            this.currentIndex=0;
+        this.currentIndex.set(this.currentIndex.get()-1);
+        if(this.currentIndex.get()<=0){
+            this.currentIndex.set(0);
             this.stopTimerLine(event);
+            this.showPageTip();
         }
-        this.imageUtil = this.imageUtilList.get(this.currentIndex);
+        this.imageUtil = this.imageUtilList.get(this.currentIndex.get());
         this.image = new Image(imageUtil.getURL());
         this.updateMainImageView();
     }
@@ -283,6 +332,7 @@ public class WindowSlideController implements Initializable {
         if (this.timeline != null)
             this.timeline.stop();
         this.timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
+//            System.out.println("+==");
             preImage(event);
         }));
         this.timeline.setCycleCount(Timeline.INDEFINITE); // 无限循环
@@ -294,12 +344,13 @@ public class WindowSlideController implements Initializable {
      */
     @FXML
     private void nextImage(Event event) {
-        this.currentIndex++;
-        if(this.currentIndex>=this.imageUtilList.size()){
-            this.currentIndex=this.imageUtilList.size()-1;
+        this.currentIndex.set(this.currentIndex.get()+1);
+        if(this.currentIndex.get()>=this.imageUtilList.size()-1){
+            this.currentIndex.set(imageUtilList.size()-1);
             this.stopTimerLine(event);
+            this.showPageTip();
         }
-        this.imageUtil = this.imageUtilList.get(this.currentIndex);
+        this.imageUtil = this.imageUtilList.get(this.currentIndex.get());
         this.image = new Image(imageUtil.getURL());
         this.updateMainImageView();
     }
@@ -329,9 +380,68 @@ public class WindowSlideController implements Initializable {
         }
     }
 
+    /**
+     * 显示页面范围提示
+     */
+    private void showPageTip(){
+        if(this.currentIndex.get()==0){
+            Notifications.create()
+                    .text("第一张")
+                    .hideAfter(Duration.seconds(0.5))
+                    .position(Pos.CENTER)
+                    .owner(this.secondaryPane)
+                    .darkStyle()
+                    .show();
+        } else if (this.currentIndex.get() == this.imageUtilList.size()-1) {
+            Notifications.create()
+                    .text("最后一张")
+                    .hideAfter(Duration.seconds(0.5))
+                    .position(Pos.CENTER)
+                    .owner(this.secondaryPane)
+                    .darkStyle()
+                    .show();
+        }
+    }
 
+    /**
+     * 设置全局scene键盘事件
+     */
+    public void setUpKeyEvent(Scene scene){
+        Platform.runLater(() -> {
+            scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+                this.initShortcutKey(event);
+            });
+            scene.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+                this.stopTimerLine(event);
+            });
+        });
 
+    }
 
+    /**
+     * 初始化快捷键方法
+     * @param event
+     */
+    private void initShortcutKey(KeyEvent event){
+        KeyCode code = event.getCode();
+
+        switch(code){
+            case LEFT -> {
+                if(this.currentIndex.get()<=0){
+                    event.consume();
+                }else{
+                    preImage(event);
+                }
+            }
+            case RIGHT -> {
+                if(this.currentIndex.get()>=imageUtilList.size()-1){
+                    event.consume();
+                }else{
+                    nextImage(event);
+                }
+            }
+        }
+    }
 
 //    private static final int MAX_VISIBLE_THUMBNAILS = 10;
 //    private static final double THUMBNAIL_WIDTH = 120;
@@ -453,6 +563,8 @@ public class WindowSlideController implements Initializable {
         minBtn.setTooltip(tooltips[11]);
         maxBtn.setTooltip(tooltips[12]);
         closeBtn.setTooltip(tooltips[13]);
+
+
     }
 
     /**
@@ -624,6 +736,9 @@ public class WindowSlideController implements Initializable {
             CustomMenuItem item = this.createMenuItem(textMap.get(id),urlMap.get(id));
             item.setId(id);
             item.setOnAction(btn.getOnAction());
+            if(buttonMap.get(id)!=null&&buttonMap.get(id).isDisabled()){
+                item.setDisable(true);
+            }
             items.add(item);
         }
 
@@ -632,6 +747,9 @@ public class WindowSlideController implements Initializable {
             CustomMenuItem item = this.createMenuItem(textMap.get(id),urlMap.get(id));
             item.setId(id);
             item.setOnAction(btn.getOnAction());
+            if(buttonMap.get(id)!=null&&buttonMap.get(id).isDisabled()){
+                item.setDisable(true);
+            }
             items.add(item);
         }
 

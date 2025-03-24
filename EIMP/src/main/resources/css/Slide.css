@@ -89,7 +89,6 @@
     /*-fx-background-size: 20px 20px;         !* 图片尺寸 *!*/
     -fx-background-color: transparent;  /* 背景透明 */
     -fx-border-color: transparent;      /* 边框透明 */
-    /*-fx-background-size: cover;         !* 图片覆盖整个按钮 *!*/
     -fx-background-position: center;    /* 图片居中 */
     -fx-background-repeat: no-repeat;   /* 不重复 */
     -fx-min-width: 30px;
@@ -104,6 +103,9 @@
 .funtionalButton:pressed{
     -fx-background-color:#505354 ;
     -fx-opacity: 50;
+}
+.funtionalButton:disabled{
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 0);
 }
 .maxBtn-full{
     -fx-background-image: url("../icon/FullScreen.png");  /* 图片路径（相对于CSS文件） */
