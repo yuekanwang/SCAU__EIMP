@@ -116,7 +116,6 @@
     -fx-background-position: center;    /* 图片居中 */
 }
 #maxBtn{
-    -fx-background-image: url("../icon2/FullScreen.png");  /* 图片路径（相对于CSS文件） */
     -fx-background-color:transparent;   /*按钮背景透明*/
     -fx-background-size: 20;            /*图片大小调整*/
     -fx-background-repeat: no-repeat;   /* 禁止重复 */
@@ -125,4 +124,10 @@
 
 #closeBtn:hover,#minBtn:hover,#maxBtn:hover {/*给这些按钮的悬停统一改深色*/
     -fx-background-color:#1AA3B2;
+}
+.maxBtn-full{
+    -fx-background-image: url("../icon2/FullScreen.png");
+}
+.maxBtn-recover {
+    -fx-background-image: url("../icon2/Recover.png");
 }

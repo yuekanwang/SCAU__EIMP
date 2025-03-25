@@ -54,7 +54,7 @@
                         </Button>
                      </children>
                   </HBox>
-                  <HBox prefHeight="44.0" prefWidth="941.0" AnchorPane.bottomAnchor="71.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <HBox onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" prefHeight="44.0" prefWidth="941.0" AnchorPane.bottomAnchor="71.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <ImageView fx:id="AppImage" fitHeight="40.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER">
                            <HBox.margin>
@@ -75,7 +75,7 @@
                               <Font name="System Bold" size="17.0" />
                            </font>
                         </Label>
-                        <Pane maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="614.0" HBox.hgrow="ALWAYS" />
+                        <Pane maxWidth="1.7976931348623157E308" onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" prefHeight="40.0" prefWidth="614.0" HBox.hgrow="ALWAYS" />
                         <Button fx:id="minBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="45.0" HBox.hgrow="NEVER" />
                         <Button fx:id="maxBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.2" prefWidth="45.0" HBox.hgrow="NEVER" />
                         <Button fx:id="closeBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.2" prefWidth="45.0" HBox.hgrow="NEVER" />
