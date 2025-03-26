@@ -8,9 +8,10 @@ import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
@@ -23,14 +24,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
-
 import java.io.File;
 import java.net.URL;
 import java.util.*;
+
 
 public class WindowSlideController implements Initializable {
     /**
@@ -53,13 +56,17 @@ public class WindowSlideController implements Initializable {
     @FXML private Button info;
     @FXML private Button share;
     /**
-     * 图片缩小按钮
+     * 图片放大按钮
      */
     @FXML private Button zoomIn;
     /**
-     * 图片放大按钮
+     * 图片缩小按钮
      */
     @FXML private Button zoomOut;
+    /**
+     * 图片放缩比例
+     */
+    @FXML private Label zoomScale;
     /**
      * 恢复图片原始比例按钮
      */
@@ -124,17 +131,22 @@ public class WindowSlideController implements Initializable {
      */
     private Timeline timeline;
     /**
-     * 图片放大比例
+     * 图片放缩比例
      */
-    private int scale = 100;
+    private IntegerProperty scaleInteger = new SimpleIntegerProperty(-1);
     /**
      * 最大比例
      */
-    private final static int MAX_SCALE = 1000;
+    private final int MAX_SCALE = 5000;
     /**
      * 最小比例
      */
-    private final static int MIN_SCALE = 100;
+    private  int MIN_SCALE;
+    /**
+     * 图片面板
+     */
+    @FXML
+    private StackPane imagePane;
     /**
      * 缩略图栏面板
      */
@@ -172,13 +184,11 @@ public class WindowSlideController implements Initializable {
         this.windowMainController = (WindowMainController) ControllerMap.getController(WindowMainController.class);
         this.stage = SlideWindow.getStage();
         this.initMap();
-        this.initImageView();
         this.initMoreMenuButton();
         this.setUpDynamicButtonContainerListener();
         this.initButtonStyle();
         this.setUpWindowControls();
         this.secondaryPane.setVisible(false);// 暂时隐藏缩略图栏,待实现
-
     }
 
     /**
@@ -196,10 +206,11 @@ public class WindowSlideController implements Initializable {
                 this.imageUtilList.add(imageFile);
             }
         }
+        this.setUpZoomScaleListener();
+        this.initButtonStatus();
 
         this.image = new Image(imageUtil.getURL());
         this.updateMainImageView();
-        this.initButtonStatus();
     }
 
     /**
@@ -225,6 +236,20 @@ public class WindowSlideController implements Initializable {
 
     }
 
+    private void setUpZoomScaleListener(){
+        this.scaleInteger.addListener((obs,oldvalue,newvalue)->{
+            if(newvalue.intValue()<=MIN_SCALE){
+                this.zoomOut.setDisable(true);
+            } else if (newvalue.intValue()>=MAX_SCALE) {
+                this.zoomIn.setDisable(true);
+            }else{
+                this.zoomIn.setDisable(false);
+                this.zoomOut.setDisable(false);
+            }
+            this.zoomScale.setText(newvalue.toString()+"%");
+        });
+    }
+
     /**
      * 设置按钮对应的菜单项的禁用状态
      * @param button 按钮
@@ -244,10 +269,110 @@ public class WindowSlideController implements Initializable {
      */
     private void updateMainImageView() {
         this.updateWindowInfo();
+        this.updateImageScale();
         this.mainImageView.setImage(this.image);
     }
 
+    /**
+     * 图片自适应窗口大小更新放缩比例
+     */
+    private void updateImageScale(){
+        //清空上次设置后遗留下的数据
+        this.mainImageView.setScaleX(1.0);
+        this.mainImageView.setScaleY(1.0);
+        this.mainImageView.getTransforms().clear();
 
+
+        double width = this.image.getWidth();
+        double height = this.image.getHeight();
+        double paneWidth = imagePane.getWidth();
+        double paneHeight = imagePane.getHeight();
+
+        // 图片比面板大图片自适应窗口
+        if(width>paneWidth || height>paneHeight){
+            this.mainImageView.fitWidthProperty().bind(imagePane.widthProperty());
+            this.mainImageView.fitHeightProperty().bind(imagePane.heightProperty());
+            this.MIN_SCALE = this.getAdaptedPercent(width,height,mainImageView.getFitWidth(),mainImageView.getFitHeight());
+
+        }else{  // 图片比面板小原始比例
+            this.mainImageView.fitWidthProperty().bind(this.image.widthProperty());
+            this.mainImageView.fitHeightProperty().bind(this.image.heightProperty());
+            this.MIN_SCALE = 100;
+        }
+        this.scaleInteger.set(this.MIN_SCALE);
+
+
+        this.totalScale = 1.0;
+    }
+
+    @FXML
+    private void adaptScene(){
+//        this.mainImageView.fitWidthProperty().bind(imagePane.widthProperty());
+//        this.mainImageView.fitHeightProperty().bind(imagePane.heightProperty());
+//        int adaptedPercent = this.getAdaptedPercent(this.image.getWidth(), this.image.getHeight(), mainImageView.getFitWidth(), mainImageView.getFitHeight());
+//        if(adaptedPercent>this.scaleInteger.get()){
+//            while()
+//        }else if(adaptedPercent<this.scaleInteger.get()){
+//
+//        }
+//        this.scaleInteger.set(adaptedPercent);
+    }
+
+
+    /**
+     * 计算图片自适应窗口后的缩小比例
+     * @param actualWidth 照片实际宽
+     * @param actualHeight 照片实际高
+     * @param fitWidth imageview适应宽
+     * @param fitHeight imageview适应高
+     * @return 适应后的缩小比例
+     */
+    private int getAdaptedPercent(double actualWidth, double actualHeight, double fitWidth, double fitHeight) {
+        double displayWidth = 0;
+        double displayHeight = 0;
+
+        //按比例适应
+        if (this.mainImageView.isPreserveRatio()) {
+            double actualRatio = actualWidth / actualHeight;
+            double fitRatio = fitWidth / fitHeight;
+            if (actualRatio > fitRatio) {   //宽填满,高缩放
+                displayWidth = fitWidth;
+                displayHeight = fitWidth / actualRatio;
+            } else {
+                displayHeight = fitHeight;  //高填满,宽缩放
+                displayWidth = fitHeight * actualRatio;
+            }
+        } else {  // 不按比例适应
+            displayWidth = fitWidth;
+            displayHeight = fitHeight;
+        }
+        int ScaleX = (int) (100 * displayWidth / actualWidth);
+        int ScaleY = (int) (100 * displayHeight / actualHeight);
+        return Math.min(ScaleX, ScaleY);
+    }
+
+//    private boolean isFilledImage(double actualWidth, double actualHeight, double fitWidth, double fitHeight){
+//        double displayWidth = 0;
+//        double displayHeight = 0;
+//
+//        //按比例适应
+//        if (this.mainImageView.isPreserveRatio()) {
+//            double actualRatio = actualWidth / actualHeight;
+//            double fitRatio = fitWidth / fitHeight;
+//            if (actualRatio > fitRatio) {   //宽填满,高缩放
+//                displayWidth = fitWidth;
+//                displayHeight = fitWidth / actualRatio;
+//            } else {
+//                displayHeight = fitHeight;  //高填满,宽缩放
+//                displayWidth = fitHeight * actualRatio;
+//            }
+//        } else {  // 不按比例适应
+//            displayWidth = fitWidth;
+//            displayHeight = fitHeight;
+//        }
+//
+//        return
+//    }
     /**
      * 更新窗口标题及图片相关信息
      */
@@ -268,6 +393,10 @@ public class WindowSlideController implements Initializable {
         str = String.format("%d×%d",(int)this.image.getWidth(),(int)this.image.getHeight());
         this.imageArea.setText(str);
         this.updateControlTooltip(this.imageArea,str,"图片尺寸:");
+
+        // 图片比例
+        this.zoomScale.setText(this.scaleInteger.getValue().toString()+"%");
+        this.zoomOut.setDisable(this.scaleInteger.get() <= MIN_SCALE);
     }
 
     /**
@@ -289,22 +418,22 @@ public class WindowSlideController implements Initializable {
             }else{
                 control.setTooltip(new Tooltip(tooltipText));
             }
-            control.getTooltip().setShowDelay(javafx.util.Duration.millis(500));
+            control.getTooltip().setShowDelay(Duration.millis(500));
         }
     }
-    /**
-     * 图片显示自适应窗口大小
-     */
-    private void initImageView(){
-        // 绑定ImageView尺寸到StackPane可用空间
-        mainImageView.fitWidthProperty().bind(
-                ((StackPane)mainImageView.getParent()).widthProperty()
-        );
-        mainImageView.fitHeightProperty().bind(
-                ((StackPane)mainImageView.getParent()).heightProperty()
-        );
-    }
 
+    /**
+     * 触发持续事件
+     * @param handler 单点击触发事件处理逻辑
+     * @param ms 间隔毫秒数
+     */
+    private void fireConstantly(EventHandler<ActionEvent> handler,double ms){
+        if (this.timeline != null)
+            this.timeline.stop();
+        this.timeline = new Timeline(new KeyFrame(Duration.millis(ms),handler));
+        this.timeline.setCycleCount(Timeline.INDEFINITE); // 无限循环
+        this.timeline.play();
+    }
 
     /**
      * 切换上一张图片
@@ -315,7 +444,7 @@ public class WindowSlideController implements Initializable {
         this.currentIndex.set(this.currentIndex.get()-1);
         if(this.currentIndex.get()<=0){
             this.currentIndex.set(0);
-            this.stopTimerLine(event);
+            this.stopTimerLine();
             this.showPageTip();
         }
         this.imageUtil = this.imageUtilList.get(this.currentIndex.get());
@@ -329,14 +458,7 @@ public class WindowSlideController implements Initializable {
      */
     @FXML
     private void preImageConstantly(Event event) {
-        if (this.timeline != null)
-            this.timeline.stop();
-        this.timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
-//            System.out.println("+==");
-            preImage(event);
-        }));
-        this.timeline.setCycleCount(Timeline.INDEFINITE); // 无限循环
-        this.timeline.play();
+        this.fireConstantly(e->this.preImage(event),300);
     }
     /**
      * 切换下一张图片
@@ -347,7 +469,7 @@ public class WindowSlideController implements Initializable {
         this.currentIndex.set(this.currentIndex.get()+1);
         if(this.currentIndex.get()>=this.imageUtilList.size()-1){
             this.currentIndex.set(imageUtilList.size()-1);
-            this.stopTimerLine(event);
+            this.stopTimerLine();
             this.showPageTip();
         }
         this.imageUtil = this.imageUtilList.get(this.currentIndex.get());
@@ -361,20 +483,13 @@ public class WindowSlideController implements Initializable {
      */
     @FXML
     private void nextImageConstantly(Event event) {
-        if (this.timeline != null)
-            this.timeline.stop();
-        this.timeline = new Timeline(new KeyFrame(Duration.millis(300), e -> {
-            nextImage(event);
-        }));
-        this.timeline.setCycleCount(Timeline.INDEFINITE); // 无限循环
-        this.timeline.play();
+        this.fireConstantly(e->this.nextImage(event),300);
     }
     /**
      * 停止持续事件的时间线
-     * @param event
      */
     @FXML
-    private void stopTimerLine(Event event) {
+    private void stopTimerLine() {
         if(this.timeline != null){
             this.timeline.stop();
         }
@@ -412,7 +527,7 @@ public class WindowSlideController implements Initializable {
                 this.initShortcutKey(event);
             });
             scene.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
-                this.stopTimerLine(event);
+                this.stopTimerLine();
             });
         });
 
@@ -426,23 +541,147 @@ public class WindowSlideController implements Initializable {
         KeyCode code = event.getCode();
 
         switch(code){
-            case LEFT -> {
+            case LEFT -> {              //左方向键
                 if(this.currentIndex.get()<=0){
                     event.consume();
                 }else{
                     preImage(event);
                 }
             }
-            case RIGHT -> {
+            case RIGHT -> {             //右方向键
                 if(this.currentIndex.get()>=imageUtilList.size()-1){
                     event.consume();
                 }else{
                     nextImage(event);
                 }
             }
+            case OPEN_BRACKET -> {      //左中括号
+                if(this.scaleInteger.get()>=MAX_SCALE){
+                    event.consume();
+                }else {
+                    zoomIn();
+                }
+            }
+            case CLOSE_BRACKET -> {     //右中括号
+                if(this.scaleInteger.get()<=MIN_SCALE){
+                    event.consume();
+                }else{
+                    zoomOut();
+                }
+            }
         }
     }
 
+    /**
+     * 总放缩比例
+     */
+    private double totalScale = 1.0;
+    /**
+     * 放大因子
+     */
+    private final double zoomInFactor = 1.1;
+    /**
+     * 缩小因子
+     */
+    private final double zoomOutFactor = 1/1.1;
+
+    /**
+     * 放缩原子操作
+     * @param zoomFactor 放缩因子
+     * @param pivotX 放缩轴点x
+     * @param pivotY 放缩轴点y
+     */
+    private void zoom(double zoomFactor, double pivotX, double pivotY) {
+        double newSacle = this.totalScale * zoomFactor;
+        this.totalScale = newSacle;
+
+        if (pivotX >= 0) {
+            Scale scale = new Scale(zoomFactor,zoomFactor,pivotX, pivotY);
+            this.mainImageView.getTransforms().add(scale);
+        } else {
+            this.mainImageView.setScaleX(newSacle);
+            this.mainImageView.setScaleY(newSacle);
+        }
+        // 值溢出修正
+        int newScaleInterger = Math.min((int) (this.MIN_SCALE * newSacle), this.MAX_SCALE);
+        newScaleInterger = Math.max(newScaleInterger, this.MIN_SCALE);
+        if(newScaleInterger == this.MIN_SCALE|| newScaleInterger == this.MAX_SCALE){
+            this.stopTimerLine();
+        }
+        this.scaleInteger.set(newScaleInterger);
+    }
+
+    /**
+     * 中心放大
+     */
+    @FXML
+    private void zoomIn() {
+        this.zoom(this.zoomInFactor,-1,-1);
+    }
+
+    /**
+     * 持续中心放大
+     * @param event
+     */
+    @FXML
+    private void zoomInConstantly(Event event){
+        this.fireConstantly(e->this.zoomIn(),80);
+    }
+
+    /**
+     * 在轴点放大
+     * @param pivotX 轴点x
+     * @param pivotY 轴点y
+     */
+    private void zoomIn(double pivotX, double pivotY){
+        this.zoom(this.zoomInFactor,pivotX,pivotY);
+    }
+
+    /**
+     * 中心缩小
+     */
+    @FXML
+    private void zoomOut() {
+        this.zoom(this.zoomOutFactor,-1,-1);
+    }
+
+    /**
+     * 持续中心缩小
+     * @param event
+     */
+    @FXML
+    private void zoomOutConstantly(Event event){
+        this.fireConstantly(e->this.zoomOut(),80);
+    }
+
+    /**
+     * 在轴点缩小
+     * @param pivotX 轴点x
+     * @param pivotY 轴点y
+     */
+    private void zoomOut(double pivotX, double pivotY) {
+        this.zoom(this.zoomOutFactor,pivotX,pivotY);
+    }
+
+    /**
+     * 滚轮放缩图片
+     * @param scrollEvent
+     */
+    @FXML
+    private void zoomByScroll(ScrollEvent scrollEvent){
+        double deltaY = scrollEvent.getDeltaY();
+        if(deltaY>0){
+            if(this.scaleInteger.get()>=MAX_SCALE){
+                return;
+            }
+            zoomIn(scrollEvent.getX(),scrollEvent.getY());
+        }else{
+            if(this.scaleInteger.get()<=MIN_SCALE){
+                return;
+            }
+            zoomOut(scrollEvent.getX(),scrollEvent.getY());
+        }
+    }
 //    private static final int MAX_VISIBLE_THUMBNAILS = 10;
 //    private static final double THUMBNAIL_WIDTH = 120;
 //
@@ -487,8 +726,8 @@ public class WindowSlideController implements Initializable {
         textMap.put("play", "播放");
         textMap.put("info", "信息");
         textMap.put("share",  "转发");
-        textMap.put("zoomIn", "缩小");
-        textMap.put("zoomOut", "放大");
+        textMap.put("zoomIn", "放大");
+        textMap.put("zoomOut", "缩小");
         textMap.put("originalScale","原始比例");
         textMap.put("minBtn","最小化");
         textMap.put("maxBtn","最大化");
@@ -518,8 +757,8 @@ public class WindowSlideController implements Initializable {
                 new Tooltip("播放"),
                 new Tooltip("信息"),
                 new Tooltip("转发"),
-                new Tooltip("缩小"),
                 new Tooltip("放大"),
+                new Tooltip("缩小"),
                 new Tooltip("原始比例"),
                 new Tooltip("最小化"),
                 new Tooltip("最大化"),
@@ -528,7 +767,7 @@ public class WindowSlideController implements Initializable {
 
         // 文本提示弹窗延时
         for(Tooltip tooltip : tooltips){
-            tooltip.setShowDelay(javafx.util.Duration.millis(500));
+            tooltip.setShowDelay(Duration.millis(500));
         }
 
         ObservableList<Node> children = dynamicButtonContainer.getChildren();
@@ -818,7 +1057,7 @@ public class WindowSlideController implements Initializable {
      * 根面板,锚定其他组件
      */
     @FXML
-    private AnchorPane rootPane;
+    public AnchorPane rootPane;
 
     /**
      * 设置所有可调节窗口大小指示区域的监听器

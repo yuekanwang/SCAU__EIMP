@@ -2,18 +2,28 @@ package com.eimp;
 
 import com.eimp.controller.WindowSlideController;
 import com.eimp.util.ImageUtil;
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
+
 import java.io.IOException;
 
 public class SlideWindow extends Application {
@@ -37,6 +47,9 @@ public class SlideWindow extends Application {
             this.num = num;
         }
     }
+
+    private double width;
+    private double height;
     @Override
     public void start(Stage stage) throws IOException {
         SlideWindow.stage = stage;
@@ -44,8 +57,8 @@ public class SlideWindow extends Application {
         stage.setMinWidth(590);
         stage.setMinHeight(580);
         // 默认窗口大小
-        double width = 900;
-        double height = 700;
+//        double width = 900;
+//        double height = 700;
         // 根据屏幕大小自适应设置长宽
         try {
             Rectangle2D bounds = Screen.getScreens().getFirst().getBounds();
@@ -65,13 +78,21 @@ public class SlideWindow extends Application {
         stage.getIcons().add(Appicon);
         stage.initStyle(StageStyle.UNDECORATED);
         controller.setUpKeyEvent(scene);
-        //导入所选图片的信息工具
-        controller.importImage(SlideWindow.imageUtil);
+
         switch(launchMethodEnum){
             case PLAY: break;
-            case CLICK: stage.show(); break;
+            case CLICK:
+                // 添加淡入效果
+                controller.rootPane.setOpacity(0.5);
+                stage.show();
+                //导入所选图片的信息工具
+                controller.importImage(SlideWindow.imageUtil);
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(800), controller.rootPane);
+                fadeIn.setFromValue(0.5);
+                fadeIn.setToValue(1);
+                fadeIn.play();
+                break;
         }
-
 
     }
 

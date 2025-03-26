@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="修改动态功能栏bug">
+    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="添加动态功能样式和快捷键及按钮禁用逻辑">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/SlideWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/SlideWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/css/Slide.css" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/css/Slide.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowSlide.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowSlide.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/icon/zoom-in.png" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/zoom-in.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/icon/zoom-out.png" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/zoom-out.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,7 +150,10 @@
       <workItem from="1742285121257" duration="30344000" />
       <workItem from="1742383817151" duration="5567000" />
       <workItem from="1742470433842" duration="3808000" />
-      <workItem from="1742719823386" duration="29986000" />
+      <workItem from="1742719823386" duration="32393000" />
+      <workItem from="1742830336928" duration="24114000" />
+      <workItem from="1742947975892" duration="13390000" />
+      <workItem from="1742988762793" duration="8637000" />
     </task>
     <task id="LOCAL-00001" summary="修改幻灯片UI,大部分已修改,缩略图UI待确定">
       <option name="closed" value="true" />
@@ -199,7 +203,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742743419203</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="添加动态功能样式和快捷键及按钮禁用逻辑">
+      <option name="closed" value="true" />
+      <created>1742820801166</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1742820801166</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -221,6 +233,7 @@
     <MESSAGE value="修改幻灯片UI,大部分已修改,缩略图UI待确定" />
     <MESSAGE value="主窗口双击进入幻灯片接口完成,可以左右切换图片,其他功能待实现" />
     <MESSAGE value="修改动态功能栏bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改动态功能栏bug" />
+    <MESSAGE value="添加动态功能样式和快捷键及按钮禁用逻辑" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加动态功能样式和快捷键及按钮禁用逻辑" />
   </component>
 </project>
