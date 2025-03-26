@@ -3,7 +3,7 @@
 {
     -fx-background-image:url("../icon2/arrow-left-circle.png");/*图片引用*/
     -fx-background-color:transparent;   /*按钮背景透明*/
-    -fx-background-size: contain;       /*图片大小自动适应按钮大小*/
+    -fx-background-size: 50;       /*图片大小自动适应按钮大小*/
     -fx-background-repeat: no-repeat;   /* 禁止重复 */
     -fx-background-position: center;    /* 图片居中 */
 }
@@ -11,14 +11,12 @@
 .image-Left_Button:hover
 {
     -fx-background-color:#2CBED4;       /*按钮背景颜色改为深银色*/
+    -fx-background-size: 60;
     -fx-cursor: hand;                   /* 改变鼠标手势 */
 }
 .image-Left_Button:pressed
 {
-    -fx-min-height: 54px;
-    /*-fx-min-height或width能用按钮大小的最小值*/
-    -fx-min-width: 54px;
-    /*原本按钮的大小是略小于：54px 54px，在这里用了这个，会使得按钮点击的时候，巧妙得发生弹动*/
+    -fx-background-size: 50;       /*图片大小自动适应按钮大小*/
 }
 /* 路径回退键 */
 
@@ -27,7 +25,7 @@
 {
     -fx-background-image:url("../icon2/arrow-right-circle.png");
     -fx-background-color:transparent;
-    -fx-background-size: contain;
+    -fx-background-size: 50;       /*图片大小自动适应按钮大小*/
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
@@ -35,13 +33,13 @@
 .image-Right_Button:hover
 {
     -fx-background-color:#2CBED4;
+    -fx-background-size: 60;
     -fx-cursor: hand;
 }
 
 .image-Right_Button:pressed
 {
-    -fx-min-height: 54px;
-    -fx-min-width: 54px;
+    -fx-background-size: 50;       /*图片大小自动适应按钮大小*/
 }
 /*路径前进键*/
 
@@ -116,7 +114,6 @@
     -fx-background-position: center;    /* 图片居中 */
 }
 #maxBtn{
-    -fx-background-image: url("../icon2/FullScreen.png");  /* 图片路径（相对于CSS文件） */
     -fx-background-color:transparent;   /*按钮背景透明*/
     -fx-background-size: 20;            /*图片大小调整*/
     -fx-background-repeat: no-repeat;   /* 禁止重复 */
@@ -125,4 +122,58 @@
 
 #closeBtn:hover,#minBtn:hover,#maxBtn:hover {/*给这些按钮的悬停统一改深色*/
     -fx-background-color:#1AA3B2;
+}
+.maxBtn-full{/*最大化按钮*/
+    -fx-background-image: url("../icon2/FullScreen.png");
+}
+.maxBtn-recover {/*最大化的缩小按钮*/
+    -fx-background-image: url("../icon2/Recover.png");
+}
+
+#SortMenu,#SelectAll_Button,#Delete_Button,/*多个按钮同样的部分写在一起*/
+#Flushed_Button,#Slideshow_Button,#Help_Button
+{
+    -fx-background-color:transparent;   /*按钮背景透明*/
+    -fx-background-size: 30;       /*图片大小自动适应按钮大小*/
+    -fx-background-repeat: no-repeat;   /* 禁止重复 */
+    -fx-background-position: left;    /* 图片居中 */
+    -fx-border-radius: 10px;  /*边角的弧度*/
+    -fx-border-width: 3px;
+}
+
+/*每个按钮独特的地方，再写进去*/
+#SortMenu{
+    -fx-background-image: url("../icon2/排序.png");
+}
+#SelectAll_Button{
+    -fx-background-image: url("../icon2/全选.png");
+}
+#Delete_Button{
+    -fx-background-image: url("../icon2/删除.png");
+}
+#Flushed_Button{
+    -fx-background-image: url("../icon2/刷新.png");
+}
+#Slideshow_Button{
+    -fx-background-image: url("../icon2/幻灯片.png");
+}
+#Help_Button{
+    -fx-background-image: url("../icon2/帮助.png");
+}
+
+#SortMenu:hover ,#SelectAll_Button:hover,#Delete_Button:hover,
+#Flushed_Button:hover,#Slideshow_Button:hover,#Help_Button:hover
+{
+    -fx-border-color: #3BCCE2;
+    -fx-cursor: hand;
+}
+#SortMenu:pressed ,#SelectAll_Button:pressed,#Delete_Button:pressed,
+#Flushed_Button:pressed,#Slideshow_Button:pressed,#Help_Button:pressed
+{
+    -fx-background-color:#C641EC;
+}
+
+#About_Button{
+    -fx-cursor: hand;
+    -fx-background-color:#D173EA ;
 }

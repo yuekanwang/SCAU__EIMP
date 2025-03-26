@@ -1,5 +1,7 @@
 package com.eimp.controller;
 
+import com.eimp.App;
+import com.eimp.SlideWindow;
 import com.eimp.component.DirectoryLoader;
 import com.eimp.component.FileTreeItem;
 import com.eimp.component.PreviewFlowPane;
@@ -9,11 +11,15 @@ import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
 import javax.swing.filechooser.FileSystemView;
@@ -25,6 +31,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class WindowMainController implements Initializable {
+
+    private Stage stage;
 
     @FXML
     public AnchorPane top;
@@ -119,6 +127,8 @@ public class WindowMainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.stage = App.getStage();//这里的stage写上App里的stage
+        this.setUpWindowControls();//调用窗口控制函数
         initFileTreeView();
         initPreviewPane();
     }
@@ -290,4 +300,361 @@ public class WindowMainController implements Initializable {
         previewFlowPane.setIsShift(true);
         previewFlowPane.setFrom(previewFlowPane.getThumbnailPanels().indexOf(endPane));
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     *  窗口控制逻辑
+     *  作者：yuekanwang
+     */
+    private void setUpWindowControls() {
+        this.setUpResizeListeners();
+        maxBtn.getStyleClass().add("maxBtn-full");
+        // 窗口控制按钮事件
+        closeBtn.setOnAction(e -> stage.close());
+        minBtn.setOnAction(e -> stage.setIconified(true));
+        maxBtn.setOnAction(e -> toggleMaximize());
+    }
+
+
+    /**
+     * 窗口拖拽时的初始横坐标
+     */
+    private double startX;
+    /**
+     * 窗口拖拽时的初始纵坐标
+     */
+    private double startY;
+    /**
+     * 窗口拖拽前宽度
+     */
+    private double startWidth;
+    /**
+     * 窗口拖拽前高度
+     */
+    private double startHeight;
+
+    private double WidthX;
+    private double HightY;
+    /*
+    *  窗口左上角坐标
+    * */
+
+
+    /**
+     * 设置所有可调节窗口大小指示区域的监听器
+     */
+    private void setUpResizeListeners() {
+        // 左侧调整
+        setupResizeHandler(leftResize, WindowMainController.ResizeDirection.LEFT);
+        // 右侧调整
+        setupResizeHandler(rightResize, WindowMainController.ResizeDirection.RIGHT);
+        // 顶部调整
+        setupResizeHandler(topResize, WindowMainController.ResizeDirection.TOP);
+        // 底部调整
+        setupResizeHandler(bottomResize, WindowMainController.ResizeDirection.BOTTOM);
+        // 左上角调整
+        setupResizeHandler(leftTopResize, WindowMainController.ResizeDirection.LEFT_TOP);
+        // 右上角调整
+        setupResizeHandler(rightTopResize, WindowMainController.ResizeDirection.RIGHT_TOP);
+        // 左下角调整
+        setupResizeHandler(leftBottomResize, WindowMainController.ResizeDirection.LEFT_BOTTOM);
+        // 右下角调整
+        setupResizeHandler(rightBottomResize, WindowMainController.ResizeDirection.RIGHT_BOTTOM);
+    }
+
+    /**
+     * 调节方向枚举值
+     */
+    private enum ResizeDirection {
+        LEFT, RIGHT, TOP, BOTTOM,
+        LEFT_TOP, RIGHT_TOP, LEFT_BOTTOM, RIGHT_BOTTOM
+    }
+
+    /**
+     * 鼠标拖拽事件分发处理逻辑
+     * @param region 调节区域
+     * @param direction 调节方向
+     */
+    private void setupResizeHandler(Region region, WindowMainController.ResizeDirection direction) {
+        region.setOnMousePressed(event -> startResize(event));
+        region.setOnMouseDragged(event -> handleResize(event, direction));
+
+    }
+
+    /**
+     * 记录鼠标初始坐标,窗口初始大小
+     * @param event
+     */
+    private void startResize(MouseEvent event) {
+        startX = event.getScreenX();
+        startY = event.getScreenY();
+        startWidth = stage.getWidth();
+        startHeight = stage.getHeight();
+        WidthX=stage.getX();
+        HightY=stage.getY();
+        event.consume();
+    }
+
+    /**
+     * 主要处理事件分发逻辑
+     * @param event
+     * @param direction 调节方向
+     */
+    private void handleResize(MouseEvent event, WindowMainController.ResizeDirection direction) {
+        double deltaX = event.getScreenX() - startX;
+        double deltaY = event.getScreenY() - startY;
+
+        switch (direction) {
+            case LEFT:
+                handleLeftResize(deltaX);
+                break;
+            case RIGHT:
+                handleRightResize(deltaX);
+                break;
+            case TOP:
+                handleTopResize(deltaY);
+                break;
+            case BOTTOM:
+                handleBottomResize(deltaY);
+                break;
+            case LEFT_TOP:
+                handleLeftTopResize(deltaX,deltaY);
+                break;
+            case RIGHT_TOP:
+                handleRightTopResize(deltaX,deltaY);
+                break;
+            case LEFT_BOTTOM:
+                handleLeftBottomResize(deltaX,deltaY);
+                break;
+            case RIGHT_BOTTOM:
+                handleRightBottomResize(deltaX,deltaY);
+
+                break;
+        }
+        event.consume();
+    }
+
+    /**
+     * 原子调节操作,窗口在左边区域放缩
+     * @param deltaX x坐标偏移量
+     */
+    //读懂了这个函数，下面7个函数都能读懂
+    private void handleLeftResize(double deltaX) {
+        double newWidth = startWidth - deltaX; //获取当前的窗口width
+        if (newWidth > stage.getMinWidth()) {//不能超过窗口最大值
+            if(stage.isMaximized())//如果窗口已经最大化，此时改动窗口，则取消窗口最大化，并改变按钮
+            {
+                stage.setMaximized(false);
+                MaxBtn_Change();
+            }
+            stage.setWidth(newWidth);//设置长度为新的长度
+            stage.setHeight(startHeight);//设置高度为原来的高度
+            stage.setY(HightY);//设置左上角的Y坐标为原来的Y坐标
+            stage.setX(startX + deltaX);//设置左上角的X坐标为新的X坐标
+        }
+    }
+
+    /**
+     * 原子调节操作,窗口在右边区域放缩
+     * @param deltaX x坐标偏移量
+     */
+    private void handleRightResize(double deltaX) {
+        double newWidth = startWidth + deltaX;
+        if (newWidth > stage.getMinWidth()) {
+            if(stage.isMaximized())
+            {
+                stage.setMaximized(false);
+                MaxBtn_Change();
+            }
+            stage.setWidth(newWidth);
+            stage.setHeight(startHeight);
+            stage.setY(HightY);
+            stage.setX(WidthX);
+        }
+    }
+
+    /**
+     * 原子调节操作,窗口在顶部区域放缩
+     * @param deltaY y坐标偏移量
+     */
+    private void handleTopResize(double deltaY) {
+        double newHeight = startHeight - deltaY;
+        if (newHeight > stage.getMinHeight()) {
+            if(stage.isMaximized())
+            {
+                stage.setMaximized(false);
+                MaxBtn_Change();
+            }
+            stage.setHeight(newHeight);
+            stage.setWidth(startWidth);
+            stage.setY(startY + deltaY);
+            stage.setX(WidthX);
+        }
+    }
+
+    /**
+     * 原子调节操作,窗口在底部区域放缩
+     * @param deltaY y坐标偏移量
+     */
+    private void handleBottomResize(double deltaY) {
+        double newHeight = startHeight + deltaY;
+        if (newHeight > stage.getMinHeight()) {
+            if(stage.isMaximized())
+            {
+                stage.setMaximized(false);
+                MaxBtn_Change();
+            }
+            stage.setHeight(newHeight);
+            stage.setWidth(startWidth);
+            stage.setY(HightY);
+            stage.setX(WidthX);
+        }
+    }
+
+    /**
+     * 原子调节操作,窗口在左上边区域放缩
+     */
+    private void handleLeftTopResize(double deltaX,double deltaY)
+    {
+        double newWidth = startWidth - deltaX;
+        double newHeight = startHeight - deltaY;
+        if (newWidth > stage.getMinWidth()&&newHeight > stage.getMinHeight()) {
+            if(stage.isMaximized())
+            {
+                stage.setMaximized(false);
+                MaxBtn_Change();
+            }
+            stage.setWidth(newWidth);
+            stage.setHeight(newHeight);
+            stage.setY(startY + deltaY);
+            stage.setX(startX + deltaX);
+        }
+    }
+
+    /**
+     * 原子调节操作,窗口在右上边区域放缩
+     */
+    private void handleRightTopResize(double deltaX,double deltaY)
+    {
+        double newWidth = startWidth + deltaX;
+        double newHeight = startHeight - deltaY;
+        if (newWidth > stage.getMinWidth()&&newHeight > stage.getMinHeight()) {
+            if(stage.isMaximized())
+            {
+                stage.setMaximized(false);
+                MaxBtn_Change();
+            }
+            stage.setWidth(newWidth);
+            stage.setHeight(newHeight);
+            stage.setY(startY + deltaY);
+            stage.setX(WidthX);
+        }
+    }
+    /**
+     * 原子调节操作,窗口在右边区域放缩
+     */
+    private void handleLeftBottomResize(double deltaX,double deltaY)
+    {
+        double newWidth = startWidth - deltaX;
+        double newHeight = startHeight + deltaY;
+        if (newWidth > stage.getMinWidth()&&newHeight > stage.getMinHeight()) {
+            if(stage.isMaximized())
+            {
+                stage.setMaximized(false);
+                MaxBtn_Change();
+            }
+            stage.setWidth(newWidth);
+            stage.setHeight(newHeight);
+            stage.setY(HightY);
+            stage.setX(startX + deltaX);
+        }
+    }
+    /**
+     * 原子调节操作,窗口在右边区域放缩
+     */
+    private void handleRightBottomResize(double deltaX,double deltaY)
+    {
+        double newWidth = startWidth + deltaX; //获取当前的窗口width
+        double newHeight = startHeight + deltaY;
+        if (newWidth > stage.getMinWidth()&&newHeight > stage.getMinHeight()) {
+            if(stage.isMaximized())
+            {
+                stage.setMaximized(false);
+                MaxBtn_Change();
+            }
+            stage.setWidth(newWidth);
+            stage.setHeight(newHeight);
+            stage.setY(HightY);
+            stage.setX(WidthX);
+        }
+    }
+
+
+    private double xOffset = 0;
+    private double yOffset = 0;
+    /**
+     * 鼠标拖拽窗口事件处理,记录鼠标初始位置
+     */
+    private boolean isMaximized;
+    @FXML
+    private void handleMousePressed(MouseEvent event) {
+        // 仅当点击在空白区域时记录坐标
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+
+    }
+
+
+    /**
+     * 鼠标拖拽窗口事件处理,窗口跟随鼠标拖拽位置
+     * @param event
+     */
+    @FXML
+    private void handleMouseDragged(MouseEvent event) {
+        if (stage.isMaximized())
+        {
+            startResize(event);
+            stage.setMaximized(false);
+            stage.setWidth(startWidth);
+            stage.setHeight(startHeight);
+            MaxBtn_Change();
+        }
+        stage.setX(event.getScreenX() - xOffset);
+        stage.setY(event.getScreenY() - yOffset);
+    }
+    /**
+     * 窗口最大化切换
+     */
+    private void toggleMaximize() {
+        stage.setMaximized(!stage.isMaximized());
+        MaxBtn_Change();
+    }
+    /**
+     * 这是最大化按钮样式改变的函数
+     */
+    private void MaxBtn_Change(){
+        if(stage.isMaximized()) {
+            maxBtn.getStyleClass().remove("maxBtn-full");
+            maxBtn.getStyleClass().add("maxBtn-recover");
+        }else {
+            maxBtn.getStyleClass().remove("maxBtn-recover");
+            maxBtn.getStyleClass().add("maxBtn-full");
+        }
+    }
+
+
 }
+
+
