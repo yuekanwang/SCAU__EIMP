@@ -23,7 +23,7 @@ public class App extends Application {
         App.stage = stage;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/WindowMain.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1100, 700);
-        stage.setTitle("电子图片管理系统");
+        stage.setTitle("EIMP Photo");
         stage.setMinHeight(400);
         stage.setMinWidth(650);
         stage.setScene(scene);

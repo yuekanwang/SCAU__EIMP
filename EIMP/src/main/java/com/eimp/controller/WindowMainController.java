@@ -641,7 +641,9 @@ public class WindowMainController implements Initializable {
         stage.setMaximized(!stage.isMaximized());
         MaxBtn_Change();
     }
-
+    /**
+     * 这是最大化按钮样式改变的函数
+     */
     private void MaxBtn_Change(){
         if(stage.isMaximized()) {
             maxBtn.getStyleClass().remove("maxBtn-full");
