@@ -1,7 +1,6 @@
 package com.eimp.controller;
 
 import com.eimp.App;
-import com.eimp.SlideWindow;
 import com.eimp.component.DirectoryLoader;
 import com.eimp.component.FileTreeItem;
 import com.eimp.component.PreviewFlowPane;
@@ -9,26 +8,23 @@ import com.eimp.component.PreviewFlowPane;
 import com.eimp.component.ThumbnailPanel;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class WindowMainController implements Initializable {
 
@@ -39,7 +35,7 @@ public class WindowMainController implements Initializable {
     @FXML
     public AnchorPane mid;
     @FXML
-    public AnchorPane bottom;//这些AnchorPane是布局框
+    public AnchorPane buttom;//这些AnchorPane是布局框
     @FXML
     public TreeView<String> treeView;//树视图，用于做目录树
     @FXML
@@ -93,7 +89,6 @@ public class WindowMainController implements Initializable {
     public Region leftBottomResize;
     @FXML
     public Region rightBottomResize;
-
 
     private Rectangle rectangle;
 
@@ -192,6 +187,13 @@ public class WindowMainController implements Initializable {
         treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue instanceof FileTreeItem) {
                 previewFlowPane.update(((FileTreeItem) newValue).getDirectory());
+                File_URL.setText(((FileTreeItem) newValue).getDirectory().getAbsolutePath());
+            }
+        });
+
+        File_URL.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                goPath();
             }
         });
 
@@ -227,6 +229,22 @@ public class WindowMainController implements Initializable {
     }
 
     /**
+     * 导航到指定路径
+     *
+     * @author Cyberangel2023
+     */
+    @FXML
+    private void goPath() {
+        String path = File_URL.getText();
+        if (path == null) {
+            return;
+        }
+        System.out.println(path);
+        File file = new File(path);
+        previewFlowPane.update(file);
+    }
+
+    /**
      * 鼠标事件处理
      *
      * @author Cyberangel2023
@@ -242,7 +260,7 @@ public class WindowMainController implements Initializable {
         previewFlowPane.setOnMousePressed(event -> {
             x = event.getX();
             y = event.getY();
-            menu.hide();
+            menu.close();
 
             // 处理点击空白区域后已选择的图片
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1 && !event.isControlDown()) {
@@ -254,7 +272,7 @@ public class WindowMainController implements Initializable {
 
             // 右键菜单
             if (event.getButton() == MouseButton.SECONDARY) {
-                menu.show();
+                menu.show(imagePreviewPane, event.getScreenX(), event.getScreenY());
             }
         });
 
@@ -300,19 +318,6 @@ public class WindowMainController implements Initializable {
         previewFlowPane.setIsShift(true);
         previewFlowPane.setFrom(previewFlowPane.getThumbnailPanels().indexOf(endPane));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      *  窗口控制逻辑
@@ -654,7 +659,104 @@ public class WindowMainController implements Initializable {
         }
     }
 
+    public TextField getSearchPath() {
+        return Search_Path;
+    }
 
+    class Menu extends ContextMenu {
+        MenuItem copy = new MenuItem("复制");
+
+        MenuItem copyaddress = new MenuItem("复制文件地址");
+
+        MenuItem paste = new MenuItem("粘贴");
+
+        MenuItem delete = new MenuItem("删除");
+
+        MenuItem rename = new MenuItem("重命名");
+
+        MenuItem attribute = new MenuItem("属性");
+
+        MenuItem compress = new MenuItem("压缩到");
+
+        Menu() {
+            copy.setOnAction(e -> copyImage());
+            copyaddress.setOnAction(e -> copyAddress());
+            paste.setOnAction(e -> pasteImage());
+            delete.setOnAction(e -> deleteImage());
+            rename.setOnAction(e -> renameImage());
+            attribute.setOnAction(e -> showImageAttribute());
+            compress.setOnAction(e -> compressImage());
+            getItems().addAll(copy, copyaddress, paste, delete, rename, attribute, compress);
+        }
+
+        // 菜单显示
+        @Override
+        public void show(Node pane, double x, double y) {
+            super.show(pane, x, y);
+        }
+
+        // 菜单关闭
+        public void close() {
+            hide();
+        }
+    }
+
+    // 存储复制的图片
+    private final List<ThumbnailPanel> copyImg = new ArrayList<>();
+    /**
+     * 复制图片
+     */
+    @FXML
+    public void copyImage() {
+        copyImg.clear();
+        copyImg.addAll(previewFlowPane.getNewSelected());
+    }
+
+    // 存储复制的图片地址
+    private String copyAddr = null;
+    /**
+     * 复制图片地址
+     */
+    @FXML
+    public void copyAddress() {
+        copyAddr = previewFlowPane.getDirectory().getAbsolutePath() +
+                previewFlowPane.getNewSelected().getLast().getImageUtil().getFileName();
+    }
+
+    /**
+     * 粘贴图片
+     */
+    @FXML
+    public void pasteImage() {
+    }
+
+    /**
+     * 删除图片
+     */
+    @FXML
+    public void deleteImage() {
+    }
+
+    /**
+     * 重命名图片
+     */
+    @FXML
+    public void renameImage() {
+    }
+
+    /**
+     * 打开图片属性
+     */
+    @FXML
+    public void showImageAttribute() {
+    }
+
+    /**
+     * 压缩图片
+     */
+    @FXML
+    public void compressImage() {
+    }
 }
 
 

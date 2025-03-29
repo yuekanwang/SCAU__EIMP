@@ -1,15 +1,18 @@
 package com.eimp.component;
 
-import com.eimp.App;
 import com.eimp.SlideWindow;
+import com.eimp.controller.ControllerMap;
+import com.eimp.controller.WindowMainController;
 import com.eimp.util.ImageUtil;
 import javafx.application.Platform;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 
-import java.io.IOException;
+import java.awt.*;
 
 /**
  * 初始化目录树
@@ -20,13 +23,20 @@ import java.io.IOException;
 
 public class ThumbnailPanel extends BorderPane {
     // 图片能展示的最长名字
-    private static final int MAX_NAME = 20;
+    private static final int MAX_NAME = 15;
     // 图片
     private ImageView imageView;
     // 图片工具
     private ImageUtil imageUtil;
+    // 图片名称
+    private final TextField imageName;
     // 是否被选中
     private boolean isSelected;
+
+    private static final WindowMainController MAIN_WINDOWS_CONTROLLER = (WindowMainController) ControllerMap.getController(WindowMainController.class);
+
+    // 主界面搜索框
+    private static TextField searchKey;
 
     public ThumbnailPanel(ImageUtil imageUtil) {
         this.setMaxSize(150, 190);
@@ -39,8 +49,23 @@ public class ThumbnailPanel extends BorderPane {
         this.imageView.setFitWidth(140);
         this.imageView.setFitHeight(140);
         this.imageView.setPreserveRatio(true);
+        int length = imageUtil.getFileName().length();
+        //名字长度大于限定就剪切
+        if (length > MAX_NAME) {
+            this.imageName = new TextField(imageUtil.getFileName().substring(0, MAX_NAME) + "...") {
+            };
+        } else {
+            this.imageName = new TextField(imageUtil.getFileName());
+        }
+        imageName.setEditable(false);
+        imageName.setStyle("-fx-border-color: transparent; -fx-background-color: transparent; -fx-text-fill: black; -fx-alignment: CENTER;");
+
+        //searchKey = MAIN_WINDOWS_CONTROLLER.getSearchPath();
+        // 绑定主界面搜索框
+        //imageName.textProperty().bindBidirectional(searchKey.textProperty());
 
         setCenter(imageView);
+        setBottom(imageName);
 
         // 设置鼠标点击事件
         this.setOnMouseClicked(event -> {
