@@ -13,8 +13,8 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="rootPane" minHeight="580.0" minWidth="590.0" prefHeight="700.0" prefWidth="900.0" stylesheets="@../css/Slide.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.controller.WindowSlideController">
-      <StackPane fx:id="imagePane" layoutX="204.0" layoutY="303.0" style="-fx-background-color: #1e1f22;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
-            <ImageView fx:id="mainImageView" onScroll="#zoomByScroll" preserveRatio="true" StackPane.alignment="CENTER" />
+      <StackPane fx:id="imagePane" layoutX="204.0" layoutY="303.0" onScroll="#zoomByScroll" style="-fx-background-color: #1e1f22;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+            <ImageView fx:id="mainImageView" preserveRatio="true" StackPane.alignment="CENTER" />
             <AnchorPane fx:id="secondaryPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;">
                   <ScrollPane fx:id="scrollPane" hbarPolicy="AS_NEEDED" layoutX="164.0" layoutY="555.0" prefHeight="96.0" prefWidth="571.0" style="-fx-background-color: #3c3f41;" vbarPolicy="NEVER" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0">
                         <HBox fx:id="thumbnailContainer" alignment="CENTER" prefHeight="93.0" prefWidth="353.0" spacing="5" style="-fx-padding: 0; -fx-background-color: #3c3f41;">
@@ -115,7 +115,7 @@
             <Button id="zoomIn" fx:id="zoomIn" maxHeight="28.0" maxWidth="28.0" minHeight="28.0" minWidth="28.0" onAction="#zoomIn" onMousePressed="#zoomInConstantly" onMouseReleased="#stopTimerLine" prefHeight="23.0" prefWidth="28.0" styleClass="funtionalButton" />
             <Button id="zoomOut" fx:id="zoomOut" maxHeight="28.0" maxWidth="28.0" minHeight="28.0" minWidth="28.0" onAction="#zoomOut" onMousePressed="#zoomOutConstantly" onMouseReleased="#stopTimerLine" prefHeight="28.0" prefWidth="28.0" styleClass="funtionalButton" />
             <Label fx:id="zoomScale" minWidth="20.0" prefHeight="26.0" prefWidth="31.0" style="-fx-min-width: 40; -fx-text-fill: #ffffff;" text="100%" textFill="WHITE" />
-            <Button id="originalScale" fx:id="originalScale" maxHeight="28.0" maxWidth="28.0" minHeight="28.0" minWidth="28.0" onAction="#adaptScene" prefHeight="28.0" prefWidth="28.0" styleClass="funtionalButton" />
+            <Button id="originalScale" fx:id="originalScale" maxHeight="28.0" maxWidth="28.0" minHeight="28.0" minWidth="28.0" onAction="#updateOriginalScaleStatus" prefHeight="28.0" prefWidth="28.0" styleClass="funtionalButton" />
             <Separator orientation="VERTICAL" />
             <Button id="minBtn" fx:id="minBtn" graphicTextGap="0.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 999; -fx-min-width: 20; -fx-min-height: 20; -fx-background-color: #a0a0a0;" />
             <Button id="maxBtn" fx:id="maxBtn" graphicTextGap="0.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 999; -fx-min-width: 20; -fx-min-height: 20; -fx-background-color: #a0a0a0;" />

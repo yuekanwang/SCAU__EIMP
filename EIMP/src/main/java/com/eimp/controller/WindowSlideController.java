@@ -2,8 +2,7 @@ package com.eimp.controller;
 import com.eimp.SlideWindow;
 import com.eimp.util.FileUtil;
 import com.eimp.util.ImageUtil;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -15,18 +14,16 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
@@ -131,6 +128,14 @@ public class WindowSlideController implements Initializable {
      */
     private Timeline timeline;
     /**
+     * 图片显示模式枚举值
+     */
+    private enum DisplayMode {FIT, ORIGINAL, ZOOMING};
+    /**
+     * 初始图片显示模式
+     */
+    private DisplayMode displayMode = DisplayMode.FIT;
+    /**
      * 图片放缩比例
      */
     private IntegerProperty scaleInteger = new SimpleIntegerProperty(-1);
@@ -173,6 +178,10 @@ public class WindowSlideController implements Initializable {
     @FXML
     private Button imageArea;
     /**
+     * 图片宽高
+     */
+    private double originalWidth, originalHeight;
+    /**
      * 窗口布局初始化,对fxml布局组件初始化
      * @param location
      * @param resources
@@ -206,8 +215,10 @@ public class WindowSlideController implements Initializable {
                 this.imageUtilList.add(imageFile);
             }
         }
+
         this.setUpZoomScaleListener();
         this.initButtonStatus();
+        this.setUpMovementConstraints();
 
         this.image = new Image(imageUtil.getURL());
         this.updateMainImageView();
@@ -236,18 +247,44 @@ public class WindowSlideController implements Initializable {
 
     }
 
+    /**
+     * 初始化并监听放缩比例及功能禁用状态
+     */
     private void setUpZoomScaleListener(){
         this.scaleInteger.addListener((obs,oldvalue,newvalue)->{
             if(newvalue.intValue()<=MIN_SCALE){
                 this.zoomOut.setDisable(true);
+                if(this.MIN_SCALE<100){
+                    this.displayMode = DisplayMode.FIT;
+                    this.updateOriginalSacleStyle();
+                }else{
+                    this.displayMode = DisplayMode.ORIGINAL;
+                    this.updateOriginalSacleStyle();
+                }
             } else if (newvalue.intValue()>=MAX_SCALE) {
                 this.zoomIn.setDisable(true);
-            }else{
+            } else {
                 this.zoomIn.setDisable(false);
                 this.zoomOut.setDisable(false);
             }
             this.zoomScale.setText(newvalue.toString()+"%");
         });
+
+    }
+
+    /**
+     * 更新图片自适应和原比例按钮样式
+     */
+    private void updateOriginalSacleStyle(){
+        switch (displayMode) {
+            case FIT->{
+                this.originalScale.getTooltip().setText("原始比例");
+            }
+            default->{
+                this.originalScale.getTooltip().setText("适应窗口");
+            }
+        }
+
     }
 
     /**
@@ -268,87 +305,215 @@ public class WindowSlideController implements Initializable {
      * 更新当前窗口显示的图片及相关信息
      */
     private void updateMainImageView() {
+        this.originalWidth = this.image.getWidth();
+        this.originalHeight = this.image.getHeight();
         this.updateWindowInfo();
-        this.updateImageScale();
+        this.initImageScale();
         this.mainImageView.setImage(this.image);
+        this.updateCursor();
     }
 
     /**
      * 图片自适应窗口大小更新放缩比例
      */
-    private void updateImageScale(){
-        //清空上次设置后遗留下的数据
-        this.mainImageView.setScaleX(1.0);
-        this.mainImageView.setScaleY(1.0);
-        this.mainImageView.getTransforms().clear();
+    private void initImageScale(){
+        this.clearImageTransforms();
 
-
-        double width = this.image.getWidth();
-        double height = this.image.getHeight();
         double paneWidth = imagePane.getWidth();
         double paneHeight = imagePane.getHeight();
 
         // 图片比面板大图片自适应窗口
-        if(width>paneWidth || height>paneHeight){
-            this.mainImageView.fitWidthProperty().bind(imagePane.widthProperty());
-            this.mainImageView.fitHeightProperty().bind(imagePane.heightProperty());
-            this.MIN_SCALE = this.getAdaptedPercent(width,height,mainImageView.getFitWidth(),mainImageView.getFitHeight());
-
+        if(this.originalWidth>paneWidth || this.originalHeight>paneHeight){
+            this.setDisplayMode(DisplayMode.FIT);
+            this.MIN_SCALE = this.getAdaptedPercent(paneWidth, paneHeight);
         }else{  // 图片比面板小原始比例
-            this.mainImageView.fitWidthProperty().bind(this.image.widthProperty());
-            this.mainImageView.fitHeightProperty().bind(this.image.heightProperty());
+            this.setDisplayMode(DisplayMode.ORIGINAL);
             this.MIN_SCALE = 100;
         }
         this.scaleInteger.set(this.MIN_SCALE);
 
-
         this.totalScale = 1.0;
     }
 
-    @FXML
-    private void adaptScene(){
-//        this.mainImageView.fitWidthProperty().bind(imagePane.widthProperty());
-//        this.mainImageView.fitHeightProperty().bind(imagePane.heightProperty());
-//        int adaptedPercent = this.getAdaptedPercent(this.image.getWidth(), this.image.getHeight(), mainImageView.getFitWidth(), mainImageView.getFitHeight());
-//        if(adaptedPercent>this.scaleInteger.get()){
-//            while()
-//        }else if(adaptedPercent<this.scaleInteger.get()){
-//
-//        }
-//        this.scaleInteger.set(adaptedPercent);
+    /**
+     * 清空上次设置后遗留下的数据
+     */
+    private void clearImageTransforms(){
+        this.mainImageView.setScaleX(1.0);
+        this.mainImageView.setScaleY(1.0);
+        this.mainImageView.setTranslateX(0);
+        this.mainImageView.setTranslateY(0);
+        this.mainImageView.getTransforms().clear();
+        this.totalScale = 1.0;
     }
 
+    /**
+     * 更新图片显示大小
+     */
+    private void updateImageSize() {
+        Bounds viewport = imagePane.getBoundsInLocal();
+
+        switch (displayMode) {
+            case FIT -> {
+                double scale = Math.min(
+                        viewport.getWidth() / originalWidth,
+                        viewport.getHeight() / originalHeight
+                );
+                applyScaling(scale);
+            }
+            case ORIGINAL -> {
+                applyScaling(1.0);
+            }
+        }
+    }
+    @FXML
+    private void updateOriginalScaleStatus(){
+        switch(displayMode){
+            case FIT -> {
+                this.setOriginalScale();
+                this.displayMode = DisplayMode.ORIGINAL;
+            }
+            default -> {
+                this.adaptScene();
+                this.displayMode = DisplayMode.FIT;
+            }
+        }
+        this.updateOriginalSacleStyle();
+    }
+    /**
+     * 图片等比例放缩并绑定
+     * @param scale 比例
+     */
+    private void applyScaling(double scale) {
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.millis(100),
+                        new KeyValue(mainImageView.fitWidthProperty(), originalWidth * scale),
+                        new KeyValue(mainImageView.fitHeightProperty(), originalHeight * scale),
+                        new KeyValue(mainImageView.translateXProperty(), 0),
+                        new KeyValue(mainImageView.translateYProperty(), 0)
+                )
+        );
+        timeline.play();
+        // 保留原始比例
+//        mainImageView.setFitWidth(originalWidth * scale);
+//        mainImageView.setFitHeight(originalHeight * scale);
+
+        // 重置位置
+        translateX = translateY = 0;
+//        mainImageView.setTranslateX(0);
+//        mainImageView.setTranslateY(0);
+    }
+
+    /**
+     * 设置图片显示模式
+     * @param mode 显示模式
+     */
+    private void setDisplayMode(DisplayMode mode) {
+        displayMode = mode;
+        updateImageSize();
+    }
+    private void adaptScene(){
+        int adaptedPercent = this.getAdaptedPercent(imagePane.getWidth(), imagePane.getHeight());
+        Timeline[] timelines = new Timeline[1];
+        if(adaptedPercent>this.scaleInteger.get()){
+            int curScale = this.MIN_SCALE;
+            timelines[0] = new Timeline(
+                    new KeyFrame(Duration.millis(10), event -> {
+                        zoomIn();
+                        if(curScale * totalScale >= adaptedPercent){
+                            timelines[0].stop();
+                            zoomOut();
+                        }
+                    })
+            );
+            timelines[0].setCycleCount(Timeline.INDEFINITE);
+            timelines[0].play();
+        }else if(adaptedPercent<this.scaleInteger.get() && this.MIN_SCALE<100){
+            int curScale = this.MIN_SCALE;
+            timelines[0] = new Timeline(
+                    new KeyFrame(Duration.millis(10), event -> {
+                        zoomOut();
+                        if(this.scaleInteger.get()==this.MIN_SCALE){
+                            timelines[0].stop();
+                        }
+                    })
+            );
+            timelines[0].setCycleCount(Timeline.INDEFINITE);
+            timelines[0].play();
+        }else{
+            int curScale = this.MIN_SCALE;
+            timelines[0] = new Timeline(
+                    new KeyFrame(Duration.millis(10), event -> {
+                        zoomOut();
+                        if(curScale * totalScale < adaptedPercent){
+                            timelines[0].stop();
+                        }
+                    })
+            );
+            timelines[0].setCycleCount(Timeline.INDEFINITE);
+            timelines[0].play();
+        }
+
+        this.scaleInteger.set(adaptedPercent);
+    }
+    private void setOriginalScale(){
+        Timeline[] timelines = new Timeline[1];
+        if(this.MIN_SCALE < 100 && this.scaleInteger.get() < 100){
+            int curScale = this.MIN_SCALE;
+            timelines[0] = new Timeline(
+                    new KeyFrame(Duration.millis(10), event -> {
+                        zoomIn();
+                        if(curScale * totalScale >= 100){
+                            timelines[0].stop();
+                        }
+                    })
+            );
+            timelines[0].setCycleCount(Timeline.INDEFINITE);
+            timelines[0].play();
+        }else{
+            int curScale = this.MIN_SCALE;
+            timelines[0] = new Timeline(
+                    new KeyFrame(Duration.millis(10), event -> {
+                        zoomOut();
+                        if(this.scaleInteger.get()==this.MIN_SCALE){
+                            timelines[0].stop();
+                        }
+                    })
+            );
+            timelines[0].setCycleCount(Timeline.INDEFINITE);
+            timelines[0].play();
+        }
+    }
 
     /**
      * 计算图片自适应窗口后的缩小比例
-     * @param actualWidth 照片实际宽
-     * @param actualHeight 照片实际高
      * @param fitWidth imageview适应宽
      * @param fitHeight imageview适应高
      * @return 适应后的缩小比例
      */
-    private int getAdaptedPercent(double actualWidth, double actualHeight, double fitWidth, double fitHeight) {
-        double displayWidth = 0;
-        double displayHeight = 0;
-
-        //按比例适应
-        if (this.mainImageView.isPreserveRatio()) {
-            double actualRatio = actualWidth / actualHeight;
-            double fitRatio = fitWidth / fitHeight;
-            if (actualRatio > fitRatio) {   //宽填满,高缩放
-                displayWidth = fitWidth;
-                displayHeight = fitWidth / actualRatio;
-            } else {
-                displayHeight = fitHeight;  //高填满,宽缩放
-                displayWidth = fitHeight * actualRatio;
-            }
-        } else {  // 不按比例适应
-            displayWidth = fitWidth;
-            displayHeight = fitHeight;
-        }
-        int ScaleX = (int) (100 * displayWidth / actualWidth);
-        int ScaleY = (int) (100 * displayHeight / actualHeight);
-        return Math.min(ScaleX, ScaleY);
+    private int getAdaptedPercent(double fitWidth, double fitHeight) {
+//        double displayWidth = 0;
+//        double displayHeight = 0;
+//
+//        //按比例适应
+//        if (this.mainImageView.isPreserveRatio()) {
+//            double actualRatio = actualWidth / actualHeight;
+//            double fitRatio = fitWidth / fitHeight;
+//            if (actualRatio > fitRatio) {   //宽填满,高缩放
+//                displayWidth = fitWidth;
+//                displayHeight = fitWidth / actualRatio;
+//            } else {
+//                displayHeight = fitHeight;  //高填满,宽缩放
+//                displayWidth = fitHeight * actualRatio;
+//            }
+//        } else {  // 不按比例适应
+//            displayWidth = fitWidth;
+//            displayHeight = fitHeight;
+//        }
+//        int ScaleX = (int) (100 * displayWidth / actualWidth);
+//        int ScaleY = (int) (100 * displayHeight / actualHeight);
+//        return Math.min(ScaleX, ScaleY);
+        return (int)(100 * Math.min(fitWidth / originalWidth, fitHeight / originalHeight));
     }
 
 //    private boolean isFilledImage(double actualWidth, double actualHeight, double fitWidth, double fitHeight){
@@ -373,6 +538,269 @@ public class WindowSlideController implements Initializable {
 //
 //        return
 //    }
+
+    private double lastX, lastY;    // 拖拽前鼠标位置
+    private double translateX = 0 , translateY = 0;  // 当前偏移量
+
+    /**
+     * 设置鼠标拖拽移动事件,限制移动范围
+     */
+    private void setUpMovementConstraints() {
+        imagePane.setOnMousePressed(e -> {
+            if (e.getButton() == MouseButton.PRIMARY&&this.isMoveable()) {
+                lastX = e.getScreenX();
+                lastY = e.getScreenY();
+                this.imagePane.setCursor(Cursor.CLOSED_HAND);
+            }
+        });
+
+        imagePane.setOnMouseDragged(e -> {
+            if (e.getButton() == MouseButton.PRIMARY&&this.isMoveable()) {
+                this.imagePane.setCursor(Cursor.CLOSED_HAND);
+                Bounds currentBounds = this.mainImageView.getBoundsInParent();
+                Bounds stackVisibleBounds = imagePane.getLayoutBounds();
+                double imgPaneWidth = stackVisibleBounds.getWidth();
+                double imgPaneHeight = stackVisibleBounds.getHeight();
+                // 计算允许的移动方向
+                boolean widthFilled = currentBounds.getWidth() > imgPaneWidth;
+                boolean heightFilled = currentBounds.getHeight() > imgPaneHeight;
+
+                if(widthFilled){
+                    double deltaX = e.getScreenX() - lastX;
+                    // 应用限制后的偏移量
+                    translateX += widthFilled ? deltaX : 0;
+                    // 限制移动范围
+                    translateX = getFixedOffset(translateX,imgPaneWidth /2 - currentBounds.getWidth()/2, currentBounds.getWidth()/2 - imgPaneWidth/2);
+                    mainImageView.setTranslateX(translateX);
+                    lastX = e.getScreenX();
+                }
+                if(heightFilled){
+                    double deltaY = e.getScreenY() - lastY;
+                    translateY += heightFilled ? deltaY : 0;
+                    translateY = getFixedOffset(translateY, imgPaneHeight/2 - currentBounds.getHeight()/2, currentBounds.getHeight()/2 - imgPaneHeight/2);
+                    mainImageView.setTranslateY(translateY);
+                    lastY = e.getScreenY();
+                }
+            }
+        });
+
+        imagePane.setOnMouseReleased(e -> {
+            this.updateCursor();
+        });
+    }
+
+    /**
+     * 判断图片是否可移动视图
+     * @return 可移动值
+     */
+    private boolean isMoveable(){
+        Bounds currentBounds = this.mainImageView.getBoundsInParent();
+        Bounds stackVisibleBounds = imagePane.getLayoutBounds();
+        int imgPaneWidth = (int)stackVisibleBounds.getWidth();
+        int imgPaneHeight = (int)stackVisibleBounds.getHeight();
+        return (int)currentBounds.getWidth() > imgPaneWidth || (int)currentBounds.getHeight() > imgPaneHeight;
+    }
+    /**
+     * 获得移动限制范围内的移动偏移量
+     * @param value 原始偏移值
+     * @param min 最小负偏移值
+     * @param max 最大正偏移值
+     * @return 修正偏移值
+     */
+    private double getFixedOffset(double value, double min, double max) {
+        return Math.max(min, Math.min(max, value));
+    }
+
+    /**
+     * 总放缩比例
+     */
+    private double totalScale = 1.0;
+    /**
+     * 放大因子
+     */
+    private final double zoomInFactor = 1.1;
+    /**
+     * 缩小因子
+     */
+    private final double zoomOutFactor = 1/1.1;
+    /**
+     * 判断图片是否已经填满场景
+     * @return 填满场景值
+     */
+    private boolean isOverflow(){
+        Bounds imageBounds = this.mainImageView.getBoundsInParent();
+        Bounds stackVisibleBounds = imagePane.getLayoutBounds();
+        return  (int)imageBounds.getWidth() >= (int)stackVisibleBounds.getWidth() && (int)imageBounds.getHeight() >= (int)stackVisibleBounds.getHeight();
+    }
+    /**
+     * 放缩原子操作
+     * @param zoomFactor 放缩因子
+     * @param zoomCenter 放缩中心
+     */
+    private void zoom(double zoomFactor, Point2D zoomCenter) {
+        // 放缩值更新 以及 图片显示偏移值更新
+        double newSacle = this.totalScale * zoomFactor;
+        this.translateX *=zoomFactor;
+        this.translateY *=zoomFactor;
+        this.totalScale = newSacle;
+
+        // 先放缩
+        this.mainImageView.setScaleX(newSacle);
+        this.mainImageView.setScaleY(newSacle);
+
+        // 再偏移 (图片占满imagepane前先中心放缩,占满后偏移放缩)
+        if(zoomFactor>1&&this.isOverflow()){
+            this.mainImageView.setTranslateX(this.translateX);
+            this.mainImageView.setTranslateY(this.translateY);
+        }else if(zoomFactor<1&&this.isOverflow()){
+            Bounds currentBounds = this.mainImageView.getBoundsInParent();
+            double imgPaneWidth = this.imagePane.getLayoutBounds().getWidth();
+            double imgPaneHeight = this.imagePane.getLayoutBounds().getHeight();
+            // 限制偏移范围
+            translateX = getFixedOffset(translateX,imgPaneWidth /2 - currentBounds.getWidth()/2, currentBounds.getWidth()/2 - imgPaneWidth/2);
+            mainImageView.setTranslateX(translateX);
+            translateY = getFixedOffset(translateY, imgPaneHeight/2 - currentBounds.getHeight()/2, currentBounds.getHeight()/2 - imgPaneHeight/2);
+            mainImageView.setTranslateY(translateY);
+        }else{
+            TranslateTransition transition = new TranslateTransition(Duration.millis(200), mainImageView);
+            transition.setToX(0);
+            transition.setToY(0);
+            transition.play();
+//            this.mainImageView.setTranslateX(0);
+//            this.mainImageView.setTranslateY(0);
+            this.translateX =0;
+            this.translateY =0;
+        }
+
+
+        // 值溢出修正
+        int newScaleInterger = Math.min((int) (this.MIN_SCALE * newSacle), this.MAX_SCALE);
+        newScaleInterger = Math.max(newScaleInterger, this.MIN_SCALE);
+        if(newScaleInterger == this.MIN_SCALE|| newScaleInterger == this.MAX_SCALE){
+            this.stopTimerLine();
+        }
+        // 更新比例值
+        this.scaleInteger.set(newScaleInterger);
+        // 更新是否可移动鼠标样式
+        this.updateCursor();
+    }
+
+//    private void addEdgeBounceEffect() {
+//        final double SPRING_CONSTANT = 0.05;
+//        final double FRICTION = 0.9;
+//
+//        imageView.translateXProperty().addListener((obs, old, newVal) -> {
+//            Bounds imgBounds = imageView.getBoundsInParent();
+//            Bounds viewport = container.getBoundsInLocal();
+//
+//            if (imgBounds.getWidth() > viewport.getWidth()) {
+//                double overflow = (imgBounds.getWidth() - viewport.getWidth())/2;
+//                if (Math.abs(newVal.doubleValue()) > overflow) {
+//                    double velocity = (newVal.doubleValue() - old.doubleValue()) * FRICTION;
+//                    animateRebound(overflow * Math.signum(newVal.doubleValue()), velocity, true);
+//                }
+//            }
+//        });
+//
+//        // Y轴同理
+//    }
+    /**
+     * 更新鼠标状态
+     */
+    private void updateCursor(){
+        if(this.isMoveable()){
+            imagePane.setCursor(Cursor.OPEN_HAND);
+        }else{
+            imagePane.setCursor(Cursor.DEFAULT);
+        }
+    }
+    /**
+     * 中心放大
+     */
+    @FXML
+    private void zoomIn() {
+        this.zoom(this.zoomInFactor,null);
+    }
+
+    /**
+     * 持续中心放大
+     * @param event
+     */
+    @FXML
+    private void zoomInConstantly(Event event){
+        this.fireConstantly(e->this.zoomIn(),80);
+    }
+
+    /**
+     * 在轴点放大
+     * @param zoomCenter 轴点
+     */
+    private void zoomIn(Point2D zoomCenter){
+        this.zoom(this.zoomInFactor,zoomCenter);
+    }
+
+    /**
+     * 中心缩小
+     */
+    @FXML
+    private void zoomOut() {
+        this.zoom(this.zoomOutFactor,null);
+    }
+
+    /**
+     * 持续中心缩小
+     * @param event
+     */
+    @FXML
+    private void zoomOutConstantly(Event event){
+        this.fireConstantly(e->this.zoomOut(),80);
+    }
+
+    /**
+     * 在轴点缩小
+     * @param zoomCenter 轴点
+     */
+    private void zoomOut(Point2D zoomCenter) {
+        this.zoom(this.zoomOutFactor,zoomCenter);
+    }
+
+    /**
+     * 滚轮放缩图片
+     * @param scrollEvent
+     */
+    @FXML
+    private void zoomByScroll(ScrollEvent scrollEvent){
+        if(scrollEvent.isControlDown()){
+            double deltaY = scrollEvent.getDeltaY();
+            if(deltaY>0){
+                if(this.scaleInteger.get()>=MAX_SCALE){
+                    return;
+                }
+                zoomIn(new Point2D(scrollEvent.getX(),scrollEvent.getY()));
+            }else{
+                if(this.scaleInteger.get()<=MIN_SCALE){
+                    return;
+                }
+                zoomOut(new Point2D(scrollEvent.getX(),scrollEvent.getY()));
+            }
+        }
+    }
+//    private static final int MAX_VISIBLE_THUMBNAILS = 10;
+//    private static final double THUMBNAIL_WIDTH = 120;
+//
+//    // 添加缩略图的方法
+//    private void addThumbnail(Image image) {
+//        ImageView thumbnail = new ImageView(image);
+//        thumbnail.setFitHeight(90);
+//        thumbnail.setPreserveRatio(true);
+//        thumbnailContainer.getChildren().add(thumbnail);
+//
+//        // 当超过10个时启用固定宽度
+//        if (thumbnailContainer.getChildren().size() > MAX_VISIBLE_THUMBNAILS) {
+//            thumbnailContainer.setPrefWidth(MAX_VISIBLE_THUMBNAILS * THUMBNAIL_WIDTH);
+//        }
+//    }
+
     /**
      * 更新窗口标题及图片相关信息
      */
@@ -539,165 +967,45 @@ public class WindowSlideController implements Initializable {
      */
     private void initShortcutKey(KeyEvent event){
         KeyCode code = event.getCode();
-
-        switch(code){
-            case LEFT -> {              //左方向键
-                if(this.currentIndex.get()<=0){
-                    event.consume();
-                }else{
-                    preImage(event);
-                }
+        if (event.isControlDown()) {
+            switch (code) {
+                case O -> this.setDisplayMode(DisplayMode.ORIGINAL);
+                case F -> this.setDisplayMode(DisplayMode.FIT);
             }
-            case RIGHT -> {             //右方向键
-                if(this.currentIndex.get()>=imageUtilList.size()-1){
-                    event.consume();
-                }else{
-                    nextImage(event);
-                }
-            }
-            case OPEN_BRACKET -> {      //左中括号
-                if(this.scaleInteger.get()>=MAX_SCALE){
-                    event.consume();
-                }else {
-                    zoomIn();
-                }
-            }
-            case CLOSE_BRACKET -> {     //右中括号
-                if(this.scaleInteger.get()<=MIN_SCALE){
-                    event.consume();
-                }else{
-                    zoomOut();
-                }
-            }
-        }
-    }
-
-    /**
-     * 总放缩比例
-     */
-    private double totalScale = 1.0;
-    /**
-     * 放大因子
-     */
-    private final double zoomInFactor = 1.1;
-    /**
-     * 缩小因子
-     */
-    private final double zoomOutFactor = 1/1.1;
-
-    /**
-     * 放缩原子操作
-     * @param zoomFactor 放缩因子
-     * @param pivotX 放缩轴点x
-     * @param pivotY 放缩轴点y
-     */
-    private void zoom(double zoomFactor, double pivotX, double pivotY) {
-        double newSacle = this.totalScale * zoomFactor;
-        this.totalScale = newSacle;
-
-        if (pivotX >= 0) {
-            Scale scale = new Scale(zoomFactor,zoomFactor,pivotX, pivotY);
-            this.mainImageView.getTransforms().add(scale);
-        } else {
-            this.mainImageView.setScaleX(newSacle);
-            this.mainImageView.setScaleY(newSacle);
-        }
-        // 值溢出修正
-        int newScaleInterger = Math.min((int) (this.MIN_SCALE * newSacle), this.MAX_SCALE);
-        newScaleInterger = Math.max(newScaleInterger, this.MIN_SCALE);
-        if(newScaleInterger == this.MIN_SCALE|| newScaleInterger == this.MAX_SCALE){
-            this.stopTimerLine();
-        }
-        this.scaleInteger.set(newScaleInterger);
-    }
-
-    /**
-     * 中心放大
-     */
-    @FXML
-    private void zoomIn() {
-        this.zoom(this.zoomInFactor,-1,-1);
-    }
-
-    /**
-     * 持续中心放大
-     * @param event
-     */
-    @FXML
-    private void zoomInConstantly(Event event){
-        this.fireConstantly(e->this.zoomIn(),80);
-    }
-
-    /**
-     * 在轴点放大
-     * @param pivotX 轴点x
-     * @param pivotY 轴点y
-     */
-    private void zoomIn(double pivotX, double pivotY){
-        this.zoom(this.zoomInFactor,pivotX,pivotY);
-    }
-
-    /**
-     * 中心缩小
-     */
-    @FXML
-    private void zoomOut() {
-        this.zoom(this.zoomOutFactor,-1,-1);
-    }
-
-    /**
-     * 持续中心缩小
-     * @param event
-     */
-    @FXML
-    private void zoomOutConstantly(Event event){
-        this.fireConstantly(e->this.zoomOut(),80);
-    }
-
-    /**
-     * 在轴点缩小
-     * @param pivotX 轴点x
-     * @param pivotY 轴点y
-     */
-    private void zoomOut(double pivotX, double pivotY) {
-        this.zoom(this.zoomOutFactor,pivotX,pivotY);
-    }
-
-    /**
-     * 滚轮放缩图片
-     * @param scrollEvent
-     */
-    @FXML
-    private void zoomByScroll(ScrollEvent scrollEvent){
-        double deltaY = scrollEvent.getDeltaY();
-        if(deltaY>0){
-            if(this.scaleInteger.get()>=MAX_SCALE){
-                return;
-            }
-            zoomIn(scrollEvent.getX(),scrollEvent.getY());
         }else{
-            if(this.scaleInteger.get()<=MIN_SCALE){
-                return;
+            switch(code){
+                case LEFT -> {              //左方向键
+                    if(this.currentIndex.get()<=0){
+                        event.consume();
+                    }else{
+                        preImage(event);
+                    }
+                }
+                case RIGHT -> {             //右方向键
+                    if(this.currentIndex.get()>=imageUtilList.size()-1){
+                        event.consume();
+                    }else{
+                        nextImage(event);
+                    }
+                }
+                case OPEN_BRACKET -> {      //左中括号
+                    if(this.scaleInteger.get()>=MAX_SCALE){
+                        event.consume();
+                    }else {
+                        zoomIn();
+                    }
+                }
+                case CLOSE_BRACKET -> {     //右中括号
+                    if(this.scaleInteger.get()<=MIN_SCALE){
+                        event.consume();
+                    }else{
+                        zoomOut();
+                    }
+                }
             }
-            zoomOut(scrollEvent.getX(),scrollEvent.getY());
         }
-    }
-//    private static final int MAX_VISIBLE_THUMBNAILS = 10;
-//    private static final double THUMBNAIL_WIDTH = 120;
-//
-//    // 添加缩略图的方法
-//    private void addThumbnail(Image image) {
-//        ImageView thumbnail = new ImageView(image);
-//        thumbnail.setFitHeight(90);
-//        thumbnail.setPreserveRatio(true);
-//        thumbnailContainer.getChildren().add(thumbnail);
-//
-//        // 当超过10个时启用固定宽度
-//        if (thumbnailContainer.getChildren().size() > MAX_VISIBLE_THUMBNAILS) {
-//            thumbnailContainer.setPrefWidth(MAX_VISIBLE_THUMBNAILS * THUMBNAIL_WIDTH);
-//        }
-//    }
 
+    }
 
 
     /**
@@ -714,7 +1022,7 @@ public class WindowSlideController implements Initializable {
         urlMap.put("share",  "/icon/share.png");
         urlMap.put("zoomIn", "/icon/zoom-in.png");
         urlMap.put("zoomOut", "/icon/zoom-out.png");
-        urlMap.put("originalScale","/icon/original.png");
+        urlMap.put("originalScale","/icon/original-fit.png");
         urlMap.put("item1","/icon/MoreMenu.png");
         urlMap.put("item2","/icon/MoreMenu.png");
         urlMap.put("item3","/icon/MoreMenu.png");
@@ -1226,8 +1534,6 @@ public class WindowSlideController implements Initializable {
             stage.setY(event.getScreenY() - yOffset);
         }
     }
-
-
 }
 
 
