@@ -27,6 +27,14 @@ public class PreviewFlowPane extends FlowPane {
         return directory;
     }
 
+    public List<ThumbnailPanel> getNewSelected() {
+        return newSelected;
+    }
+
+    public List<ThumbnailPanel> getOldSelected() {
+        return oldSelected;
+    }
+
     public boolean newSelectedIsEmpty() {
         return newSelected.isEmpty();
     }
@@ -56,8 +64,11 @@ public class PreviewFlowPane extends FlowPane {
 
     public void update(File directory) {
         this.directory = directory;
+        // 清空图片数组
         thumbnailPanels.clear();
+        // 过滤文件，获取图片格式的文件
         File[] files = this.directory.listFiles(FileUtil::isSupportImageFormat);
+        // 将图片加载进数组
         if (files != null) {
             for (File file : files) {
                 ImageUtil imageUtil = new ImageUtil(file);
@@ -110,6 +121,7 @@ public class PreviewFlowPane extends FlowPane {
     /**
      * shift多选设置
      */
+    // shift选中图片的起始和末尾
     private int from;
     private int to;
     // 允许使用shift多选
@@ -139,6 +151,7 @@ public class PreviewFlowPane extends FlowPane {
         return isShift;
     }
 
+    // shift根据起始末尾选中图片
     public void shiftSelected() {
         clearSelected();
         if (from > to) {

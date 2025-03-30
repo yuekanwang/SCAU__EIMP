@@ -100,4 +100,8 @@ public class FileTreeItem extends TreeItem<String> {
     public File getDirectory() {
         return directory;
     }
+
+    public boolean getInit() {
+        return isInit;
+    }
 }
