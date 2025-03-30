@@ -24,6 +24,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
@@ -51,7 +52,7 @@ public class WindowSlideController implements Initializable {
     @FXML private Button nextPage;
     @FXML private Button play;
     @FXML private Button info;
-    @FXML private Button share;
+    @FXML private Button compress;
     /**
      * 图片放大按钮
      */
@@ -217,11 +218,57 @@ public class WindowSlideController implements Initializable {
         }
 
         this.setUpZoomScaleListener();
+        this.setUpRotationListener();
         this.initButtonStatus();
         this.setUpMovementConstraints();
 
         this.image = new Image(imageUtil.getURL());
         this.updateMainImageView();
+    }
+
+    /**
+     * 旋转变换类
+     */
+    private Rotate rotateTransform = new Rotate(0);
+
+    /**
+     * 图片旋转
+     */
+    @FXML
+    private void rotate(){
+        this.recoverTranslattion(50);
+        rotateTransform.setAngle(rotateTransform.getAngle() + 90);
+        this.updateCursor();
+    }
+
+//    private static final int MAX_VISIBLE_THUMBNAILS = 10;
+//    private static final double THUMBNAIL_WIDTH = 120;
+//
+//    // 添加缩略图的方法
+//    private void addThumbnail(Image image) {
+//        ImageView thumbnail = new ImageView(image);
+//        thumbnail.setFitHeight(90);
+//        thumbnail.setPreserveRatio(true);
+//        thumbnailContainer.getChildren().add(thumbnail);
+//
+//        // 当超过10个时启用固定宽度
+//        if (thumbnailContainer.getChildren().size() > MAX_VISIBLE_THUMBNAILS) {
+//            thumbnailContainer.setPrefWidth(MAX_VISIBLE_THUMBNAILS * THUMBNAIL_WIDTH);
+//        }
+//    }
+    /**
+     * 监听图片旋转中心
+     */
+    private void setUpRotationListener(){
+        // 监听ImageView的尺寸变化，设置旋转中心点
+        mainImageView.boundsInLocalProperty().addListener((obs, oldVal, newVal) -> {
+            double width = newVal.getWidth();
+            double height = newVal.getHeight();
+            if (width > 0 && height > 0) {
+                rotateTransform.setPivotX(width / 2); // 中心点X坐标
+                rotateTransform.setPivotY(height / 2); // 中心点Y坐标
+            }
+        });
     }
 
     /**
@@ -269,7 +316,6 @@ public class WindowSlideController implements Initializable {
             }
             this.zoomScale.setText(newvalue.toString()+"%");
         });
-
     }
 
     /**
@@ -278,10 +324,10 @@ public class WindowSlideController implements Initializable {
     private void updateOriginalSacleStyle(){
         switch (displayMode) {
             case FIT->{
-                this.originalScale.getTooltip().setText("原始比例");
+                this.originalScale.getTooltip().setText("原始比例 | Ctrl+O");
             }
             default->{
-                this.originalScale.getTooltip().setText("适应窗口");
+                this.originalScale.getTooltip().setText("适应窗口 | Ctrl+F");
             }
         }
 
@@ -314,11 +360,24 @@ public class WindowSlideController implements Initializable {
     }
 
     /**
+     * 清空上次设置后遗留下的数据
+     */
+    private void clearImageTransforms(){
+        this.mainImageView.setScaleX(1.0);
+        this.mainImageView.setScaleY(1.0);
+        this.mainImageView.setTranslateX(0);
+        this.mainImageView.setTranslateY(0);
+        this.mainImageView.getTransforms().clear();
+        this.rotateTransform.setAngle(0);
+        this.totalScale = 1.0;
+    }
+
+    /**
      * 图片自适应窗口大小更新放缩比例
      */
     private void initImageScale(){
         this.clearImageTransforms();
-
+        mainImageView.getTransforms().add(rotateTransform);
         double paneWidth = imagePane.getWidth();
         double paneHeight = imagePane.getHeight();
 
@@ -336,36 +395,34 @@ public class WindowSlideController implements Initializable {
     }
 
     /**
-     * 清空上次设置后遗留下的数据
-     */
-    private void clearImageTransforms(){
-        this.mainImageView.setScaleX(1.0);
-        this.mainImageView.setScaleY(1.0);
-        this.mainImageView.setTranslateX(0);
-        this.mainImageView.setTranslateY(0);
-        this.mainImageView.getTransforms().clear();
-        this.totalScale = 1.0;
-    }
-
-    /**
-     * 更新图片显示大小
+     * 更新图片显示大小并绑定
      */
     private void updateImageSize() {
-        Bounds viewport = imagePane.getBoundsInLocal();
-
         switch (displayMode) {
             case FIT -> {
-                double scale = Math.min(
-                        viewport.getWidth() / originalWidth,
-                        viewport.getHeight() / originalHeight
-                );
-                applyScaling(scale);
+                mainImageView.fitWidthProperty().bind(imagePane.widthProperty());
+                mainImageView.fitHeightProperty().bind(imagePane.heightProperty());
             }
             case ORIGINAL -> {
-                applyScaling(1.0);
+
+                mainImageView.fitWidthProperty().bind(image.widthProperty());
+                mainImageView.fitHeightProperty().bind(image.heightProperty());
             }
         }
     }
+
+    /**
+     * 设置图片显示模式
+     * @param mode 显示模式
+     */
+    private void setDisplayMode(DisplayMode mode) {
+        displayMode = mode;
+        updateImageSize();
+    }
+
+    /**
+     * 根据图片显示模式更新
+     */
     @FXML
     private void updateOriginalScaleStatus(){
         switch(displayMode){
@@ -380,38 +437,10 @@ public class WindowSlideController implements Initializable {
         }
         this.updateOriginalSacleStyle();
     }
-    /**
-     * 图片等比例放缩并绑定
-     * @param scale 比例
-     */
-    private void applyScaling(double scale) {
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.millis(100),
-                        new KeyValue(mainImageView.fitWidthProperty(), originalWidth * scale),
-                        new KeyValue(mainImageView.fitHeightProperty(), originalHeight * scale),
-                        new KeyValue(mainImageView.translateXProperty(), 0),
-                        new KeyValue(mainImageView.translateYProperty(), 0)
-                )
-        );
-        timeline.play();
-        // 保留原始比例
-//        mainImageView.setFitWidth(originalWidth * scale);
-//        mainImageView.setFitHeight(originalHeight * scale);
-
-        // 重置位置
-        translateX = translateY = 0;
-//        mainImageView.setTranslateX(0);
-//        mainImageView.setTranslateY(0);
-    }
 
     /**
-     * 设置图片显示模式
-     * @param mode 显示模式
+     * 图片适应窗口
      */
-    private void setDisplayMode(DisplayMode mode) {
-        displayMode = mode;
-        updateImageSize();
-    }
     private void adaptScene(){
         int adaptedPercent = this.getAdaptedPercent(imagePane.getWidth(), imagePane.getHeight());
         Timeline[] timelines = new Timeline[1];
@@ -456,6 +485,10 @@ public class WindowSlideController implements Initializable {
 
         this.scaleInteger.set(adaptedPercent);
     }
+
+    /**
+     * 恢复图片原始比例
+     */
     private void setOriginalScale(){
         Timeline[] timelines = new Timeline[1];
         if(this.MIN_SCALE < 100 && this.scaleInteger.get() < 100){
@@ -484,6 +517,7 @@ public class WindowSlideController implements Initializable {
             timelines[0].play();
         }
     }
+
 
     /**
      * 计算图片自适应窗口后的缩小比例
@@ -543,6 +577,19 @@ public class WindowSlideController implements Initializable {
     private double translateX = 0 , translateY = 0;  // 当前偏移量
 
     /**
+     * 图片恢复偏置
+     * @param ms 动画毫秒数
+     */
+    private void recoverTranslattion(double ms){
+        TranslateTransition transition = new TranslateTransition(Duration.millis(ms), mainImageView);
+        transition.setToX(0);
+        transition.setToY(0);
+        transition.play();
+        this.translateX =0;
+        this.translateY =0;
+    }
+
+    /**
      * 设置鼠标拖拽移动事件,限制移动范围
      */
     private void setUpMovementConstraints() {
@@ -589,17 +636,7 @@ public class WindowSlideController implements Initializable {
         });
     }
 
-    /**
-     * 判断图片是否可移动视图
-     * @return 可移动值
-     */
-    private boolean isMoveable(){
-        Bounds currentBounds = this.mainImageView.getBoundsInParent();
-        Bounds stackVisibleBounds = imagePane.getLayoutBounds();
-        int imgPaneWidth = (int)stackVisibleBounds.getWidth();
-        int imgPaneHeight = (int)stackVisibleBounds.getHeight();
-        return (int)currentBounds.getWidth() > imgPaneWidth || (int)currentBounds.getHeight() > imgPaneHeight;
-    }
+
     /**
      * 获得移动限制范围内的移动偏移量
      * @param value 原始偏移值
@@ -612,6 +649,55 @@ public class WindowSlideController implements Initializable {
     }
 
     /**
+     * 判断图片是否可移动视图
+     * @return 可移动值
+     */
+    private boolean isMoveable(){
+        Bounds currentBounds = this.mainImageView.getBoundsInParent();
+        Bounds stackVisibleBounds = imagePane.getLayoutBounds();
+        int imgPaneWidth = (int)stackVisibleBounds.getWidth();
+        int imgPaneHeight = (int)stackVisibleBounds.getHeight();
+        return (int)currentBounds.getWidth() > imgPaneWidth || (int)currentBounds.getHeight() > imgPaneHeight;
+    }
+    /**
+     * 判断图片是否已经填满场景
+     * @return 填满场景值
+     */
+    private boolean isOverflow(){
+        Bounds imageBounds = this.mainImageView.getBoundsInParent();
+        Bounds stackVisibleBounds = imagePane.getLayoutBounds();
+        return  (int)imageBounds.getWidth() >= (int)stackVisibleBounds.getWidth() && (int)imageBounds.getHeight() >= (int)stackVisibleBounds.getHeight();
+    }
+    //    private void addEdgeBounceEffect() {
+//        final double SPRING_CONSTANT = 0.05;
+//        final double FRICTION = 0.9;
+//
+//        imageView.translateXProperty().addListener((obs, old, newVal) -> {
+//            Bounds imgBounds = imageView.getBoundsInParent();
+//            Bounds viewport = container.getBoundsInLocal();
+//
+//            if (imgBounds.getWidth() > viewport.getWidth()) {
+//                double overflow = (imgBounds.getWidth() - viewport.getWidth())/2;
+//                if (Math.abs(newVal.doubleValue()) > overflow) {
+//                    double velocity = (newVal.doubleValue() - old.doubleValue()) * FRICTION;
+//                    animateRebound(overflow * Math.signum(newVal.doubleValue()), velocity, true);
+//                }
+//            }
+//        });
+//
+//        // Y轴同理
+//    }
+    /**
+     * 更新鼠标状态
+     */
+    private void updateCursor(){
+        if(this.isMoveable()){
+            imagePane.setCursor(Cursor.OPEN_HAND);
+        }else{
+            imagePane.setCursor(Cursor.DEFAULT);
+        }
+    }
+    /**
      * 总放缩比例
      */
     private double totalScale = 1.0;
@@ -623,15 +709,6 @@ public class WindowSlideController implements Initializable {
      * 缩小因子
      */
     private final double zoomOutFactor = 1/1.1;
-    /**
-     * 判断图片是否已经填满场景
-     * @return 填满场景值
-     */
-    private boolean isOverflow(){
-        Bounds imageBounds = this.mainImageView.getBoundsInParent();
-        Bounds stackVisibleBounds = imagePane.getLayoutBounds();
-        return  (int)imageBounds.getWidth() >= (int)stackVisibleBounds.getWidth() && (int)imageBounds.getHeight() >= (int)stackVisibleBounds.getHeight();
-    }
     /**
      * 放缩原子操作
      * @param zoomFactor 放缩因子
@@ -662,14 +739,7 @@ public class WindowSlideController implements Initializable {
             translateY = getFixedOffset(translateY, imgPaneHeight/2 - currentBounds.getHeight()/2, currentBounds.getHeight()/2 - imgPaneHeight/2);
             mainImageView.setTranslateY(translateY);
         }else{
-            TranslateTransition transition = new TranslateTransition(Duration.millis(200), mainImageView);
-            transition.setToX(0);
-            transition.setToY(0);
-            transition.play();
-//            this.mainImageView.setTranslateX(0);
-//            this.mainImageView.setTranslateY(0);
-            this.translateX =0;
-            this.translateY =0;
+            this.recoverTranslattion(200);
         }
 
 
@@ -685,35 +755,6 @@ public class WindowSlideController implements Initializable {
         this.updateCursor();
     }
 
-//    private void addEdgeBounceEffect() {
-//        final double SPRING_CONSTANT = 0.05;
-//        final double FRICTION = 0.9;
-//
-//        imageView.translateXProperty().addListener((obs, old, newVal) -> {
-//            Bounds imgBounds = imageView.getBoundsInParent();
-//            Bounds viewport = container.getBoundsInLocal();
-//
-//            if (imgBounds.getWidth() > viewport.getWidth()) {
-//                double overflow = (imgBounds.getWidth() - viewport.getWidth())/2;
-//                if (Math.abs(newVal.doubleValue()) > overflow) {
-//                    double velocity = (newVal.doubleValue() - old.doubleValue()) * FRICTION;
-//                    animateRebound(overflow * Math.signum(newVal.doubleValue()), velocity, true);
-//                }
-//            }
-//        });
-//
-//        // Y轴同理
-//    }
-    /**
-     * 更新鼠标状态
-     */
-    private void updateCursor(){
-        if(this.isMoveable()){
-            imagePane.setCursor(Cursor.OPEN_HAND);
-        }else{
-            imagePane.setCursor(Cursor.DEFAULT);
-        }
-    }
     /**
      * 中心放大
      */
@@ -783,23 +824,27 @@ public class WindowSlideController implements Initializable {
                 }
                 zoomOut(new Point2D(scrollEvent.getX(),scrollEvent.getY()));
             }
+        }else{
+            Bounds currentBounds = this.mainImageView.getBoundsInParent();
+            Bounds stackVisibleBounds = imagePane.getLayoutBounds();
+            double imgPaneHeight = stackVisibleBounds.getHeight();
+            double imgPaneWidth = stackVisibleBounds.getWidth();
+            // 计算允许的移动方向
+            boolean heightFilled = currentBounds.getHeight() > imgPaneHeight;
+            boolean widthFilled = currentBounds.getWidth() > imgPaneWidth;
+            if(heightFilled){
+                double offset = scrollEvent.getDeltaY() > 0 ? 50 : -50;
+                translateY += heightFilled ? offset : 0;
+                translateY = getFixedOffset(translateY, imgPaneHeight/2 - currentBounds.getHeight()/2, currentBounds.getHeight()/2 - imgPaneHeight/2);
+                mainImageView.setTranslateY(translateY);
+            }else if(widthFilled){
+                double offset = scrollEvent.getDeltaY() > 0 ? 50 : -50;
+                translateX += widthFilled ? offset : 0;
+                translateX = getFixedOffset(translateX, imgPaneWidth/2 - currentBounds.getWidth()/2, currentBounds.getWidth()/2 - imgPaneWidth/2);
+                mainImageView.setTranslateX(translateX);
+            }
         }
     }
-//    private static final int MAX_VISIBLE_THUMBNAILS = 10;
-//    private static final double THUMBNAIL_WIDTH = 120;
-//
-//    // 添加缩略图的方法
-//    private void addThumbnail(Image image) {
-//        ImageView thumbnail = new ImageView(image);
-//        thumbnail.setFitHeight(90);
-//        thumbnail.setPreserveRatio(true);
-//        thumbnailContainer.getChildren().add(thumbnail);
-//
-//        // 当超过10个时启用固定宽度
-//        if (thumbnailContainer.getChildren().size() > MAX_VISIBLE_THUMBNAILS) {
-//            thumbnailContainer.setPrefWidth(MAX_VISIBLE_THUMBNAILS * THUMBNAIL_WIDTH);
-//        }
-//    }
 
     /**
      * 更新窗口标题及图片相关信息
@@ -969,8 +1014,23 @@ public class WindowSlideController implements Initializable {
         KeyCode code = event.getCode();
         if (event.isControlDown()) {
             switch (code) {
-                case O -> this.setDisplayMode(DisplayMode.ORIGINAL);
-                case F -> this.setDisplayMode(DisplayMode.FIT);
+                case O -> {
+                    if(this.displayMode==DisplayMode.ORIGINAL){
+                        return;
+                    }
+                    this.displayMode = DisplayMode.FIT;
+                    this.updateOriginalScaleStatus();
+                }
+                case F -> {
+                    if(this.displayMode==DisplayMode.FIT){
+                        return;
+                    }
+                    this.displayMode = DisplayMode.ORIGINAL;
+                    this.updateOriginalScaleStatus();
+                }
+                case R-> {
+                    this.rotate();
+                }
             }
         }else{
             switch(code){
@@ -1019,7 +1079,7 @@ public class WindowSlideController implements Initializable {
         urlMap.put("nextPage", "/icon/arrow-right-circle.png");
         urlMap.put("play", "/icon/play.png");
         urlMap.put("info", "/icon/prompt.png");
-        urlMap.put("share",  "/icon/share.png");
+        urlMap.put("compress",  "/icon/compress.png");
         urlMap.put("zoomIn", "/icon/zoom-in.png");
         urlMap.put("zoomOut", "/icon/zoom-out.png");
         urlMap.put("originalScale","/icon/original-fit.png");
@@ -1027,15 +1087,15 @@ public class WindowSlideController implements Initializable {
         urlMap.put("item2","/icon/MoreMenu.png");
         urlMap.put("item3","/icon/MoreMenu.png");
         textMap.put("moreMenuButton", "更多功能");
-        textMap.put("rotate", "顺时针旋转90°");
-        textMap.put("delete", "删除");
-        textMap.put("prePage", "上一张");
-        textMap.put("nextPage", "下一张");
-        textMap.put("play", "播放");
-        textMap.put("info", "信息");
-        textMap.put("share",  "转发");
-        textMap.put("zoomIn", "放大");
-        textMap.put("zoomOut", "缩小");
+        textMap.put("rotate", "顺时针旋转90°|Ctrl+R");
+        textMap.put("delete", "删除|Ctrl+D");
+        textMap.put("prePage", "上一张|方向键⬅");
+        textMap.put("nextPage", "下一张|方向键➡");
+        textMap.put("play", "播放|Ctrl+P");
+        textMap.put("info", "信息|Ctrl+I");
+        textMap.put("compress",  "压缩|Ctrl+C");
+        textMap.put("zoomIn", "放大|开括号[|Ctrl+滚轮⬆");
+        textMap.put("zoomOut", "缩小|闭括号]|Ctrl+滚轮⬇");
         textMap.put("originalScale","原始比例");
         textMap.put("minBtn","最小化");
         textMap.put("maxBtn","最大化");
@@ -1049,7 +1109,7 @@ public class WindowSlideController implements Initializable {
         buttonMap.put("nextPage", this.nextPage);
         buttonMap.put("play", this.play);
         buttonMap.put("info", this.info);
-        buttonMap.put("share", this.share );
+        buttonMap.put("compress", this.compress);
     }
 
     /**
@@ -1058,15 +1118,15 @@ public class WindowSlideController implements Initializable {
     private void initButtonStyle(){
         Tooltip[] tooltips = {
                 new Tooltip("更多功能"),
-                new Tooltip("顺时针旋转90°"),
-                new Tooltip("删除"),
-                new Tooltip("上一张"),
-                new Tooltip("下一张"),
-                new Tooltip("播放"),
-                new Tooltip("信息"),
-                new Tooltip("转发"),
-                new Tooltip("放大"),
-                new Tooltip("缩小"),
+                new Tooltip("顺时针旋转90°|Ctrl+R"),
+                new Tooltip("删除|Ctrl+D"),
+                new Tooltip("上一张|方向键⬅"),
+                new Tooltip("下一张|方向键➡"),
+                new Tooltip("播放|Ctrl+P"),
+                new Tooltip("信息|Ctrl+I"),
+                new Tooltip("压缩|Ctrl+C"),
+                new Tooltip( "放大|开括号[|Ctrl+滚轮⬆"),
+                new Tooltip("缩小|闭括号]|Ctrl+滚轮⬇"),
                 new Tooltip("原始比例"),
                 new Tooltip("最小化"),
                 new Tooltip("最大化"),

@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="修改动态功能栏bug" />
+    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="修改动态功能栏bug">
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/compress.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/SlideWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/SlideWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowSlide.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowSlide.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/icon/share.png" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -116,6 +123,14 @@
       </method>
     </configuration>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -141,6 +156,8 @@
       <workItem from="1742383817151" duration="5567000" />
       <workItem from="1742470433842" duration="3808000" />
       <workItem from="1742719823386" duration="12792000" />
+      <workItem from="1743307299314" duration="155000" />
+      <workItem from="1743312089432" duration="11815000" />
     </task>
     <task id="LOCAL-00001" summary="修改幻灯片UI,大部分已修改,缩略图UI待确定">
       <option name="closed" value="true" />
@@ -182,7 +199,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742741665115</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="修改动态功能栏bug">
+      <option name="closed" value="true" />
+      <created>1743307038423</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1743307038423</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -203,6 +228,7 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="修改幻灯片UI,大部分已修改,缩略图UI待确定" />
     <MESSAGE value="主窗口双击进入幻灯片接口完成,可以左右切换图片,其他功能待实现" />
+    <MESSAGE value="更新幻灯片窗口图片放缩功能" />
     <MESSAGE value="修改动态功能栏bug" />
     <option name="LAST_COMMIT_MESSAGE" value="修改动态功能栏bug" />
   </component>

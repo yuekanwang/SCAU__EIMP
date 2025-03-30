@@ -67,7 +67,7 @@
                               <Insets />
                            </HBox.margin>
                         </Button>
-                        <Button id="rotate" fx:id="rotate" maxWidth="30.0" minWidth="30.0" prefHeight="25.0" prefWidth="30.0" styleClass="funtionalButton">
+                        <Button id="rotate" fx:id="rotate" maxWidth="30.0" minWidth="30.0" onAction="#rotate" prefHeight="25.0" prefWidth="30.0" styleClass="funtionalButton">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -97,7 +97,7 @@
                               <Insets />
                            </HBox.margin>
                         </Button>
-                        <Button id="share" fx:id="share" maxWidth="30.0" minWidth="30.0" prefHeight="25.0" prefWidth="30.0" styleClass="funtionalButton" HBox.hgrow="ALWAYS" />
+                        <Button id="compress" fx:id="compress" maxWidth="30.0" minWidth="30.0" prefHeight="25.0" prefWidth="30.0" styleClass="funtionalButton" HBox.hgrow="ALWAYS" />
                   </HBox>
             </HBox>
             <HBox fx:id="topFillHbox" maxWidth="140.0" minWidth="0.0" style="-fx-background-color: #3c3f41;" HBox.hgrow="ALWAYS" />
