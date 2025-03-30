@@ -4,12 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="图片放缩功能存在bug,在改了">
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/fit.png" afterDir="false" />
+    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="更新幻灯片窗口图片放缩功能">
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/original-fit.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/css/Slide.css" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/css/Slide.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowSlide.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowSlide.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/icon/original.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,7 +150,7 @@
       <workItem from="1742383817151" duration="5567000" />
       <workItem from="1742470433842" duration="3808000" />
       <workItem from="1742719823386" duration="12792000" />
-      <workItem from="1743169025990" duration="50101000" />
+      <workItem from="1743169025990" duration="50467000" />
     </task>
     <task id="LOCAL-00001" summary="修改幻灯片UI,大部分已修改,缩略图UI待确定">
       <option name="closed" value="true" />
@@ -200,7 +200,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743000545883</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="更新幻灯片窗口图片放缩功能">
+      <option name="closed" value="true" />
+      <created>1743306778199</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1743306778199</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -223,6 +231,7 @@
     <MESSAGE value="主窗口双击进入幻灯片接口完成,可以左右切换图片,其他功能待实现" />
     <MESSAGE value="修改动态功能栏bug" />
     <MESSAGE value="图片放缩功能存在bug,在改了" />
-    <option name="LAST_COMMIT_MESSAGE" value="图片放缩功能存在bug,在改了" />
+    <MESSAGE value="更新幻灯片窗口图片放缩功能" />
+    <option name="LAST_COMMIT_MESSAGE" value="更新幻灯片窗口图片放缩功能" />
   </component>
 </project>
