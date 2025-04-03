@@ -5,6 +5,7 @@ import com.eimp.controller.ControllerMap;
 import com.eimp.controller.WindowMainController;
 import com.eimp.util.ImageUtil;
 import javafx.application.Platform;
+import javafx.scene.CacheHint;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.image.Image;
@@ -41,15 +42,20 @@ public class ThumbnailPanel extends BorderPane {
     public ThumbnailPanel(ImageUtil imageUtil) {
         this.setMaxSize(150, 190);
         this.setMinSize(150, 190);
-        setCache(false);
+        setCache(true);//这里丢进缓存里好一些
         this.imageUtil = imageUtil;
         this.isSelected = false;
+        
         // 保持图片大小比例
-        this.imageView = new ImageView(new Image(imageUtil.getURL(), 90, 90, true, true, true));
-        this.imageView.setFitWidth(140);
-        this.imageView.setFitHeight(140);
-        this.imageView.setPreserveRatio(true);
+        this.imageView = new ImageView(new Image(imageUtil.getURL()));//
+        this.imageView.setFitHeight(140);//这里没有必要用setFitWidth函数了
+        this.imageView.setPreserveRatio(true);//在调整图片显示大小时保持原始宽高比
+        this.imageView.setSmooth(true); // 启用高质量缩放算法，这个不可以在加载的时候使用
+        this.imageView.setCacheHint(CacheHint.SPEED); // 使用硬件加速(其实用不用都一样）
         int length = imageUtil.getFileName().length();
+
+
+
         //名字长度大于限定就剪切
         if (length > MAX_NAME) {
             this.imageName = new TextField(imageUtil.getFileName().substring(0, MAX_NAME) + "...") {
