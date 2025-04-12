@@ -35,7 +35,7 @@
                         <Insets left="5.0" />
                      </padding>
                   </Label>
-                  <HBox fx:id="infoColumn" alignment="CENTER" maxHeight="35.0" maxWidth="205.0" minWidth="205.0" prefHeight="26.0" prefWidth="205.0" style="-fx-background-color: #e0e0e0; -fx-background-radius: 4;" HBox.hgrow="NEVER">
+                  <HBox alignment="CENTER" maxHeight="35.0" maxWidth="205.0" minWidth="205.0" prefHeight="26.0" prefWidth="205.0" style="-fx-background-color: #e0e0e0; -fx-background-radius: 4;" HBox.hgrow="NEVER">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
