@@ -1,5 +1,6 @@
 package com.eimp.controller;
 import com.eimp.SlideWindow;
+import com.eimp.component.ImageInfoPane;
 import com.eimp.util.FileUtil;
 import com.eimp.util.ImageUtil;
 import javafx.animation.*;
@@ -20,6 +21,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
@@ -182,6 +184,7 @@ public class WindowSlideController implements Initializable {
      * 图片宽高
      */
     private double originalWidth, originalHeight;
+    @FXML private HBox infoColumn;
     /**
      * 窗口布局初始化,对fxml布局组件初始化
      * @param location
@@ -193,12 +196,14 @@ public class WindowSlideController implements Initializable {
         this.resources = resources;
         this.windowMainController = (WindowMainController) ControllerMap.getController(WindowMainController.class);
         this.stage = SlideWindow.getStage();
+
         this.initMap();
         this.initMoreMenuButton();
         this.setUpDynamicButtonContainerListener();
         this.initButtonStyle();
         this.setUpWindowControls();
-        this.secondaryPane.setVisible(false);// 暂时隐藏缩略图栏,待实现
+        this.initImageInfoPane();
+//        this.secondaryPane.setVisible(false);// 暂时隐藏缩略图栏,待实现
     }
 
     /**
@@ -227,10 +232,40 @@ public class WindowSlideController implements Initializable {
     }
 
     /**
+     * 图片信息面板
+     */
+    private ImageInfoPane imageInfoPane = new ImageInfoPane();
+    /**
+     * 信息面板容器
+     */
+    @FXML private HBox infoPane;
+
+    /**
+     * 显示图片信息面板
+     */
+    @FXML
+    private void showImageInfo(){
+        if(!this.imageInfoPane.isVisible()){
+            this.imageInfoPane.setVisible(true);
+        }else{
+            this.imageInfoPane.setVisible(false);
+        }
+    }
+
+    /**
+     * 初始化图片信息面板
+     */
+    private void initImageInfoPane() {
+        this.imageInfoPane.getStylesheets().setAll(getClass().getResource("/css/imageInfoPane.css").toExternalForm());
+        this.imageInfoPane.setPrefWidth(320);
+        this.imageInfoPane.setPrefHeight(250);
+        this.infoPane.getChildren().add(this.imageInfoPane);
+        this.imageInfoPane.setVisible(false);
+    }
+    /**
      * 旋转变换类
      */
     private Rotate rotateTransform = new Rotate(0);
-
     /**
      * 图片旋转
      */
@@ -239,6 +274,75 @@ public class WindowSlideController implements Initializable {
         this.recoverTranslattion(50);
         rotateTransform.setAngle(rotateTransform.getAngle() + 90);
         this.updateCursor();
+    }
+
+
+    @FXML
+    private void playing(){
+        this.setSlidePlayingStatus(false);
+        stage.setFullScreen(true);
+
+        Timeline playingTimeline = new Timeline(new KeyFrame(Duration.millis(3000),e->{
+            nextImage(e);
+        }));
+        Timeline zoomTimeline = new Timeline(new KeyFrame(Duration.millis(100),e->{
+            if(this.MIN_SCALE<100){
+                this.zoom(1/1.01,null);
+            }else{
+                this.zoom(1.01,null);
+            }
+        }));
+        playingTimeline.setCycleCount(Timeline.INDEFINITE);
+        playingTimeline.play();
+        zoomTimeline.setCycleCount(Timeline.INDEFINITE);
+        zoomTimeline.play();
+        mainImageView.getScene().setOnKeyPressed(e->{
+            switch (e.getCode()){
+                case ESCAPE -> {
+                    this.setSlidePlayingStatus(true);
+                    playingTimeline.stop();
+                    zoomTimeline.stop();
+                    stage.setFullScreen(false);
+                }
+                case SPACE -> {
+                    if(playingTimeline.getStatus() == Animation.Status.PAUSED){
+                        playingTimeline.play();
+                        zoomTimeline.play();
+                    }else{
+                        playingTimeline.pause();
+                        zoomTimeline.pause();
+                    }
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 顶部左功能栏
+     */
+    @FXML
+    private HBox topFunctionalColumn;
+
+    /**
+     * 顶部右窗口控制栏
+     */
+    @FXML
+    private HBox windowControlColumn;
+
+    /**
+     * 设置幻灯片播放界面其他组件可见性
+     * @param visible 可见性
+     */
+    private void setSlidePlayingStatus(boolean visible){
+        this.secondaryPane.setVisible(visible);
+        this.topFunctionalColumn.setVisible(visible);
+        this.windowControlColumn.setVisible(visible);
+        if(visible){
+            AnchorPane.setTopAnchor(this.imagePane,35.0);
+        }else{
+            AnchorPane.setTopAnchor(this.imagePane,0.0);
+        }
     }
 
 //    private static final int MAX_VISIBLE_THUMBNAILS = 10;
@@ -353,6 +457,7 @@ public class WindowSlideController implements Initializable {
     private void updateMainImageView() {
         this.originalWidth = this.image.getWidth();
         this.originalHeight = this.image.getHeight();
+        this.imageInfoPane.setImageUtil(this.imageUtil);
         this.updateWindowInfo();
         this.initImageScale();
         this.mainImageView.setImage(this.image);
@@ -806,7 +911,7 @@ public class WindowSlideController implements Initializable {
     }
 
     /**
-     * 滚轮放缩图片
+     * 滚轮放缩移动图片
      * @param scrollEvent
      */
     @FXML
@@ -1030,6 +1135,9 @@ public class WindowSlideController implements Initializable {
                 }
                 case R-> {
                     this.rotate();
+                }
+                case I->{
+                    this.showImageInfo();
                 }
             }
         }else{

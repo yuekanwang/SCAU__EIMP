@@ -23,10 +23,9 @@
 }
 
 /* 全局基础样式 */
-.root {
+#rootPane {
     -fx-font-family: "Microsoft YaHei";
     -fx-base: #e0e0e0;
-
 }
 /* 基础样式 */
 .button {
@@ -165,28 +164,6 @@
 }
 
 
-/*.icon-standard {*/
-/*    -fx-pref-width: 20px;*/
-/*    -fx-pref-height: 20px;*/
-/*}*/
 
-/*!* 缩略图滚动条 *!*/
-/*.thumbnail-scroll .scroll-bar:horizontal {*/
-/*    -fx-background-color: transparent;*/
-/*}*/
 
-/*.thumbnail-scroll .thumb {*/
-/*    -fx-background-color: rgba(0,0,0,0.2);*/
-/*}*/
-
-/*!* 滚动条样式 *!*/
-/*.scroll-pane > .scroll-bar:horizontal {*/
-/*    -fx-background-color: #e0e0e0;*/
-/*}*/
-
-/*!* 缩略图悬停效果 *!*/
-/*.image-view:hover {*/
-/*    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 0);*/
-/*    -fx-cursor: hand;*/
-/*}*/
 

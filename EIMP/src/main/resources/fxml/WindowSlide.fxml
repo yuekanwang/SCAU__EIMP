@@ -14,7 +14,7 @@
 
 <AnchorPane fx:id="rootPane" minHeight="580.0" minWidth="590.0" prefHeight="700.0" prefWidth="900.0" stylesheets="@../css/Slide.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.controller.WindowSlideController">
       <StackPane fx:id="imagePane" layoutX="204.0" layoutY="303.0" onScroll="#zoomByScroll" style="-fx-background-color: #1e1f22;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
-            <ImageView fx:id="mainImageView" preserveRatio="true" StackPane.alignment="CENTER" />
+            <ImageView fx:id="mainImageView" preserveRatio="true" />
             <AnchorPane fx:id="secondaryPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;">
                   <ScrollPane fx:id="scrollPane" hbarPolicy="AS_NEEDED" layoutX="164.0" layoutY="555.0" prefHeight="96.0" prefWidth="571.0" style="-fx-background-color: #3c3f41;" vbarPolicy="NEVER" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0">
                         <HBox fx:id="thumbnailContainer" alignment="CENTER" prefHeight="93.0" prefWidth="353.0" spacing="5" style="-fx-padding: 0; -fx-background-color: #3c3f41;">
@@ -22,10 +22,11 @@
                               <ImageView fitHeight="90" preserveRatio="true" />
                         </HBox>
                   </ScrollPane>
+         <HBox fx:id="infoPane" alignment="TOP_CENTER" maxHeight="250.0" minHeight="250.0" prefHeight="250.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </AnchorPane>
       </StackPane>
-      <HBox fx:id="topFunctionalColumn" alignment="CENTER_LEFT" layoutX="13.0" layoutY="5.0" maxHeight="35.0" minHeight="35.0" minWidth="500.0" onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" scaleShape="false" spacing="10.0" style=" -fx-background-color: #3c3f41;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="260.0" AnchorPane.topAnchor="0.0">
-            <HBox alignment="CENTER_LEFT" fillHeight="false" maxHeight="35.0" maxWidth="400.0" minHeight="35.0" minWidth="280.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="35.0" prefWidth="280.0" scaleShape="false" spacing="2" style="-fx-padding: 0; -fx-background-color: #3c3f41;" HBox.hgrow="ALWAYS">
+      <HBox fx:id="topFunctionalColumn" alignment="CENTER_LEFT" layoutX="13.0" layoutY="5.0" maxHeight="35.0" minHeight="35.0" minWidth="500.0" onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" scaleShape="false" spacing="10.0" style="-fx-background-color: #3c3f41;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="260.0" AnchorPane.topAnchor="0.0">
+            <HBox fx:id="infoColumn" alignment="CENTER_LEFT" fillHeight="false" maxHeight="35.0" maxWidth="400.0" minHeight="35.0" minWidth="280.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="35.0" prefWidth="280.0" scaleShape="false" spacing="2" style="-fx-padding: 0; -fx-background-color: #3c3f41;" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -87,12 +88,12 @@
                               <Insets />
                            </HBox.margin>
                         </Button>
-                        <Button id="play" fx:id="play" maxWidth="30.0" minWidth="30.0" prefHeight="25.0" prefWidth="30.0" styleClass="funtionalButton" HBox.hgrow="ALWAYS">
+                        <Button id="play" fx:id="play" maxWidth="30.0" minWidth="30.0" onAction="#playing" prefHeight="25.0" prefWidth="30.0" styleClass="funtionalButton" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </Button>
-                        <Button id="info" fx:id="info" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" styleClass="funtionalButton" HBox.hgrow="ALWAYS">
+                        <Button id="info" fx:id="info" maxWidth="30.0" minWidth="30.0" onAction="#showImageInfo" prefWidth="30.0" styleClass="funtionalButton" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -111,7 +112,7 @@
       <Region fx:id="rightTopResize" prefHeight="5" prefWidth="5" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
       <Region fx:id="leftBottomResize" prefHeight="5" prefWidth="5" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" />
       <Region fx:id="rightBottomResize" prefHeight="5" prefWidth="5" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" />
-      <HBox alignment="CENTER" maxHeight="35.0" maxWidth="260.0" minHeight="35.0" minWidth="260.0" onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" prefHeight="35.0" prefWidth="260.0" scaleShape="false" spacing="8.0" style="-fx-background-color: #3c3f41;" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox fx:id="windowControlColumn" alignment="CENTER" maxHeight="35.0" maxWidth="260.0" minHeight="35.0" minWidth="260.0" onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" prefHeight="35.0" prefWidth="260.0" scaleShape="false" spacing="8.0" style="-fx-background-color: #3c3f41;" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Button id="zoomIn" fx:id="zoomIn" maxHeight="28.0" maxWidth="28.0" minHeight="28.0" minWidth="28.0" onAction="#zoomIn" onMousePressed="#zoomInConstantly" onMouseReleased="#stopTimerLine" prefHeight="23.0" prefWidth="28.0" styleClass="funtionalButton" />
             <Button id="zoomOut" fx:id="zoomOut" maxHeight="28.0" maxWidth="28.0" minHeight="28.0" minWidth="28.0" onAction="#zoomOut" onMousePressed="#zoomOutConstantly" onMouseReleased="#stopTimerLine" prefHeight="28.0" prefWidth="28.0" styleClass="funtionalButton" />
             <Label fx:id="zoomScale" minWidth="20.0" prefHeight="26.0" prefWidth="31.0" style="-fx-min-width: 40; -fx-text-fill: #ffffff;" text="100%" textFill="WHITE" />

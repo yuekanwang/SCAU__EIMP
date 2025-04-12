@@ -61,12 +61,12 @@ public class SlideWindow extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(SlideWindow.class.getResource("/fxml/WindowSlide.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), width, height);
         stage.setScene(scene);
-
+        scene.setFill(null);
         // 获取控制器实例
         controller = fxmlLoader.getController();
         Image Appicon = new Image(getClass().getResourceAsStream("/icon2/EIMP.png"));
         stage.getIcons().add(Appicon);
-        stage.initStyle(StageStyle.UNDECORATED);
+        stage.initStyle(StageStyle.TRANSPARENT);
         controller.setUpKeyEvent(scene);
 
         switch(launchMethodEnum){
