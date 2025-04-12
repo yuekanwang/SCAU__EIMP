@@ -284,6 +284,10 @@ public class WindowSlideController implements Initializable {
 
         Timeline playingTimeline = new Timeline(new KeyFrame(Duration.millis(3000),e->{
             nextImage(e);
+            // 循环播放
+            if(this.currentIndex.get() == this.imageUtilList.size() - 1){
+                this.currentIndex.set(-1);
+            }
         }));
         Timeline zoomTimeline = new Timeline(new KeyFrame(Duration.millis(100),e->{
             if(this.MIN_SCALE<100){
@@ -314,6 +318,7 @@ public class WindowSlideController implements Initializable {
                     }
                 }
             }
+
         });
 
     }
@@ -916,6 +921,7 @@ public class WindowSlideController implements Initializable {
      */
     @FXML
     private void zoomByScroll(ScrollEvent scrollEvent){
+        if(stage.isFullScreen()) return;                // 全屏屏蔽
         if(scrollEvent.isControlDown()){
             double deltaY = scrollEvent.getDeltaY();
             if(deltaY>0){
@@ -1116,6 +1122,7 @@ public class WindowSlideController implements Initializable {
      * @param event
      */
     private void initShortcutKey(KeyEvent event){
+        if(stage.isFullScreen()) return;     // 全屏屏蔽
         KeyCode code = event.getCode();
         if (event.isControlDown()) {
             switch (code) {
