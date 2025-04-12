@@ -202,6 +202,23 @@ public class WindowMainController implements Initializable {
     }
 
     /**
+     * 导航到指定路径
+     *
+     * @author Cyberangel2023
+     */
+    @FXML
+    private void goPath() {
+        String path = File_URL.getText();
+        if (path == null) {
+            return;
+        }
+
+        System.out.println(path);
+        File file = new File(path);
+        previewFlowPane.update(file);
+    }
+
+    /**
      * 初始化缩略图面板
      *
      * @author Cyberangel2023
@@ -228,21 +245,6 @@ public class WindowMainController implements Initializable {
         rectangle.setVisible(false);
     }
 
-    /**
-     * 导航到指定路径
-     *
-     * @author Cyberangel2023
-     */
-    @FXML
-    private void goPath() {
-        String path = File_URL.getText();
-        if (path == null) {
-            return;
-        }
-        System.out.println(path);
-        File file = new File(path);
-        previewFlowPane.update(file);
-    }
 
     /**
      * 鼠标事件处理
