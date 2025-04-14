@@ -47,15 +47,23 @@ public class ThumbnailPanel extends BorderPane {
         this.isSelected = false;
         
         // 保持图片大小比例
-        this.imageView = new ImageView(new Image(imageUtil.getURL()));//
-        this.imageView.setFitHeight(140);//这里没有必要用setFitWidth函数了
+        this.imageView = new ImageView(new Image(imageUtil.getURL()));
+
+        if(this.imageView.getFitHeight()>this.imageView.getFitWidth())
+            //比较图片的宽和高，哪个边更大，就控制哪个边的大小，防止图片爆出格子外
+        {
+            this.imageView.setFitHeight(140);
+        }
+        else
+        {
+            this.imageView.setFitWidth(140);
+        }
+
         this.imageView.setPreserveRatio(true);//在调整图片显示大小时保持原始宽高比
         this.imageView.setSmooth(true); // 启用高质量缩放算法，这个不可以在加载的时候使用
         this.imageView.setCacheHint(CacheHint.SPEED); // 使用硬件加速(其实用不用都一样）
+
         int length = imageUtil.getFileName().length();
-
-
-
         //名字长度大于限定就剪切
         if (length > MAX_NAME) {
             this.imageName = new TextField(imageUtil.getFileName().substring(0, MAX_NAME) + "...") {

@@ -17,13 +17,16 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="659.0" prefWidth="941.0" stylesheets="@../css/Main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.controller.WindowMainController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="659.0" prefWidth="941.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.controller.WindowMainController">
    <children>
-      <AnchorPane layoutY="-31.2" minHeight="500" minWidth="200" prefHeight="706.0" prefWidth="941.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="interface_Pane" layoutY="-31.2" minHeight="500" minWidth="200" prefHeight="706.0" prefWidth="941.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane fx:id="top" layoutY="-27.2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="115.0" prefWidth="941.0" style="-fx-background-color: #3BCCE2" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane fx:id="top" layoutY="-27.2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="115.0" prefWidth="941.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <HBox layoutX="106.0" layoutY="30.4" prefHeight="86.0" prefWidth="941.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
                      <children>
@@ -74,17 +77,39 @@
                            <font>
                               <Font name="System Bold" size="17.0" />
                            </font>
+                           <textFill>
+                              <RadialGradient centerY="0.5416666449922504" radius="0.5">
+                                 <stops>
+                                    <Stop>
+                                       <color>
+                                          <Color red="0.03529411926865578" green="0.08235294371843338" blue="0.19607843458652496" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="0.006729475100942127">
+                                       <color>
+                                          <Color red="0.10196078568696976" green="0.12156862765550613" blue="0.16862745583057404" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="1.0">
+                                       <color>
+                                          <Color red="0.1764705926179886" green="0.19607843458652496" blue="0.250980406999588" />
+                                       </color>
+                                    </Stop>
+                                 </stops>
+                              </RadialGradient>
+                           </textFill>
                         </Label>
-                        <Pane maxWidth="1.7976931348623157E308" onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" prefHeight="40.0" prefWidth="614.0" HBox.hgrow="ALWAYS" />
+                        <Pane maxWidth="1.7976931348623157E308" onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" prefHeight="44.0" prefWidth="598.0" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="LightButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="45.0" />
                         <Button fx:id="minBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="45.0" HBox.hgrow="NEVER" />
                         <Button fx:id="maxBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.2" prefWidth="45.0" HBox.hgrow="NEVER" />
                         <Button fx:id="closeBtn" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.2" prefWidth="45.0" HBox.hgrow="NEVER" />
                      </children>
                   </HBox>
                </children></AnchorPane>
-            <AnchorPane fx:id="buttom" layoutY="872.0" maxHeight="51.0" maxWidth="1407.0" minHeight="24.0" minWidth="853.0" prefHeight="25.0" prefWidth="853.0" style="-fx-background-color: #3BCCE2;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <AnchorPane fx:id="buttom" layoutY="872.0" maxHeight="51.0" maxWidth="1407.0" minHeight="24.0" minWidth="853.0" prefHeight="25.0" prefWidth="853.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
-                  <Label fx:id="imageSize_Label" layoutY="12.8" maxHeight="51.0" maxWidth="1407.0" minHeight="11.0" minWidth="853.0" prefHeight="11.0" prefWidth="853.0" text="Label" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <Label fx:id="imageSize_Label" layoutY="12.8" maxHeight="51.0" maxWidth="1407.0" minHeight="11.0" minWidth="853.0" prefHeight="11.0" prefWidth="853.0" text="Label" textFill="#c4c4c4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font size="18.0" />
                      </font>

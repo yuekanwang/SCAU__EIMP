@@ -29,6 +29,12 @@ import java.nio.file.Files;
 import java.util.*;
 
 public class WindowMainController implements Initializable {
+    @FXML
+    public AnchorPane interface_Pane;//主界面基本面板
+    @FXML
+    public Button LightButton;//夜间/日间控制按钮
+
+    public AnchorPane root;//根
 
     private Stage stage;
 
@@ -128,6 +134,38 @@ public class WindowMainController implements Initializable {
         this.setUpWindowControls();//调用窗口控制函数
         initFileTreeView();
         initPreviewPane();
+        intPaneColor();
+    }
+
+    /**
+     * 初始化界面主题的设置和控制
+     *
+     * @author yuekanwnag
+     */
+private boolean f;//标志位，用以表示日间或夜间
+    private void intPaneColor()
+    {
+        f=true;//true表示日间，false表示夜间
+        root.getStylesheets().setAll(//初始化为日间模式
+                getClass().getResource("/css/Main_Sun.css").toExternalForm());
+
+        LightButton.setOnAction(e->{//按钮控制日间模式或夜间模式的切换
+            if(f==true)
+            {
+                f=false;
+                root.getStylesheets().clear();//清楚掉之前的样式
+                root.getStylesheets().setAll(//加入新的样式
+                        getClass().getResource("/css/Main_Night.css").toExternalForm());
+            }
+            else
+            {
+                f=true;
+                root.getStylesheets().clear();
+                root.getStylesheets().setAll(
+                        getClass().getResource("/css/Main_Sun.css").toExternalForm());
+            }
+        });
+
     }
 
     /**

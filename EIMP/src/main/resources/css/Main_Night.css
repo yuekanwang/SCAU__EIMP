@@ -10,7 +10,7 @@
 
 .image-Left_Button:hover
 {
-    -fx-background-color:#2CBED4;       /*按钮背景颜色改为深银色*/
+    -fx-background-color:#091532;       /*按钮背景颜色改为深银色*/
     -fx-background-size: 60;
     -fx-cursor: hand;                   /* 改变鼠标手势 */
 }
@@ -32,7 +32,7 @@
 
 .image-Right_Button:hover
 {
-    -fx-background-color:#2CBED4;
+    -fx-background-color:#091532;
     -fx-background-size: 60;
     -fx-cursor: hand;
 }
@@ -46,7 +46,7 @@
 /*搜索键*/
 .Search
 {
-    -fx-background-image:url("../icon2/Search_Image.png");/*图片引用*/
+    -fx-background-image:url("../icon2/搜索2.png");/*图片引用*/
     -fx-background-color:transparent;   /*按钮背景透明*/
     -fx-background-size: 25;       /*图片大小自动适应按钮大小*/
     -fx-background-repeat: no-repeat;   /* 禁止重复 */
@@ -120,9 +120,26 @@
     -fx-background-position: center;    /* 图片居中 */
 }
 
-#closeBtn:hover,#minBtn:hover,#maxBtn:hover {/*给这些按钮的悬停统一改深色*/
-    -fx-background-color:#1AA3B2;
+#LightButton
+{
+    -fx-background-image: url("../icon2/夜间模式.png");  /* 图片路径（相对于CSS文件） */
+    -fx-background-color:#451851;   /*按钮背景透明*/
+    -fx-background-radius: 15px;
+    -fx-background-size: 20;            /*图片大小调整*/
+    -fx-background-repeat: no-repeat;   /* 禁止重复 */
+    -fx-background-position: center;    /* 图片居中 */
+    -fx-cursor: hand;
 }
+
+#maxBtn:hover,#minBtn:hover,#LightButton:hover {/*给这些按钮的悬停统一改深色*/
+    -fx-background-color:#026D6F;
+}
+
+#closeBtn:hover
+{
+    -fx-background-color:red;
+}
+
 .maxBtn-full{/*最大化按钮*/
     -fx-background-image: url("../icon2/FullScreen.png");
 }
@@ -176,4 +193,35 @@
 #About_Button{
     -fx-cursor: hand;
     -fx-background-color:#D173EA ;
+}
+
+#root
+{
+    -fx-background-color:linear-gradient(to right,#1A1F2B,#2D3240,#091532)
+}
+
+/* 修正后的呼吸灯样式 */
+#AppName {
+    -base-color: rgba(109, 211, 224, 1); /* 明确定义Alpha通道 */
+
+    -fx-text-fill: -base-color;
+    -fx-effect: dropshadow(three-pass-box,
+    rgba(109, 211, 224, 0.7), 8, 0.5, 0, 0);
+
+    /* 仅动画支持属性 */
+    -fx-opacity: 1.0;
+    animation: breath_effect 3s ease-in-out infinite;
+}
+
+@keyframes breath_effect {/*待定，研究呼吸灯*/
+    0%, 100% {
+        -fx-opacity: 1.0;
+        -fx-effect: dropshadow(three-pass-box,
+        rgba(109, 211, 224, 0.8), 8, 0.5, 0, 0);
+    }
+    50% {
+        -fx-opacity: 0.3;
+        -fx-effect: dropshadow(three-pass-box,
+        rgba(109, 211, 224, 0.3), 4, 0.3, 0, 0);
+    }
 }
