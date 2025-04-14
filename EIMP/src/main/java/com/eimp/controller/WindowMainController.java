@@ -6,13 +6,14 @@ import com.eimp.component.FileTreeItem;
 import com.eimp.component.PreviewFlowPane;
 
 import com.eimp.component.ThumbnailPanel;
+import com.eimp.util.ImageUtil;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -24,6 +25,7 @@ import javafx.util.Callback;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.*;
 
 public class WindowMainController implements Initializable {
@@ -683,7 +685,7 @@ public class WindowMainController implements Initializable {
         Menu() {
             copy.setOnAction(e -> copyImage());
             copyaddress.setOnAction(e -> copyAddress());
-            paste.setOnAction(e -> pasteImage());
+            paste.setOnAction(e -> pasteAll());
             delete.setOnAction(e -> deleteImage());
             rename.setOnAction(e -> renameImage());
             attribute.setOnAction(e -> showImageAttribute());
@@ -704,18 +706,42 @@ public class WindowMainController implements Initializable {
     }
 
     // 存储复制的图片
-    private final List<ThumbnailPanel> copyImg = new ArrayList<>();
+    Clipboard clipboard = Clipboard.getSystemClipboard();
+    ClipboardContent content = new ClipboardContent();
+
     /**
      * 复制图片
      */
     @FXML
     public void copyImage() {
-        copyImg.clear();
-        copyImg.addAll(previewFlowPane.getNewSelected());
+        if (!previewFlowPane.getNewSelected().isEmpty())  {
+            // 获取用户选中的多个图片文件
+            File src;
+            File directory = previewFlowPane.getDirectory();
+            List<File> selectedFiles = new ArrayList<>();
+            for (ThumbnailPanel image : previewFlowPane.getNewSelected()) {
+                src = image.getImageUtil().getFile();
+                String in = directory.getAbsolutePath() + "\\" + src.getName();
+                selectedFiles.add(new File(in));
+            }
+            // 将文件列表存入剪贴板
+            content.putFiles(selectedFiles);
+            clipboard.setContent(content);
+        }
     }
 
     // 存储复制的图片地址
     private String copyAddr = null;
+    private String pastedText;
+
+    public String getCopyAddr() {
+        return copyAddr;
+    }
+
+    public String getPastedText() {
+        return pastedText;
+    }
+
     /**
      * 复制图片地址
      */
@@ -723,14 +749,41 @@ public class WindowMainController implements Initializable {
     public void copyAddress() {
         copyAddr = previewFlowPane.getDirectory().getAbsolutePath() +
                 previewFlowPane.getNewSelected().getLast().getImageUtil().getFileName();
+        // 将字符串存入剪贴板
+        content.putString(copyAddr);
+        clipboard.setContent(content);
     }
 
     /**
      * 粘贴图片
      */
     @FXML
-    public void pasteImage() {
+    public void pasteAll() {
+        // 获取复制图片内容
+        if (clipboard.hasFiles())  {
+            List<File> files = clipboard.getFiles();
+            for (File file : files) {
+                // 过滤非图片文件
+                if (file.getName().matches(".*\\.(png|jpg|jpeg|gif|bmp)")) {
+                    // 添加到界面容器
+                    ImageUtil imageUtil = new ImageUtil(file);
+                    ThumbnailPanel thumbnailPanel = new ThumbnailPanel(imageUtil);
+                    previewFlowPane.getThumbnailPanels().add(thumbnailPanel);
+                }
+            }
+        } else if (clipboard.hasString()) {
+            pastedText = clipboard.getString();
+        }
+        updateFlowPane();
     }
+
+    /**
+     * 刷新缩略图面板
+     */
+    public void updateFlowPane() {
+        previewFlowPane.update();
+    }
+
 
     /**
      * 删除图片

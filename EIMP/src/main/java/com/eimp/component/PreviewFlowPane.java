@@ -80,6 +80,15 @@ public class PreviewFlowPane extends FlowPane {
     }
 
     /**
+     * 当改变排序方式时刷新缩略图面板
+     */
+    public void update() {
+        if (directory != null) {
+            update(directory);
+        }
+    }
+
+    /**
      * 添加选中
      */
     public void addSelectedtoList(Object obj) {
