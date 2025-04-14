@@ -800,13 +800,25 @@ private boolean f;//标志位，用以表示日间或夜间
         // 获取复制图片内容
         if (clipboard.hasFiles())  {
             List<File> files = clipboard.getFiles();
+            File target;
+            File directory = previewFlowPane.getDirectory();
             for (File file : files) {
                 // 过滤非图片文件
                 if (file.getName().matches(".*\\.(png|jpg|jpeg|gif|bmp)")) {
                     // 添加到界面容器
-                    ImageUtil imageUtil = new ImageUtil(file);
-                    ThumbnailPanel thumbnailPanel = new ThumbnailPanel(imageUtil);
-                    previewFlowPane.getThumbnailPanels().add(thumbnailPanel);
+                    String out = directory.getAbsolutePath() + "\\" + file.getName();
+                    target = new File(out);
+                    try {
+                        //目标文件已存在时，在文件名后加“-副本后缀”
+                        while (target.exists()) {
+                            String suffix = out.substring(out.lastIndexOf("."));
+                            out = out.replace(suffix, "-副本") + suffix;
+                            target = new File(out);
+                        }
+                        Files.copy(file.toPath(), target.toPath());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } else if (clipboard.hasString()) {
@@ -822,12 +834,24 @@ private boolean f;//标志位，用以表示日间或夜间
         previewFlowPane.update();
     }
 
-
     /**
      * 删除图片
      */
     @FXML
     public void deleteImage() {
+        File chooose;
+        for (ThumbnailPanel image : previewFlowPane.getNewSelected()) {
+            chooose = image.getImageUtil().getFile();
+            if (chooose.exists() && chooose.isFile()) {
+                boolean isDeleted = chooose.delete();  // 返回删除结果
+                if (isDeleted) {
+                    // System.out.println(" 文件删除成功");
+                } else {
+                    // System.out.println(" 文件被占用或无权限");
+                }
+            }
+        }
+        updateFlowPane();
     }
 
     /**
