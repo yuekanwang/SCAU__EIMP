@@ -67,7 +67,7 @@
                               <Image url="@../icon2/EIMP.png" />
                            </image>
                            <viewport>
-                              <Rectangle2D />
+                              <Rectangle2D /><!--splitPane-->
                            </viewport>
                         </ImageView>
                         <Label fx:id="AppName" minHeight="-Infinity" minWidth="-Infinity" prefHeight="37.0" prefWidth="138.0" text="EIMP Photo" HBox.hgrow="NEVER">
@@ -132,7 +132,7 @@
                      <children>
                         <AnchorPane fx:id="mid" prefHeight="46.0" prefWidth="870.0">
                            <children>
-                              <HBox layoutX="244.0" layoutY="-27.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <HBox fx:id="item_HBox" layoutX="244.0" layoutY="-27.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
                                     <MenuButton fx:id="SortMenu" alignment="CENTER_RIGHT" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="140.0" text="排序方式" HBox.hgrow="NEVER">
                                       <items>

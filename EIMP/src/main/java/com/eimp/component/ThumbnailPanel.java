@@ -6,6 +6,7 @@ import com.eimp.controller.WindowMainController;
 import com.eimp.util.ImageUtil;
 import javafx.application.Platform;
 import javafx.scene.CacheHint;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.image.Image;
@@ -30,7 +31,7 @@ public class ThumbnailPanel extends BorderPane {
     // 图片工具
     private ImageUtil imageUtil;
     // 图片名称
-    private final TextField imageName;
+    private  final TextField imageName;
     // 是否被选中
     private boolean isSelected;
 
@@ -46,22 +47,13 @@ public class ThumbnailPanel extends BorderPane {
         this.imageUtil = imageUtil;
         this.isSelected = false;
         
-        // 保持图片大小比例
+        //保持图片大小比例
         this.imageView = new ImageView(new Image(imageUtil.getURL()));
 
-        if(this.imageView.getFitHeight()>this.imageView.getFitWidth())
-            //比较图片的宽和高，哪个边更大，就控制哪个边的大小，防止图片爆出格子外
-        {
-            this.imageView.setFitHeight(140);
-        }
-        else
-        {
-            this.imageView.setFitWidth(140);
-        }
-
-        this.imageView.setPreserveRatio(true);//在调整图片显示大小时保持原始宽高比
+        this.imageView.setFitHeight(140);
+        this.imageView.setFitWidth(140);
         this.imageView.setSmooth(true); // 启用高质量缩放算法，这个不可以在加载的时候使用
-        this.imageView.setCacheHint(CacheHint.SPEED); // 使用硬件加速(其实用不用都一样）
+        this.imageView.setCacheHint(CacheHint.SCALE_AND_ROTATE); // 使用硬件加速(其实用不用都一样）
 
         int length = imageUtil.getFileName().length();
         //名字长度大于限定就剪切
@@ -72,7 +64,7 @@ public class ThumbnailPanel extends BorderPane {
             this.imageName = new TextField(imageUtil.getFileName());
         }
         imageName.setEditable(false);
-        imageName.setStyle("-fx-border-color: transparent; -fx-background-color: transparent; -fx-text-fill: black; -fx-alignment: CENTER;");
+        imageName.setStyle(" -fx-border-color: transparent; -fx-background-color: transparent; -fx-text-fill: black; -fx-alignment: CENTER;");
 
         //searchKey = MAIN_WINDOWS_CONTROLLER.getSearchPath();
         // 绑定主界面搜索框
@@ -135,6 +127,7 @@ public class ThumbnailPanel extends BorderPane {
             }
         });
     }
+
 
     /**
      * 图片选中背景设置

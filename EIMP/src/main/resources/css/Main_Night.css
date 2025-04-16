@@ -159,35 +159,54 @@
 }
 
 /*每个按钮独特的地方，再写进去*/
-#SortMenu{
-    -fx-background-image: url("../icon2/排序.png");
+/* 针对排序菜单的深度适配 */
+#SortMenu {
+    -fx-background-color: transparent; /* 清除默认背景 */
+    -fx-background-image: url("../icon2/排序2.png");
 }
+
+/* 精确控制文字标签 */
+#SortMenu > .label {
+    -fx-text-fill: #FFFFFF !important; /* 使用导航栏同款蓝色 */
+}
+
+/* 下拉箭头同步配色 */
+#SortMenu .arrow {
+    -fx-background-color: #2B579A;
+    -fx-scale-x: 0.9; /* 尺寸微调适配图标 */
+}
+
 #SelectAll_Button{
-    -fx-background-image: url("../icon2/全选.png");
+    -fx-background-image: url("../icon2/全选2.png");
+    -fx-text-fill: #FFFFFF
 }
 #Delete_Button{
-    -fx-background-image: url("../icon2/删除.png");
+    -fx-background-image: url("../icon2/删除2.png");
+    -fx-text-fill: #FFFFFF
 }
 #Flushed_Button{
-    -fx-background-image: url("../icon2/刷新.png");
+    -fx-background-image: url("../icon2/刷新2.png");
+    -fx-text-fill: #FFFFFF
 }
 #Slideshow_Button{
-    -fx-background-image: url("../icon2/幻灯片.png");
+    -fx-background-image: url("../icon2/幻灯片2.png");
+    -fx-text-fill: #FFFFFF
 }
 #Help_Button{
-    -fx-background-image: url("../icon2/帮助.png");
+    -fx-background-image: url("../icon2/帮助2.png");
+    -fx-text-fill: #FFFFFF
 }
 
 #SortMenu:hover ,#SelectAll_Button:hover,#Delete_Button:hover,
 #Flushed_Button:hover,#Slideshow_Button:hover,#Help_Button:hover
 {
-    -fx-border-color: #3BCCE2;
+    -fx-border-color: #DBDBDB;
     -fx-cursor: hand;
 }
 #SortMenu:pressed ,#SelectAll_Button:pressed,#Delete_Button:pressed,
 #Flushed_Button:pressed,#Slideshow_Button:pressed,#Help_Button:pressed
 {
-    -fx-background-color:#C641EC;
+    -fx-background-color:#DBDBDB;
 }
 
 #About_Button{
@@ -199,6 +218,81 @@
 {
     -fx-background-color:linear-gradient(to right,#1A1F2B,#2D3240,#091532)
 }
+
+#imagePreviewPane,#item_HBox
+{
+    -fx-background-color:#1A1F2B
+}
+
+/* 垂直滚动条整体样式 */
+#imagePreviewScrollPane .scroll-bar:vertical {
+    -fx-background-color: #01486B;
+    -fx-padding: 0 2px;                 /* 边缘留空 */
+}
+
+/* 垂直滚动条滑块 */
+#imagePreviewScrollPane .scroll-bar:vertical .thumb {
+    -fx-background-color: #091532;      /* 使用导航栏同款蓝色 */
+    -fx-background-radius: 4px;          /* 圆角效果 */
+    -fx-background-insets: 2px;         /* 内边距 */
+}
+
+#splitPane
+{
+    -fx-background-color: #1a1a1a;     /* 整体背景色 */
+}
+/* 主容器样式 */
+#treeView {
+    -fx-background-color: #1a1a1a;     /* 整体背景色 */
+    -fx-border-color: #2B579A;         /* 右侧边框（与导航栏同色） */
+    -fx-border-width: 0 2px 0 0;
+}
+
+/* 单元格基础样式 */
+.tree-cell {
+    -fx-background-color: transparent; /* 透明背景 */
+    -fx-text-fill: #e0e0e0;            /* 文字颜色 */
+    -fx-font-size: 13px;
+    -fx-padding: 6px 10px;             /* 与图片预览区对齐 */
+}
+
+/* 展开/折叠箭头 */
+.tree-disclosure-node .arrow {
+    -fx-background-color: #6b8cce;     /* 浅蓝色箭头 */
+    -fx-shape: "M 0 0 L 5 5 L 0 10 Z";/* 自定义箭头形状 */
+}
+
+/* 选中状态 */
+.tree-cell:selected {
+    -fx-background-color: #2B579A55;   /* 半透明选中效果 */
+    -fx-text-fill: #fff;
+}
+
+/* 悬停效果 */
+.tree-cell:hover {
+    -fx-background-color: #2B579A33;   /* 弱化悬停避免干扰 */
+}
+
+/* 连接线样式 */
+.tree-cell > .tree-disclosure-node > .arrow {
+    -fx-effect: dropshadow(gaussian, #2B579A, 4, 0.5, 0, 0);
+}
+
+/* 滚动条同步 */
+#treeView .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8px;
+}
+#treeView .scroll-bar:vertical .thumb {
+    -fx-background-color: #2B579A;
+}
+
+
+
+
+
+
+
 
 /* 修正后的呼吸灯样式 */
 #AppName {
