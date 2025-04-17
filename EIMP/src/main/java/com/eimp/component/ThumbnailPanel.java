@@ -5,16 +5,24 @@ import com.eimp.controller.ControllerMap;
 import com.eimp.controller.WindowMainController;
 import com.eimp.util.ImageUtil;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.scene.CacheHint;
-import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputControl;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 
-import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.regex.Pattern;
 
 /**
  * 初始化目录树
@@ -31,7 +39,7 @@ public class ThumbnailPanel extends BorderPane {
     // 图片工具
     private ImageUtil imageUtil;
     // 图片名称
-    private  final TextField imageName;
+    private TextField imageName;
     // 是否被选中
     private boolean isSelected;
 
@@ -46,7 +54,7 @@ public class ThumbnailPanel extends BorderPane {
         setCache(true);//这里丢进缓存里好一些
         this.imageUtil = imageUtil;
         this.isSelected = false;
-        
+
         //保持图片大小比例
         this.imageView = new ImageView(new Image(imageUtil.getURL()));
 
@@ -55,16 +63,40 @@ public class ThumbnailPanel extends BorderPane {
         this.imageView.setSmooth(true); // 启用高质量缩放算法，这个不可以在加载的时候使用
         this.imageView.setCacheHint(CacheHint.SCALE_AND_ROTATE); // 使用硬件加速(其实用不用都一样）
 
-        int length = imageUtil.getFileName().length();
-        //名字长度大于限定就剪切
-        if (length > MAX_NAME) {
-            this.imageName = new TextField(imageUtil.getFileName().substring(0, MAX_NAME) + "...") {
-            };
-        } else {
-            this.imageName = new TextField(imageUtil.getFileName());
-        }
+        // 裁剪文本
+        cutting();
+        // 设置文本默认样式
+        initText();
+        // 设置不可编辑
         imageName.setEditable(false);
-        imageName.setStyle(" -fx-border-color: transparent; -fx-background-color: transparent; -fx-text-fill: black; -fx-alignment: CENTER;");
+
+        imageName.setOnAction(this::confirmRename);
+        imageName.addEventFilter(KeyEvent.KEY_PRESSED, this::handleEscape);
+        // 双击事件：进入编辑模式
+        imageName.setOnMouseClicked(event  -> {
+            if (event.getClickCount()  == 2) {
+                MAIN_WINDOWS_CONTROLLER.renameImage();
+            }
+        });
+
+        // 失去焦点事件
+        imageName.focusedProperty().addListener((observable,  oldValue, newValue) -> {
+            if (!newValue) {
+                // 失去焦点时触发
+                String newName = imageName.getText().trim();
+                // 检测非法字符
+                String regex = "[\\\\/:*?\"<>|]";
+                if (Pattern.compile(regex).matcher(newName).find())  {
+                    showError("重命名失败: 存在非法字符");
+                    resetName();
+                    return;
+                }
+                if (!newName.isEmpty())  {
+                    renameFile(newName);
+                }
+                resetName();
+            }
+        });
 
         //searchKey = MAIN_WINDOWS_CONTROLLER.getSearchPath();
         // 绑定主界面搜索框
@@ -128,12 +160,22 @@ public class ThumbnailPanel extends BorderPane {
         });
     }
 
+    private void cutting() {
+        int length = imageUtil.getFileName().length();
+        //名字长度大于限定就剪切
+        if (length > MAX_NAME) {
+            this.imageName = new TextField(imageUtil.getFileName().substring(0, MAX_NAME) + "...") {
+            };
+        } else {
+            this.imageName = new TextField(imageUtil.getFileName());
+        }
+    }
 
     /**
      * 图片选中背景设置
      */
     public void selected() {
-        this.setStyle("-fx-background-color: #cce8ff");
+        this.setStyle("-fx-background-color: #DCD8FE");
         this.isSelected = true;
     }
 
@@ -146,7 +188,129 @@ public class ThumbnailPanel extends BorderPane {
         return imageUtil;
     }
 
+    public void setImageUtil(ImageUtil imageUtil) {
+        this.imageUtil = imageUtil;
+    }
+
+    public TextField getImageName() {
+        return imageName;
+    }
+
     public boolean getSelected() {
         return isSelected;
+    }
+
+    // 日间字体设置
+    public void initText() {
+        imageName.setStyle(
+                "-fx-background-color: transparent; " + // 透明背景
+                        "-fx-border-color: transparent; " + // 透明边框
+                        "-fx-text-fill: black; " + // 黑色文本
+                        "-fx-highlight-fill: transparent; " + // 选中文本的背景颜色为透明
+                        "-fx-highlight-text-fill: black; " + // 选中文本的颜色
+                        "-fx-cursor: default; " + // 鼠标光标为默认样式
+                        "-fx-alignment: CENTER;" // 设置居中;
+        );
+    }
+
+    public void setText() {
+        imageName.setStyle(
+                "-fx-background-color: #D7D5E9; " + // 淡蓝紫背景
+                        "-fx-border-color: black; " + // 黑色边框
+                        "-fx-text-fill: black; " + // 白色文本
+                        "-fx-highlight-fill: #6B3DF7; " + // 选中文本的背景颜色为蓝紫色
+                        "-fx-highlight-text-fill: white; " + // 选中文本的颜色
+                        "-fx-alignment: CENTER;" // 设置居中;
+        );
+    }
+
+    // 夜间字体设置
+    public void initBlackText() {
+        imageName.setStyle(
+                "-fx-background-color: transparent; " + // 透明背景
+                        "-fx-border-color: transparent; " + // 透明边框
+                        "-fx-text-fill: white; " + // 白色文本
+                        "-fx-highlight-fill: transparent; " + // 选中文本的背景颜色为透明
+                        "-fx-highlight-text-fill: white; " + // 选中文本的颜色
+                        "-fx-cursor: default; " + // 鼠标光标为默认样式
+                        "-fx-alignment: CENTER;" // 设置居中;
+        );
+    }
+
+    public void setBlackText() {
+        imageName.setStyle(
+                "-fx-background-color: #242424; " + // 黑色背景
+                        "-fx-border-color: white; " + // 白色边框
+                        "-fx-text-fill: white; " + // 白色文本
+                        "-fx-highlight-fill: #6B3DF7; " + // 选中文本的背景颜色为蓝紫色
+                        "-fx-highlight-text-fill: white; " + // 选中文本的颜色
+                        "-fx-alignment: CENTER;" // 设置居中;
+        );
+    }
+
+    public void startReName() {
+        // 设置图片全称
+        imageName.setText(imageUtil.getFileName());
+        // 设置可编辑
+        imageName.setEditable(true);
+        // 设置文本修改样式
+        setText();
+        // 获取焦点
+        imageName.requestFocus();
+        // 选择全部文字
+        imageName.selectAll();
+    }
+
+    // TextFiled输出
+    private void confirmRename(ActionEvent event) {
+        String newName = imageName.getText().trim();
+        // 检测非法字符
+        String regex = "[\\\\/:*?\"<>|]";
+        if (Pattern.compile(regex).matcher(newName).find())  {
+            showError("重命名失败: 存在非法字符");
+            resetName();
+            return;
+        }
+        if (!newName.isEmpty())  {
+            renameFile(newName);
+        }
+        resetName();
+    }
+
+    // 重命名操作
+    private void renameFile(String newName) {
+        // 获取图片地址
+        Path oldPath = Paths.get(imageUtil.getAbsolutePath());
+        Path newPath = oldPath.resolveSibling(newName);
+        try {
+            // 替换文件
+            Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+
+        }
+    }
+
+    // 设置Esc按键事件
+    private void handleEscape(KeyEvent event) {
+        if (event.getCode()  == KeyCode.ESCAPE) {
+            resetName();
+        }
+    }
+
+    // 错误显示
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setContentText(message);
+        alert.show();
+    }
+
+    // 重新设置
+    private void resetName() {
+        // 对文字重新处理
+        cutting();
+        initText();
+        imageName.setEditable(false);
+        PreviewFlowPane parent = (PreviewFlowPane) this.getParent();
+        parent.update();
     }
 }

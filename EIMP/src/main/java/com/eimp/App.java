@@ -1,8 +1,7 @@
 package com.eimp;
 
-import com.eimp.component.ThumbnailPanel;
+import com.eimp.controller.ControllerMap;
 import com.eimp.controller.WindowMainController;
-import com.eimp.controller.WindowSlideController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -15,7 +14,7 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 
 public class App extends Application {
-    private WindowMainController controller;
+    private WindowMainController mainController;
     private static Stage stage;
 
     @Override
@@ -23,6 +22,8 @@ public class App extends Application {
         App.stage = stage;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/WindowMain.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1100, 700);
+        this.mainController  = fxmlLoader.getController();
+        ControllerMap.addController(mainController);
         stage.setTitle("EIMP Photo");
         stage.setMinHeight(400);
         stage.setMinWidth(650);

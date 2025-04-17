@@ -6,13 +6,10 @@ import com.eimp.component.FileTreeItem;
 import com.eimp.component.PreviewFlowPane;
 
 import com.eimp.component.ThumbnailPanel;
-import com.eimp.util.ImageUtil;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -860,6 +857,10 @@ private boolean f;//标志位，用以表示日间或夜间
      */
     @FXML
     public void renameImage() {
+        if (!previewFlowPane.getNewSelected().isEmpty()) {
+            ThumbnailPanel image = previewFlowPane.getNewSelected().getLast();
+            image.startReName();
+        }
     }
 
     /**
