@@ -139,7 +139,12 @@ public class WindowMainController implements Initializable {
      *
      * @author yuekanwnag
      */
-private boolean f;//标志位，用以表示日间或夜间
+    private boolean f;//标志位，用以表示日间或夜间
+
+    public boolean getF() {
+        return f;
+    }
+
     private void intPaneColor()
     {
         f=true;//true表示日间，false表示夜间
@@ -147,7 +152,7 @@ private boolean f;//标志位，用以表示日间或夜间
                 getClass().getResource("/css/Main_Sun.css").toExternalForm());
 
         LightButton.setOnAction(e->{//按钮控制日间模式或夜间模式的切换
-            if(f==true)
+            if(f)
             {
                 f=false;
                 root.getStylesheets().clear();//清楚掉之前的样式
@@ -161,8 +166,8 @@ private boolean f;//标志位，用以表示日间或夜间
                 root.getStylesheets().setAll(
                         getClass().getResource("/css/Main_Sun.css").toExternalForm());
             }
+            updateFlowPane();
         });
-
     }
 
 

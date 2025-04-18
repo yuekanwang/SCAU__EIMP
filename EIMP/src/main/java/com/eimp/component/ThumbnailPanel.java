@@ -16,7 +16,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -66,7 +65,11 @@ public class ThumbnailPanel extends BorderPane {
         // 裁剪文本
         cutting();
         // 设置文本默认样式
-        initText();
+        if (!MAIN_WINDOWS_CONTROLLER.getF()) {
+            initBlackText();
+        } else {
+            initText();
+        }
         // 设置不可编辑
         imageName.setEditable(false);
 
@@ -87,7 +90,7 @@ public class ThumbnailPanel extends BorderPane {
                 // 检测非法字符
                 String regex = "[\\\\/:*?\"<>|]";
                 if (Pattern.compile(regex).matcher(newName).find())  {
-                    showError("重命名失败: 存在非法字符");
+                    showError();
                     resetName();
                     return;
                 }
@@ -175,7 +178,11 @@ public class ThumbnailPanel extends BorderPane {
      * 图片选中背景设置
      */
     public void selected() {
-        this.setStyle("-fx-background-color: #DCD8FE");
+        if (MAIN_WINDOWS_CONTROLLER.getF()) {
+            this.setStyle("-fx-background-color: rgba(220, 216, 254, 0.9)");
+        } else {
+            this.setStyle("-fx-background-color: rgba(130, 130, 130, 0.8)");
+        }
         this.isSelected = true;
     }
 
@@ -254,7 +261,11 @@ public class ThumbnailPanel extends BorderPane {
         // 设置可编辑
         imageName.setEditable(true);
         // 设置文本修改样式
-        setText();
+        if (!MAIN_WINDOWS_CONTROLLER.getF()) {
+            setBlackText();
+        } else {
+            setText();
+        }
         // 获取焦点
         imageName.requestFocus();
         // 选择全部文字
@@ -267,7 +278,7 @@ public class ThumbnailPanel extends BorderPane {
         // 检测非法字符
         String regex = "[\\\\/:*?\"<>|]";
         if (Pattern.compile(regex).matcher(newName).find())  {
-            showError("重命名失败: 存在非法字符");
+            showError();
             resetName();
             return;
         }
@@ -298,9 +309,9 @@ public class ThumbnailPanel extends BorderPane {
     }
 
     // 错误显示
-    private void showError(String message) {
+    private void showError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setContentText(message);
+        alert.setContentText("重命名失败: 存在非法字符");
         alert.show();
     }
 
@@ -308,7 +319,11 @@ public class ThumbnailPanel extends BorderPane {
     private void resetName() {
         // 对文字重新处理
         cutting();
-        initText();
+        if (!MAIN_WINDOWS_CONTROLLER.getF()) {
+            initBlackText();
+        } else {
+            initText();
+        }
         imageName.setEditable(false);
         PreviewFlowPane parent = (PreviewFlowPane) this.getParent();
         parent.update();
