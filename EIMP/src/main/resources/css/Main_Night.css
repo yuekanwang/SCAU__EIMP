@@ -70,6 +70,11 @@
 {
     -fx-font-size: 20px;        /*字体大小*/
     -fx-background-radius: 12;  /*边角的弧度*/
+    -fx-background-color: #091532;
+    -fx-border-width: 6;
+    -fx-border-radius: 12;
+    -fx-border-color: black;
+    -fx-text-fill: white;
 }
 /*路径条*/
 
@@ -305,17 +310,4 @@
     /* 仅动画支持属性 */
     -fx-opacity: 1.0;
     animation: breath_effect 3s ease-in-out infinite;
-}
-
-@keyframes breath_effect {/*待定，研究呼吸灯*/
-    0%, 100% {
-        -fx-opacity: 1.0;
-        -fx-effect: dropshadow(three-pass-box,
-        rgba(109, 211, 224, 0.8), 8, 0.5, 0, 0);
-    }
-    50% {
-        -fx-opacity: 0.3;
-        -fx-effect: dropshadow(three-pass-box,
-        rgba(109, 211, 224, 0.3), 4, 0.3, 0, 0);
-    }
 }
