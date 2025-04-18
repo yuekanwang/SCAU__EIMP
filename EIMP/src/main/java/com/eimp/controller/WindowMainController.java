@@ -1,19 +1,16 @@
 package com.eimp.controller;
 
 import com.eimp.App;
-import com.eimp.component.DirectoryLoader;
-import com.eimp.component.FileTreeItem;
-import com.eimp.component.PreviewFlowPane;
+import com.eimp.component.*;
 
-import com.eimp.component.ThumbnailPanel;
+import com.eimp.util.ImageUtil;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -55,6 +52,8 @@ public class WindowMainController implements Initializable {
 
     // 缩略图展示面板
     public PreviewFlowPane previewFlowPane;
+    // 图片信息面板容器
+    private HBox infoPane = new HBox();
 
     /*这些是按钮*/
     @FXML
@@ -127,6 +126,7 @@ public class WindowMainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        root.getChildren().add(infoPane);
         this.stage = App.getStage();//这里的stage写上App里的stage
         this.setUpWindowControls();//调用窗口控制函数
         initFileTreeView();
@@ -873,6 +873,28 @@ public class WindowMainController implements Initializable {
      */
     @FXML
     public void showImageAttribute() {
+        // 图片信息面板
+        ImageInfoPane imageInfoPane = new ImageInfoPane(previewFlowPane.getNewSelected().getLast().getImageUtil());
+        initImageInfoPane(imageInfoPane);
+        showImageInfo(imageInfoPane);
+    }
+
+    /**
+     * 初始化图片信息面板
+     */
+    private void initImageInfoPane(ImageInfoPane imageInfoPane) {
+        imageInfoPane.getStylesheets().setAll(Objects.requireNonNull(getClass().getResource("/css/imageInfoPane.css")).toExternalForm());
+        imageInfoPane.setPrefWidth(320);
+        imageInfoPane.setPrefHeight(250);
+        infoPane.getChildren().add(imageInfoPane);
+        imageInfoPane.setVisible(false);
+    }
+
+    /**
+     * 显示图片信息面板
+     */
+    private void showImageInfo(ImageInfoPane imageInfoPane){
+        imageInfoPane.setVisible(!imageInfoPane.isVisible());
     }
 
     /**
