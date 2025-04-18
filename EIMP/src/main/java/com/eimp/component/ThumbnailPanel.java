@@ -55,12 +55,7 @@ public class ThumbnailPanel extends BorderPane {
         this.isSelected = false;
 
         //保持图片大小比例
-        this.imageView = new ImageView(new Image(imageUtil.getURL()));
-
-        this.imageView.setFitHeight(140);
-        this.imageView.setFitWidth(140);
-        this.imageView.setSmooth(true); // 启用高质量缩放算法，这个不可以在加载的时候使用
-        this.imageView.setCacheHint(CacheHint.SCALE_AND_ROTATE); // 使用硬件加速(其实用不用都一样）
+        this.imageView = new ImageView(new Image(imageUtil.getURL(),140,140,true,true));
 
         // 裁剪文本
         cutting();
