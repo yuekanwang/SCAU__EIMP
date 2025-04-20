@@ -1,7 +1,6 @@
 package com.eimp.controller;
 
 import com.eimp.CropWindow;
-import com.eimp.SlideWindow;
 import com.eimp.component.CropRectMasker;
 import com.eimp.util.FileUtil;
 import com.eimp.util.ImageUtil;
@@ -32,9 +31,14 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import javax.imageio.*;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 
 public class WindowCropController implements Initializable {
@@ -383,22 +387,24 @@ public class WindowCropController implements Initializable {
      * @return 保存结果
      */
     private boolean saveImage(WritableImage croppedImage,String filename){
-        String type = filename.substring(filename.lastIndexOf(".")+1);
-        filename = this.outPath +"\\" + filename.substring(0, filename.lastIndexOf(".")) +"-副本."+type;
+        filename = this.outPath +"\\" + filename.substring(0, filename.lastIndexOf(".")) +"-副本.png";
         File file = new File(filename);
         if(file.exists()){
-            filename=filename.substring(0,filename.lastIndexOf("."))+"-副本."+type;
+            filename=filename.substring(0,filename.lastIndexOf("."))+"-副本.png";
         }
         // 使用ImageWriter保存图像
+        // TODO 目前只能保存png格式 ,jpg jpeg格式保存存在问题
         try {
             BufferedImage bufferedImage = SwingFXUtils.fromFXImage(croppedImage, null);
-            ImageIO.write(bufferedImage,type,new File(filename));
-            return true;
-        } catch (Exception e) {
+            if(ImageIO.write(bufferedImage,"png",new File(filename))){
+                return true;
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return false;
     }
+
     /**
      * 输出尺寸标签
      */
