@@ -7,6 +7,8 @@ import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,6 +21,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.GaussianBlur;
@@ -26,8 +29,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import java.io.File;
@@ -131,6 +136,14 @@ public class WindowSlideController implements Initializable {
      */
     private Timeline timeline;
     /**
+     * 幻灯片播放时间线
+     */
+    private Timeline playingTimeLine;
+    /**
+     * 图片放缩时间线
+     */
+    private Timeline zoomingTimeLine;
+    /**
      * 图片显示模式枚举值
      */
     private enum DisplayMode {FIT, ORIGINAL, ZOOMING};
@@ -203,7 +216,37 @@ public class WindowSlideController implements Initializable {
         this.initButtonStyle();
         this.setUpWindowControls();
         this.initImageInfoPane();
+        this.setUpFullScreenListener();
 //        this.secondaryPane.setVisible(false);// 暂时隐藏缩略图栏,待实现
+    }
+
+    /**
+     * 设置全屏监听器
+     */
+    private void setUpFullScreenListener(){
+        stage.fullScreenProperty().addListener((obs,wasFullScreen,isNowFullScreen) -> {
+            if(isNowFullScreen){
+                this.setSlidePlayingStatus(false);
+            }else{
+                // 退出循环播放
+                if(this.currentIndex.get()==-1){
+                    this.currentIndex.set(this.imageUtilList.size()-1);
+                }
+
+                this.updateMainImageView();
+                this.setSlidePlayingStatus(true);
+                if(this.playingTimeLine!=null && this.zoomingTimeLine!=null){
+                    this.playingTimeLine.stop();
+                    this.zoomingTimeLine.stop();
+                }
+                // 退出全屏时的动画效果
+                FadeTransition ft = new FadeTransition(Duration.millis(500), rootPane);
+                ft.setFromValue(0.8);
+                ft.setToValue(1.0);
+                ft.play();
+            }
+        });
+
     }
 
     /**
@@ -276,51 +319,49 @@ public class WindowSlideController implements Initializable {
         this.updateCursor();
     }
 
-
+    /**
+     * 幻灯片混合播放
+     */
     @FXML
-    private void playing(){
-        this.setSlidePlayingStatus(false);
+    public void playing(){
         stage.setFullScreen(true);
-
-        Timeline playingTimeline = new Timeline(new KeyFrame(Duration.millis(3000),e->{
+        this.playingTimeLine = new Timeline(new KeyFrame(Duration.millis(3000),e->{
             nextImage(e);
             // 循环播放
             if(this.currentIndex.get() == this.imageUtilList.size() - 1){
                 this.currentIndex.set(-1);
             }
         }));
-        Timeline zoomTimeline = new Timeline(new KeyFrame(Duration.millis(100),e->{
+        this.zoomingTimeLine = new Timeline(new KeyFrame(Duration.millis(100),e->{
             if(this.MIN_SCALE<100){
                 this.zoom(1/1.01,null);
             }else{
                 this.zoom(1.01,null);
             }
         }));
-        playingTimeline.setCycleCount(Timeline.INDEFINITE);
-        playingTimeline.play();
-        zoomTimeline.setCycleCount(Timeline.INDEFINITE);
-        zoomTimeline.play();
-        mainImageView.getScene().setOnKeyPressed(e->{
+
+        mainImageView.getScene().addEventFilter(KeyEvent.KEY_PRESSED,e->{
             switch (e.getCode()){
                 case ESCAPE -> {
-                    this.setSlidePlayingStatus(true);
-                    playingTimeline.stop();
-                    zoomTimeline.stop();
-                    stage.setFullScreen(false);
+
                 }
                 case SPACE -> {
-                    if(playingTimeline.getStatus() == Animation.Status.PAUSED){
-                        playingTimeline.play();
-                        zoomTimeline.play();
+                    if(this.playingTimeLine.getStatus() == Animation.Status.PAUSED){
+                        this.playingTimeLine.play();
+                        this.zoomingTimeLine.play();
                     }else{
-                        playingTimeline.pause();
-                        zoomTimeline.pause();
+                        this.playingTimeLine.pause();
+                        this.zoomingTimeLine.pause();
                     }
                 }
             }
 
         });
 
+        this.playingTimeLine.setCycleCount(Timeline.INDEFINITE);
+        this.playingTimeLine.play();
+        this.zoomingTimeLine.setCycleCount(Timeline.INDEFINITE);
+        this.zoomingTimeLine.play();
     }
 
     /**
@@ -1091,6 +1132,7 @@ public class WindowSlideController implements Initializable {
                     .owner(this.secondaryPane)
                     .darkStyle()
                     .show();
+
         } else if (this.currentIndex.get() == this.imageUtilList.size()-1) {
             Notifications.create()
                     .text("最后一张")
@@ -1099,6 +1141,7 @@ public class WindowSlideController implements Initializable {
                     .owner(this.secondaryPane)
                     .darkStyle()
                     .show();
+
         }
     }
 
@@ -1122,8 +1165,12 @@ public class WindowSlideController implements Initializable {
      * @param event
      */
     private void initShortcutKey(KeyEvent event){
-        if(stage.isFullScreen()) return;     // 全屏屏蔽
+        if(stage.isFullScreen()) {
+            return;
+        }
+
         KeyCode code = event.getCode();
+
         if (event.isControlDown()) {
             switch (code) {
                 case O -> {
@@ -1145,6 +1192,9 @@ public class WindowSlideController implements Initializable {
                 }
                 case I->{
                     this.showImageInfo();
+                }
+                case P->{
+                    this.playing();
                 }
             }
         }else{
@@ -1289,22 +1339,6 @@ public class WindowSlideController implements Initializable {
 
     }
 
-    /**
-     * 窗口最大化切换
-     */
-    private void toggleMaximize() {
-        stage.setMaximized(!stage.isMaximized());
-        if(stage.isMaximized()) {
-            maxBtn.getStyleClass().remove("maxBtn-full");
-            maxBtn.getStyleClass().add("maxBtn-recover");
-            maxBtn.getTooltip().setText("还原");
-        }else {
-            maxBtn.getStyleClass().remove("maxBtn-recover");
-            maxBtn.getStyleClass().add("maxBtn-full");
-            maxBtn.getTooltip().setText("最大化");
-        }
-    }
-
 
 
     // 创建菜单项
@@ -1340,17 +1374,6 @@ public class WindowSlideController implements Initializable {
         return item;
     }
 
-    /**
-     *  窗口控制逻辑
-     */
-    private void setUpWindowControls() {
-        this.setUpResizeListeners();
-        maxBtn.getStyleClass().add("maxBtn-full");
-        // 窗口控制按钮事件
-        closeBtn.setOnAction(e -> stage.close());
-        minBtn.setOnAction(e -> stage.setIconified(true));
-        maxBtn.setOnAction(e -> toggleMaximize());
-    }
 
     /**
      * 在菜单按钮下方打开菜单
@@ -1475,6 +1498,33 @@ public class WindowSlideController implements Initializable {
             items.add(item);
         }
 
+    }
+
+    /**
+     *  窗口控制逻辑
+     */
+    private void setUpWindowControls() {
+        this.setUpResizeListeners();
+        maxBtn.getStyleClass().add("maxBtn-full");
+        // 窗口控制按钮事件
+        closeBtn.setOnAction(e -> stage.close());
+        minBtn.setOnAction(e -> stage.setIconified(true));
+        maxBtn.setOnAction(e -> toggleMaximize());
+    }
+    /**
+     * 窗口最大化切换
+     */
+    private void toggleMaximize() {
+        stage.setMaximized(!stage.isMaximized());
+        if(stage.isMaximized()) {
+            maxBtn.getStyleClass().remove("maxBtn-full");
+            maxBtn.getStyleClass().add("maxBtn-recover");
+            maxBtn.getTooltip().setText("还原");
+        }else {
+            maxBtn.getStyleClass().remove("maxBtn-recover");
+            maxBtn.getStyleClass().add("maxBtn-full");
+            maxBtn.getTooltip().setText("最大化");
+        }
     }
 
 

@@ -9,6 +9,7 @@ import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * 文件处理工具
@@ -72,4 +73,40 @@ public class FileUtil {
         }
         return fileStandardSize;
     }
+
+    /**
+     * 打开图片所在文件资源管理器位置,支持多操作系统
+     * @param filePath 图片绝对路径
+     */
+    public static void openContainingFolder(String filePath) {
+        File file = new File(filePath);
+
+        // 检查文件是否存在
+        if (!file.exists()) {
+            System.out.println("文件不存在: " + filePath);
+            return;
+        }
+
+        try {
+            String os = System.getProperty("os.name").toLowerCase();
+            String command;
+
+            if (os.contains("win")) {
+                // Windows: 高亮选中文件
+                command = "explorer /select,\"" + file.getAbsolutePath() + "\"";
+            } else if (os.contains("mac")) {
+                // macOS: 定位到文件所在目录并选中
+                command = "open -R \"" + file.getAbsolutePath() + "\"";
+            } else {
+                // Linux: 只能打开目录（无法高亮文件）
+                command = "xdg-open \"" + file.getParent() + "\"";
+            }
+
+            // 执行命令
+            Runtime.getRuntime().exec(command);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

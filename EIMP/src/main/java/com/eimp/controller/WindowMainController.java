@@ -1,11 +1,14 @@
 package com.eimp.controller;
 
 import com.eimp.App;
+import com.eimp.SlideWindow;
 import com.eimp.component.*;
 
 import com.eimp.util.ImageUtil;
+import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -15,6 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
@@ -902,6 +907,32 @@ public class WindowMainController implements Initializable {
      */
     @FXML
     public void compressImage() {
+    }
+    /**
+     * 播放幻灯片
+     */
+    @FXML
+    private void playingSlide(){
+        List<ThumbnailPanel> newSelected = this.previewFlowPane.getNewSelected();
+        ImageUtil curImage;
+        if(newSelected==null || newSelected.size()==0){
+            List<ThumbnailPanel> thumbnailPanels = this.previewFlowPane.getThumbnailPanels();
+            if(thumbnailPanels==null || thumbnailPanels.size()==0){
+                Notifications.create()
+                        .text("当前文件夹没有图片!")
+                        .hideAfter(Duration.seconds(0.5))
+                        .position(Pos.BASELINE_RIGHT)
+                        .owner(this.stage)
+                        .show();
+                return;
+            }
+            curImage = thumbnailPanels.getFirst().getImageUtil();
+        }else{
+            curImage = newSelected.getFirst().getImageUtil();
+        }
+        Platform.runLater(() -> {
+            SlideWindow.main(curImage,SlideWindow.LaunchMethodEnum.PLAY);
+        });
     }
 }
 

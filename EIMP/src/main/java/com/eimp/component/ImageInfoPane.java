@@ -1,5 +1,6 @@
 package com.eimp.component;
 
+import com.eimp.CropWindow;
 import com.eimp.util.FileUtil;
 import com.eimp.util.ImageUtil;
 import javafx.geometry.Pos;
@@ -23,7 +24,9 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+/**
+ * 图片属性面板
+ */
 public class ImageInfoPane extends VBox{
     private ImageUtil imageUtil;
     private Image image;
@@ -239,11 +242,14 @@ public class ImageInfoPane extends VBox{
             case "转格式":
 //                showConvertDialog();
                 break;
+            case "改尺寸":
+                CropWindow.main(this.imageUtil);
+                break;
             case "压缩":
 //                compressImage();
                 break;
             case "打开":
-                this.openContainingFolder(imageUtil.getAbsolutePath());
+                FileUtil.openContainingFolder(imageUtil.getAbsolutePath());
                 break;
 
             // 其他操作处理...
@@ -261,41 +267,6 @@ public class ImageInfoPane extends VBox{
 
             }
         });
-    }
-
-    /**
-     * 打开图片所在文件资源管理器位置,支持多操作系统
-     * @param filePath 图片绝对路径
-     */
-    public static void openContainingFolder(String filePath) {
-        File file = new File(filePath);
-
-        // 检查文件是否存在
-        if (!file.exists()) {
-            System.out.println("文件不存在: " + filePath);
-            return;
-        }
-
-        try {
-            String os = System.getProperty("os.name").toLowerCase();
-            String command;
-
-            if (os.contains("win")) {
-                // Windows: 高亮选中文件
-                command = "explorer /select,\"" + file.getAbsolutePath() + "\"";
-            } else if (os.contains("mac")) {
-                // macOS: 定位到文件所在目录并选中
-                command = "open -R \"" + file.getAbsolutePath() + "\"";
-            } else {
-                // Linux: 只能打开目录（无法高亮文件）
-                command = "xdg-open \"" + file.getParent() + "\"";
-            }
-
-            // 执行命令
-            Runtime.getRuntime().exec(command);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**

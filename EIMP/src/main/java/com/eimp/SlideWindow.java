@@ -46,6 +46,7 @@ public class SlideWindow extends Application {
         // 设置窗口最小尺寸
         stage.setMinWidth(590);
         stage.setMinHeight(580);
+        stage.setTitle("EIMP-图片裁剪");
         // 默认窗口大小
 //        double width = 900;
 //        double height = 700;
@@ -61,23 +62,28 @@ public class SlideWindow extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(SlideWindow.class.getResource("/fxml/WindowSlide.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), width, height);
         stage.setScene(scene);
-        scene.setFill(null);
+
         // 获取控制器实例
         controller = fxmlLoader.getController();
         Image Appicon = new Image(getClass().getResourceAsStream("/icon2/EIMP.png"));
         stage.getIcons().add(Appicon);
-        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.initStyle(StageStyle.UNDECORATED);
         controller.setUpKeyEvent(scene);
 
         switch(launchMethodEnum){
-            case PLAY: break;
+            case PLAY:
+                stage.show();
+                //导入所选图片的信息工具
+                controller.importImage(SlideWindow.imageUtil);
+                controller.playing();
+                break;
             case CLICK:
                 // 添加淡入效果
                 controller.rootPane.setOpacity(0.5);
                 stage.show();
                 //导入所选图片的信息工具
                 controller.importImage(SlideWindow.imageUtil);
-                FadeTransition fadeIn = new FadeTransition(Duration.millis(800), controller.rootPane);
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(500), controller.rootPane);
                 fadeIn.setFromValue(0.5);
                 fadeIn.setToValue(1);
                 fadeIn.play();
