@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="修改jpg等图像裁剪无法保存bug,统一存储为png副本" />
+    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="修改jpg等图像裁剪无法保存bug,统一存储为png副本">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -158,7 +160,8 @@
       <workItem from="1745077384154" duration="3830000" />
       <workItem from="1745113317771" duration="1281000" />
       <workItem from="1745119468842" duration="32000" />
-      <workItem from="1745119541347" duration="5061000" />
+      <workItem from="1745119541347" duration="5701000" />
+      <workItem from="1745415661916" duration="693000" />
     </task>
     <task id="LOCAL-00001" summary="修改幻灯片UI,大部分已修改,缩略图UI待确定">
       <option name="closed" value="true" />
@@ -256,7 +259,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745126426351</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="修改jpg等图像裁剪无法保存bug,统一存储为png副本">
+      <option name="closed" value="true" />
+      <created>1745126469031</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1745126469031</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
