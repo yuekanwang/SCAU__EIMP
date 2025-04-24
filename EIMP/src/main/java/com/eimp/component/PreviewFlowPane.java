@@ -1,7 +1,11 @@
 package com.eimp.component;
 
+import com.eimp.controller.ControllerMap;
+import com.eimp.controller.WindowMainController;
 import com.eimp.util.FileUtil;
 import com.eimp.util.ImageUtil;
+import com.eimp.util.SortOrder;
+import com.eimp.util.SortUtil;
 import javafx.scene.layout.FlowPane;
 
 import java.io.File;
@@ -22,6 +26,10 @@ public class PreviewFlowPane extends FlowPane {
     private final List<ThumbnailPanel> newSelected = new ArrayList<>();
     // 提供回撤
     private final List<ThumbnailPanel> oldSelected = new ArrayList<>();
+
+    private WindowMainController windowMainController;
+
+    private SortOrder sortOrder;
 
     public File getDirectory() {
         return directory;
@@ -64,6 +72,9 @@ public class PreviewFlowPane extends FlowPane {
 
     public void update(File directory) {
         this.directory = directory;
+        if (windowMainController == null) {
+            windowMainController = (WindowMainController) ControllerMap.getController(WindowMainController.class);
+        }
         // 清空图片数组
         thumbnailPanels.clear();
         // 过滤文件，获取图片格式的文件
@@ -76,6 +87,8 @@ public class PreviewFlowPane extends FlowPane {
                 this.thumbnailPanels.add(thumbnailPanel);
             }
         }
+        sortOrder = windowMainController.getSortOrder();
+        SortUtil.sortThumbnailPanel(this.thumbnailPanels, sortOrder.getNowString());
         getChildren().setAll(thumbnailPanels);
     }
 
@@ -84,6 +97,8 @@ public class PreviewFlowPane extends FlowPane {
      */
     public void update() {
         if (directory != null) {
+            newSelected.clear();
+            oldSelected.clear();
             update(directory);
         }
     }

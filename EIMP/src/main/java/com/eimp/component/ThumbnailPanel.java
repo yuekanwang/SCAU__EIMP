@@ -6,7 +6,6 @@ import com.eimp.controller.WindowMainController;
 import com.eimp.util.ImageUtil;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.scene.CacheHint;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -41,6 +40,8 @@ public class ThumbnailPanel extends BorderPane {
     private TextField imageName;
     // 是否被选中
     private boolean isSelected;
+    // 是否正在重命名
+    private boolean isRename = false;
 
     private static final WindowMainController MAIN_WINDOWS_CONTROLLER = (WindowMainController) ControllerMap.getController(WindowMainController.class);
 
@@ -72,20 +73,66 @@ public class ThumbnailPanel extends BorderPane {
         imageName.addEventFilter(KeyEvent.KEY_PRESSED, this::handleEscape);
         // 双击事件：进入编辑模式
         imageName.setOnMouseClicked(event  -> {
-            if (event.getClickCount()  == 2) {
+            PreviewFlowPane parent = (PreviewFlowPane) this.getParent();
+            if (event.getButton() == MouseButton.PRIMARY && event.getClickCount()  == 2) {
+                parent.clearSelected();
+                parent.addSelectedtoList(this);
+                parent.setIsShift(true);
+                parent.setFrom(parent.getThumbnailPanels().indexOf(this));
                 MAIN_WINDOWS_CONTROLLER.renameImage();
+            } else if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
+                // 按住ctrl多选时
+                if (event.isControlDown() && !isRename) {
+                    // 图片已被选中
+                    if (getSelected()) {
+                        parent.deleteSelectedtoList(this);
+                        parent.setIsShift(true);
+                        parent.setFrom(parent.getThumbnailPanels().indexOf(this));
+                    }
+                    // 图片未被选中
+                    else {
+                        parent.setIsShift(true);
+                        parent.setFrom(parent.getThumbnailPanels().indexOf(this));
+                        parent.addSelectedtoList(this);
+                    }
+                }
+                // 按住shift多选时
+                else if (event.isShiftDown() && !isRename) {
+                    if (!parent.isShift()) {
+                        parent.setIsShift(true);
+                        parent.setFrom(parent.getThumbnailPanels().indexOf(this));
+                    }
+                    parent.setTo(parent.getThumbnailPanels().indexOf(this));
+                    parent.shiftSelected();
+                }
+                // 单击选中图片
+                else {
+                    if (parent.newSelectedSize() > 1) {
+                        parent.clearSelected();
+                        parent.addSelectedtoList(this);
+                        parent.setIsShift(true);
+                        parent.setFrom(parent.getThumbnailPanels().indexOf(this));
+                    } else if (parent.newSelectedSize() == 1 && isSelected && !isRename) {
+                        parent.clearSelected();
+                        parent.setIsShift(false);
+                    } else {
+                        parent.clearSelected();
+                        parent.addSelectedtoList(this);
+                        parent.setIsShift(true);
+                        parent.setFrom(parent.getThumbnailPanels().indexOf(this));
+                    }
+                }
             }
         });
 
         // 失去焦点事件
         imageName.focusedProperty().addListener((observable,  oldValue, newValue) -> {
-            if (!newValue) {
+            if (!newValue && isRename) {
                 // 失去焦点时触发
                 String newName = imageName.getText().trim();
                 // 检测非法字符
                 String regex = "[\\\\/:*?\"<>|]";
                 if (Pattern.compile(regex).matcher(newName).find())  {
-                    showError();
                     resetName();
                     return;
                 }
@@ -251,6 +298,7 @@ public class ThumbnailPanel extends BorderPane {
     }
 
     public void startReName() {
+        isRename = true;
         // 设置图片全称
         imageName.setText(imageUtil.getFileName());
         // 设置可编辑
@@ -312,14 +360,13 @@ public class ThumbnailPanel extends BorderPane {
 
     // 重新设置
     private void resetName() {
-        // 对文字重新处理
-        cutting();
         if (!MAIN_WINDOWS_CONTROLLER.getF()) {
             initBlackText();
         } else {
             initText();
         }
         imageName.setEditable(false);
+        isRename = false;
         PreviewFlowPane parent = (PreviewFlowPane) this.getParent();
         parent.update();
     }
