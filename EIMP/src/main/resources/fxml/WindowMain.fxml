@@ -151,7 +151,7 @@
                                        </font>
                                     </MenuButton>
                                     <Pane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="46.0" prefWidth="50.0" HBox.hgrow="ALWAYS" />
-                                    <Button fx:id="SelectAll_Button" alignment="CENTER_RIGHT" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="38.0" prefWidth="84.0" text="全选" HBox.hgrow="NEVER">
+                                    <Button fx:id="SelectAll_Button" alignment="CENTER_RIGHT" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#selectedAll" prefHeight="38.0" prefWidth="84.0" text="全选" HBox.hgrow="NEVER">
                                        <HBox.margin>
                                           <Insets bottom="3.0" top="3.0" />
                                        </HBox.margin>
@@ -169,7 +169,7 @@
                                        </font>
                                     </Button>
                                     <Pane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="46.4" prefWidth="50.0" HBox.hgrow="ALWAYS" />
-                                    <Button fx:id="Flushed_Button" alignment="CENTER_RIGHT" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="37.0" prefWidth="84.0" text="刷新" HBox.hgrow="NEVER">
+                                    <Button fx:id="Flushed_Button" alignment="CENTER_RIGHT" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#flushImage" prefHeight="37.0" prefWidth="84.0" text="刷新" HBox.hgrow="NEVER">
                                        <HBox.margin>
                                           <Insets bottom="3.0" top="3.0" />
                                        </HBox.margin>

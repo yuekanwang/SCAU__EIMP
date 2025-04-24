@@ -82,7 +82,7 @@ public class ThumbnailPanel extends BorderPane {
                 MAIN_WINDOWS_CONTROLLER.renameImage();
             } else if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
                 // 按住ctrl多选时
-                if (event.isControlDown()) {
+                if (event.isControlDown() && !isRename) {
                     // 图片已被选中
                     if (getSelected()) {
                         parent.deleteSelectedtoList(this);
@@ -97,7 +97,7 @@ public class ThumbnailPanel extends BorderPane {
                     }
                 }
                 // 按住shift多选时
-                else if (event.isShiftDown()) {
+                else if (event.isShiftDown() && !isRename) {
                     if (!parent.isShift()) {
                         parent.setIsShift(true);
                         parent.setFrom(parent.getThumbnailPanels().indexOf(this));
@@ -112,7 +112,7 @@ public class ThumbnailPanel extends BorderPane {
                         parent.addSelectedtoList(this);
                         parent.setIsShift(true);
                         parent.setFrom(parent.getThumbnailPanels().indexOf(this));
-                    } else if (parent.newSelectedSize() == 1 && isSelected) {
+                    } else if (parent.newSelectedSize() == 1 && isSelected && !isRename) {
                         parent.clearSelected();
                         parent.setIsShift(false);
                     } else {

@@ -5,13 +5,13 @@ import com.eimp.SlideWindow;
 import com.eimp.component.*;
 
 import com.eimp.util.ImageUtil;
+import com.eimp.util.SortOrder;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -116,6 +116,8 @@ public class WindowMainController implements Initializable {
     @FXML
     public MenuItem Sort_Name;//按名字顺序
 
+    public SortOrder sortOrder;
+
     @FXML//顶部的部分
     public Button Left_Button;//路径后退按钮
     @FXML
@@ -137,6 +139,8 @@ public class WindowMainController implements Initializable {
         initFileTreeView();
         initPreviewPane();
         intPaneColor();
+        initSortImage();
+        sortOrder = new SortOrder();
     }
 
     /**
@@ -174,7 +178,6 @@ public class WindowMainController implements Initializable {
             updateFlowPane();
         });
     }
-
 
     /**
      * 初始化目录树
@@ -293,6 +296,73 @@ public class WindowMainController implements Initializable {
         rectangle.setVisible(false);
     }
 
+    /**
+     * 初始化排序面板
+     */
+    private void initSortImage() {
+        Sort_Name.setStyle("-fx-background-color: #C3C3C3;");
+        SortOrder_Time.setOnAction(e -> setSortOrder(4));//按时间倒序
+        SortOrder_Size.setOnAction(e -> setSortOrder(6));//按大小倒序
+        SortOrder_Name.setOnAction(e -> setSortOrder(2));//按名字倒序
+        Sort_Time.setOnAction(e -> setSortOrder(3));//按时间顺序
+        Sort_SIze.setOnAction(e -> setSortOrder(5));//按大小顺序
+        Sort_Name.setOnAction(e -> setSortOrder(1));//按名字顺序
+    }
+
+    private void setSortOrder(int op) {
+        sortOrder.setOldOp(sortOrder.getOp());
+        sortOrder.setOp(op);
+        sortOrder.setNowString();
+        changeSortCSS();
+        updateFlowPane();
+    }
+
+    private void changeSortCSS() {
+        switch (sortOrder.getOp()) {
+            case 1:
+                Sort_Name.setStyle("-fx-background-color: #C3C3C3;");
+                break;
+            case 2:
+                SortOrder_Name.setStyle("-fx-background-color: #C3C3C3;");
+                break;
+            case 3:
+                Sort_Time.setStyle("-fx-background-color: #C3C3C3;");
+                break;
+            case 4:
+                SortOrder_Time.setStyle("-fx-background-color: #C3C3C3;");
+                break;
+            case 5:
+                Sort_SIze.setStyle("-fx-background-color: #C3C3C3;");
+                break;
+            case 6:
+                SortOrder_Size.setStyle("-fx-background-color: #C3C3C3;");
+                break;
+        }
+        switch (sortOrder.getOldOp()) {
+            case 1:
+                Sort_Name.setStyle("-fx-background-color: transparent;");
+                break;
+            case 2:
+                SortOrder_Name.setStyle("-fx-background-color: transparent;");
+                break;
+            case 3:
+                Sort_Time.setStyle("-fx-background-color: transparent;");
+                break;
+            case 4:
+                SortOrder_Time.setStyle("-fx-background-color: transparent;");
+                break;
+            case 5:
+                Sort_SIze.setStyle("-fx-background-color: transparent;");
+                break;
+            case 6:
+                SortOrder_Size.setStyle("-fx-background-color: transparent;");
+                break;
+        }
+    }
+
+    public SortOrder getSortOrder() {
+        return sortOrder;
+    }
 
     /**
      * 鼠标事件处理
@@ -668,7 +738,6 @@ public class WindowMainController implements Initializable {
         // 仅当点击在空白区域时记录坐标
             xOffset = event.getSceneX();
             yOffset = event.getSceneY();
-
     }
 
 
@@ -933,6 +1002,21 @@ public class WindowMainController implements Initializable {
         Platform.runLater(() -> {
             SlideWindow.main(curImage,SlideWindow.LaunchMethodEnum.PLAY);
         });
+    }
+
+    // 全选函数
+    @FXML
+    public void selectedAll() {
+        previewFlowPane.clearSelected();
+        for (ThumbnailPanel pane : previewFlowPane.getThumbnailPanels()) {
+            previewFlowPane.addSelectedtoList(pane);
+        }
+    }
+
+    // 刷新函数
+    @FXML
+    public void flushImage() {
+        updateFlowPane();
     }
 }
 
