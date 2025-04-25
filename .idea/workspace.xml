@@ -5,7 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="修改jpg等图像裁剪无法保存bug,统一存储为png副本">
+      <change afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/util/DragUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ImageInfoPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ImageInfoPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowMainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowMainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/util/SortUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/util/SortUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -162,6 +167,11 @@
       <workItem from="1745119468842" duration="32000" />
       <workItem from="1745119541347" duration="5701000" />
       <workItem from="1745415661916" duration="693000" />
+      <workItem from="1745489454227" duration="1507000" />
+      <workItem from="1745495734438" duration="671000" />
+      <workItem from="1745504041004" duration="1470000" />
+      <workItem from="1745578211069" duration="7785000" />
+      <workItem from="1745588888285" duration="3227000" />
     </task>
     <task id="LOCAL-00001" summary="修改幻灯片UI,大部分已修改,缩略图UI待确定">
       <option name="closed" value="true" />
@@ -267,7 +277,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745126469031</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="修改jpg等图像裁剪无法保存bug,统一存储为png副本">
+      <option name="closed" value="true" />
+      <created>1745489489132</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1745489489132</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

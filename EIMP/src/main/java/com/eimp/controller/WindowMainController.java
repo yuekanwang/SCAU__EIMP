@@ -58,8 +58,9 @@ public class WindowMainController implements Initializable {
     // 缩略图展示面板
     public PreviewFlowPane previewFlowPane;
     // 图片信息面板容器
-    private HBox infoPane = new HBox();
-
+    private Pane infoPane = new Pane();
+    // 图片信息面板
+    private ImageInfoPane imageInfoPane = new ImageInfoPane(320,250);
     /*这些是按钮*/
     @FXML
     public Button minBtn;//窗口最小化按钮
@@ -136,6 +137,10 @@ public class WindowMainController implements Initializable {
         root.getChildren().add(infoPane);
         this.stage = App.getStage();//这里的stage写上App里的stage
         this.setUpWindowControls();//调用窗口控制函数
+
+        infoPane.setPickOnBounds(false);        // 鼠标可穿透性
+        infoPane.prefWidthProperty().bind(stage.widthProperty());   // 图片属性面板绑定全局宽高
+        infoPane.prefHeightProperty().bind(stage.heightProperty());
 
         initButton();
         initFileTreeView();
@@ -979,7 +984,7 @@ public class WindowMainController implements Initializable {
     @FXML
     public void showImageAttribute() {
         // 图片信息面板
-        ImageInfoPane imageInfoPane = new ImageInfoPane(previewFlowPane.getNewSelected().getLast().getImageUtil());
+        ImageInfoPane imageInfoPane = new ImageInfoPane(previewFlowPane.getNewSelected().getLast().getImageUtil(),320,250);
         initImageInfoPane(imageInfoPane);
         showImageInfo(imageInfoPane);
     }
@@ -989,8 +994,6 @@ public class WindowMainController implements Initializable {
      */
     private void initImageInfoPane(ImageInfoPane imageInfoPane) {
         imageInfoPane.getStylesheets().setAll(Objects.requireNonNull(getClass().getResource("/css/imageInfoPane.css")).toExternalForm());
-        imageInfoPane.setPrefWidth(320);
-        imageInfoPane.setPrefHeight(250);
         infoPane.getChildren().add(imageInfoPane);
         imageInfoPane.setVisible(false);
     }

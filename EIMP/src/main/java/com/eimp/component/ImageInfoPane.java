@@ -1,14 +1,17 @@
 package com.eimp.component;
 
 import com.eimp.CropWindow;
+import com.eimp.util.DragUtil;
 import com.eimp.util.FileUtil;
 import com.eimp.util.ImageUtil;
+import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -34,15 +37,21 @@ public class ImageInfoPane extends VBox{
      * 色卡列表
      */
     private List<Color> dominantColors;
+    private DragUtil dragUtil = new DragUtil(this);
 
-    public ImageInfoPane() {
+    public ImageInfoPane(double width, double height) {
         this.setId("imageInfoPane");
+        this.setPrefWidth(width);
+        this.setPrefHeight(height);
     }
 
-    public ImageInfoPane(ImageUtil imageUtil) {
+    public ImageInfoPane(ImageUtil imageUtil,double width, double height) {
         this.setId("imageInfoPane");
         this.imageUtil = imageUtil;
+        this.setPrefWidth(width);
+        this.setPrefHeight(height);
         initialize();
+
     }
 
     /**
@@ -279,4 +288,5 @@ public class ImageInfoPane extends VBox{
         this.image = new Image(imageUtil.getURL());
         initialize();
     }
+
 }

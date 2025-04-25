@@ -3,6 +3,8 @@ import com.eimp.SlideWindow;
 import com.eimp.component.ImageInfoPane;
 import com.eimp.util.FileUtil;
 import com.eimp.util.ImageUtil;
+import com.eimp.util.SortOrder;
+import com.eimp.util.SortUtil;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
@@ -215,6 +217,29 @@ public class WindowSlideController implements Initializable {
     }
 
     /**
+     * 主窗口控制器
+     */
+    private WindowMainController mainController;
+
+    /**
+     * 按照主界面的排序规则初始化图像列表顺序,获得当前图片下标
+     */
+    private void initImageListOrder(ImageUtil imageUtil){
+        if(mainController == null){
+            mainController = (WindowMainController) ControllerMap.getController(WindowMainController.class);
+            SortUtil.sortImageFile(this.imageUtilList,mainController.getSortOrder().getNowString());
+        }else{
+            SortUtil.sortImageFile(this.imageUtilList, SortOrder.ASC_SORT_BY_NAME);
+        }
+        for (int i = 0; i < imageUtilList.size(); i++) {
+            if (imageUtilList.get(i).getAbsolutePath().equals(imageUtil.getAbsolutePath())) {
+                currentIndex.set(i);
+                break;
+            }
+        }
+    }
+
+    /**
      * 设置全屏监听器
      */
     private void setUpFullScreenListener(){
@@ -263,7 +288,7 @@ public class WindowSlideController implements Initializable {
         this.setUpRotationListener();
         this.initButtonStatus();
         this.setUpMovementConstraints();
-
+        this.initImageListOrder(imageUtil);
         this.image = new Image(imageUtil.getURL());
         this.updateMainImageView();
     }
@@ -271,7 +296,7 @@ public class WindowSlideController implements Initializable {
     /**
      * 图片信息面板
      */
-    private ImageInfoPane imageInfoPane = new ImageInfoPane();
+    private ImageInfoPane imageInfoPane = new ImageInfoPane(320,250);
     /**
      * 信息面板容器
      */
@@ -294,8 +319,8 @@ public class WindowSlideController implements Initializable {
      */
     private void initImageInfoPane() {
         this.imageInfoPane.getStylesheets().setAll(getClass().getResource("/css/imageInfoPane.css").toExternalForm());
-        this.imageInfoPane.setPrefWidth(320);
-        this.imageInfoPane.setPrefHeight(250);
+//        this.imageInfoPane.setPrefWidth(320);
+//        this.imageInfoPane.setPrefHeight(250);
         this.infoPane.getChildren().add(this.imageInfoPane);
         this.imageInfoPane.setVisible(false);
     }
