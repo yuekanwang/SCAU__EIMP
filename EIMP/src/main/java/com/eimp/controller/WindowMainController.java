@@ -136,11 +136,42 @@ public class WindowMainController implements Initializable {
         root.getChildren().add(infoPane);
         this.stage = App.getStage();//这里的stage写上App里的stage
         this.setUpWindowControls();//调用窗口控制函数
+
+        initButton();
         initFileTreeView();
         initPreviewPane();
         intPaneColor();
         initSortImage();
         sortOrder = new SortOrder();
+    }
+
+    /**
+     * 初始化主界面的功能按钮的作用
+     *
+     * @author yuekanwnag
+     */
+    private void initButton()
+    {
+        Flushed_Button.setOnAction(e->flushImage());
+        SelectAll_Button.setOnAction(e->selectedAll());
+        Delete_Button.setOnAction(e->deleteImage());
+
+        Delete_Button.setOnKeyPressed(e->{//键盘视奸
+            if(e.getCode() == KeyCode.DELETE)
+                Delete_Button.fire();//触发按钮的点击
+        });
+
+/*        @FXML
+        public Button About_Button;//有下角“关于”
+
+        @FXML
+        public Button SelectAll_Button;//全选按钮
+        @FXML
+        public Button Delete_Button;//删除按钮
+        @FXML
+        public Button Flushed_Button;//刷新按钮
+
+        public Button Help_Button;//帮助按钮*/
     }
 
     /**
@@ -156,9 +187,9 @@ public class WindowMainController implements Initializable {
 
     private void intPaneColor()
     {
-        f=true;//true表示日间，false表示夜间
+        f=false;//true表示日间，false表示夜间
         root.getStylesheets().setAll(//初始化为日间模式
-                getClass().getResource("/css/Main_Sun.css").toExternalForm());
+                getClass().getResource("/css/Main_Night.css").toExternalForm());
 
         LightButton.setOnAction(e->{//按钮控制日间模式或夜间模式的切换
             if(f)
