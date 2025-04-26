@@ -11,9 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
@@ -44,10 +42,18 @@ public class ThumbnailPanel extends BorderPane {
     // 是否正在重命名
     private boolean isRename = false;
 
+    public boolean isRename() {
+        return isRename;
+    }
+
     private static final WindowMainController MAIN_WINDOWS_CONTROLLER = (WindowMainController) ControllerMap.getController(WindowMainController.class);
 
     // 主界面搜索框
     private static TextField searchKey;
+
+    static {
+        searchKey = MAIN_WINDOWS_CONTROLLER.getSearch_Path();
+    }
 
     public ThumbnailPanel(ImageUtil imageUtil) {
         this.setMaxSize(150, 190);
@@ -154,10 +160,6 @@ public class ThumbnailPanel extends BorderPane {
                 resetName();
             }
         });
-
-        //searchKey = MAIN_WINDOWS_CONTROLLER.getSearchPath();
-        // 绑定主界面搜索框
-        //imageName.textProperty().bindBidirectional(searchKey.textProperty());
 
         setCenter(imageView);
         setBottom(imageName);
@@ -317,6 +319,8 @@ public class ThumbnailPanel extends BorderPane {
     }
 
     public void startReName() {
+        MAIN_WINDOWS_CONTROLLER.imagePreviewPane.setFocusTraversable(false);
+        imageName.requestFocus();
         isRename = true;
         // 设置图片全称
         imageName.setText(imageUtil.getFileName());
@@ -388,5 +392,10 @@ public class ThumbnailPanel extends BorderPane {
         isRename = false;
         PreviewFlowPane parent = (PreviewFlowPane) this.getParent();
         parent.update();
+        MAIN_WINDOWS_CONTROLLER.imagePreviewPane.setFocusTraversable(true);
+    }
+
+    public void updateHighlight(String newValue) {
+
     }
 }
