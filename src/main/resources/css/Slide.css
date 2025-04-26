@@ -1,0 +1,177 @@
+
+/* 水平调整光标 */
+#leftResize, #rightResize, #leftResizeRect, #rightResizeRect{
+    -fx-cursor: h-resize;
+    -fx-background-color: transparent;
+}
+/* 垂直调整光标 */
+#topResize, #bottomResize, #topResizeRect, #bottomResizeRect{
+    -fx-cursor: v-resize;
+    -fx-background-color: transparent;
+}
+
+/* 对角线调整光标 */
+#leftTopResize, #rightBottomResize, #leftTopResizeRect, #rightBottomResizeRect {
+    -fx-cursor: SE_RESIZE;
+    -fx-background-color: transparent;
+}
+
+#rightTopResize, #leftBottomResize, #rightTopResizeRect, #leftBottomResizeRect {
+    -fx-cursor: SW_RESIZE;
+    -fx-background-color: transparent;
+}
+
+.maxBtn-full{
+    -fx-background-image: url("../icon/FullScreen.png");  /* 图片路径（相对于CSS文件） */
+    -fx-background-size: 10px 10px;         /* 图片尺寸 */
+    -fx-background-repeat: no-repeat;       /* 禁止重复 */
+    -fx-background-position: center;        /* 图片居中 */
+}
+.maxBtn-recover{
+    -fx-background-image: url("../icon/Recover.png");  /* 图片路径（相对于CSS文件） */
+    -fx-background-size: 10px 10px;         /* 图片尺寸 */
+    -fx-background-repeat: no-repeat;       /* 禁止重复 */
+    -fx-background-position: center;        /* 图片居中 */
+}
+/* 窗口控制按钮 */
+.window-control {
+    -fx-background-radius: 999;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-background-color: #a0a0a0;
+}
+
+/* 全局基础样式 */
+#rootPane {
+    -fx-font-family: "Microsoft YaHei";
+    -fx-base: #e0e0e0;
+}
+/* 基础样式 */
+.button {
+    -fx-font-size: 12px;
+    -fx-background-radius: 4px;
+    -fx-padding: 5 10;
+    -fx-cursor: hand;
+}
+
+/* 窗口控制按钮悬停效果 */
+.button:hover {
+    -fx-opacity: 0.8;
+}
+/* 标签和分割线默认鼠标样式 */
+.label,.separator{
+    -fx-cursor:default;
+}
+
+
+/* 动态按钮容器 */
+#dynamicButtonContainer {
+    -fx-spacing: 8;
+    -fx-padding: 0 5;
+}
+
+
+
+
+.funtionalButton{
+    /*-fx-background-size: 20px 20px;         !* 图片尺寸 *!*/
+    -fx-background-color: transparent;  /* 背景透明 */
+    -fx-border-color: transparent;      /* 边框透明 */
+    -fx-background-position: center;    /* 图片居中 */
+    -fx-background-repeat: no-repeat;   /* 不重复 */
+    -fx-min-width: 30px;
+    -fx-min-height: 30px;
+    -fx-padding: 0;                     /* 去除内边距 */
+    -fx-effect: null;                   /* 去除阴影效果 */
+}
+
+
+.funtionalButton:hover {
+    -fx-background-color:#505354 ;
+}
+.funtionalButton:pressed{
+    -fx-background-color:#505354 ;
+    -fx-opacity: 50;
+}
+.funtionalButton:disabled{
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 0);
+}
+
+#fileSize,#imageArea,#orderNum{
+    -fx-cursor: default;
+}
+#closeBtn {
+    -fx-background-color: #ff4444;
+    -fx-background-image: url("../icon/CloseFilled.png")!important;  /* 图片路径（相对于CSS文件） */
+    -fx-background-size: 10px 10px;         /* 图片尺寸 */
+    -fx-background-repeat: no-repeat;       /* 禁止重复 */
+    -fx-background-position: center;        /* 图片居中 */
+}
+/* 关闭按钮悬停加强效果 */
+#closeBtn:hover {
+    -fx-background-color: #ff6666 !important;
+}
+#minBtn{
+    -fx-background-image: url("../icon/MinusFilled.png")!important;  /* 图片路径（相对于CSS文件） */
+    -fx-background-size: 10px 10px;         /* 图片尺寸 */
+    -fx-background-repeat: no-repeat;       /* 禁止重复 */
+    -fx-background-position: center;        /* 图片居中 */
+    -fx-background-color: #f2c55c!important;
+}
+#maxBtn{
+    -fx-background-color: #4e8752!important;
+}
+
+
+#fileSize,#imageArea,#orderNum{
+    -fx-cursor: default;
+}
+
+/* 自定义 ContextMenu 的样式 */
+.context-menu {
+    -fx-background-color: #2E2E2E; /* 背景颜色 */
+    -fx-border-color: #4D4D4D;    /* 边框颜色 */
+    -fx-border-radius: 4px;       /* 边框圆角 */
+    -fx-padding: 4px;             /* 内边距 */
+    -fx-min-width: 180px;
+}
+/* 定义 Tooltip 的样式 */
+.tooltip {
+    -fx-background-color: #333333;    /* 背景颜色 */
+    -fx-text-fill: white;             /* 文字颜色 */
+    -fx-font-size: 14px;              /* 字体大小 */
+    -fx-border-color: #666666;        /* 边框颜色 */
+    -fx-border-radius: 4px;           /* 边框圆角 */
+    -fx-padding: 8px;                 /* 内边距 */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 6, 0, 0, 2); /* 阴影效果 */
+    /*-fx-translate-x: -5;*/
+    -fx-translate-y: 10;
+}
+/* 自定义 MenuItem 的默认样式 */
+.menu-item {
+    -fx-background-color: transparent; /* 默认透明背景 */
+    -fx-padding: 5px 20px 5px 10px;    /* 调整内边距 */
+    -fx-min-width: 180px;
+}
+
+/* 悬停时的 MenuItem 样式 */
+.menu-item:hover {
+    -fx-background-color: #3C3C3C;      /* 悬停背景色 */
+}
+
+/* MenuItem 中的文本样式 */
+.menu-item .label {
+    -fx-text-fill: #E0E0E0;            /* 文字颜色 */
+    -fx-font-size: 14px;               /* 字体大小 */
+}
+
+/* 分隔线样式 */
+.menu-item .separator {
+    -fx-border-color: #4D4D4D;         /* 分隔线颜色 */
+    -fx-padding: 2px 0;                /* 分隔线内边距 */
+}
+
+.shadow-effect {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0.1, 6, 8);
+}
+

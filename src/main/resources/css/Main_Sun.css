@@ -1,0 +1,245 @@
+
+.image-Left_Button/*路径回退键*/
+{
+    -fx-background-image:url("../icon2/arrow-left-circle.png");/*图片引用*/
+    -fx-background-color:transparent;   /*按钮背景透明*/
+    -fx-background-size: 50;       /*图片大小自动适应按钮大小*/
+    -fx-background-repeat: no-repeat;   /* 禁止重复 */
+    -fx-background-position: center;    /* 图片居中 */
+}
+
+.image-Left_Button:hover
+{
+    -fx-background-size: 60;
+    -fx-cursor: hand;                   /* 改变鼠标手势 */
+}
+.image-Left_Button:pressed
+{
+    -fx-background-size: 50;       /*图片大小自动适应按钮大小*/
+}
+/* 路径回退键 */
+
+/*下面的前进键同上*/
+.image-Right_Button/*路径前进键*/
+{
+    -fx-background-image:url("../icon2/arrow-right-circle.png");
+    -fx-background-color:transparent;
+    -fx-background-size: 50;       /*图片大小自动适应按钮大小*/
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.image-Right_Button:hover
+{
+    -fx-background-size: 60;
+    -fx-cursor: hand;
+}
+
+.image-Right_Button:pressed
+{
+    -fx-background-size: 50;       /*图片大小自动适应按钮大小*/
+}
+/*路径前进键*/
+
+/*搜索键*/
+.Search
+{
+    -fx-background-image:url("../icon2/搜索1.png");/*图片引用*/
+    -fx-background-color:transparent;   /*按钮背景透明*/
+    -fx-background-size: 25;       /*图片大小自动适应按钮大小*/
+    -fx-background-repeat: no-repeat;   /* 禁止重复 */
+    -fx-background-position: center;    /* 图片居中 */
+}
+
+.Search:hover
+{
+    -fx-background-size: 30;
+    -fx-cursor: hand;                   /* 改变鼠标手势 */
+}
+
+.Search:pressed
+{
+    -fx-background-size: 26;
+}
+/*搜索键*/
+
+/*路径的条*/
+.ULR_Path
+{
+    -fx-font-size: 20px;        /*字体大小*/
+    -fx-background-radius: 12;  /*边角的弧度*/
+}
+/*路径条*/
+
+/* 水平调整光标 */
+#leftResize, #rightResize {
+    -fx-cursor: h-resize;
+    -fx-background-color: transparent;
+}
+
+/* 垂直调整光标 */
+#topResize, #bottomResize {
+    -fx-cursor: v-resize;
+    -fx-background-color: transparent;
+}
+
+/* 对角线调整光标 */
+#leftTopResize, #rightBottomResize {
+    -fx-cursor: SE_RESIZE;
+    -fx-background-color: transparent;
+}
+
+#rightTopResize, #leftBottomResize {
+    -fx-cursor: SW_RESIZE;
+    -fx-background-color: transparent;
+}
+/* 对角线调整光标 */
+
+
+#closeBtn {
+    -fx-background-image: url("../icon2/CloseFilled.png");  /* 图片路径（相对于CSS文件） */
+    -fx-background-color:transparent;   /*按钮背景透明*/
+    -fx-background-size: 20;            /*图片大小调整*/
+    -fx-background-repeat: no-repeat;   /* 禁止重复 */
+    -fx-background-position: center;    /* 图片居中 */
+}
+
+#minBtn{
+    -fx-background-image: url("../icon2/MinusFilled.png");  /* 图片路径（相对于CSS文件） */
+    -fx-background-color:transparent;   /*按钮背景透明*/
+    -fx-background-size: 20;            /*图片大小调整*/
+    -fx-background-repeat: no-repeat;   /* 禁止重复 */
+    -fx-background-position: center;    /* 图片居中 */
+}
+#maxBtn{
+    -fx-background-color:transparent;   /*按钮背景透明*/
+    -fx-background-size: 20;            /*图片大小调整*/
+    -fx-background-repeat: no-repeat;   /* 禁止重复 */
+    -fx-background-position: center;    /* 图片居中 */
+}
+
+#maxBtn:hover,#minBtn:hover,#LightButton:hover {/*给这些按钮的悬停统一改深色*/
+    -fx-background-color:#1AA3B2;
+}
+#closeBtn:hover
+{
+    -fx-background-color:red;
+}
+.maxBtn-full{/*最大化按钮*/
+    -fx-background-image: url("../icon2/FullScreen.png");
+}
+.maxBtn-recover {/*最大化的缩小按钮*/
+    -fx-background-image: url("../icon2/Recover.png");
+}
+
+#LightButton
+{
+    -fx-background-image: url("../icon2/日间模式.png");  /* 图片路径（相对于CSS文件） */
+    /*-fx-background-color:transparent;   !*按钮背景透明*!*/
+    -fx-background-color: #9F92FF;
+    -fx-background-radius: 15px;
+    -fx-background-size: 20;            /*图片大小调整*/
+    -fx-background-repeat: no-repeat;   /* 禁止重复 */
+    -fx-background-position: center;    /* 图片居中 */
+    -fx-cursor: hand;
+}
+
+#SortMenu,#SelectAll_Button,#Delete_Button,/*多个按钮同样的部分写在一起*/
+#Flushed_Button,#Slideshow_Button,#Help_Button
+{
+    -fx-background-color:transparent;   /*按钮背景透明*/
+    -fx-background-size: 30;       /*图片大小自动适应按钮大小*/
+    -fx-background-repeat: no-repeat;   /* 禁止重复 */
+    -fx-background-position: left;    /* 图片居中 */
+    -fx-border-radius: 10px;  /*边角的弧度*/
+    -fx-border-width: 3px;
+}
+
+/*每个按钮独特的地方，再写进去*/
+#SortMenu{
+    -fx-background-image: url("../icon2/排序.png");
+}
+#SelectAll_Button{
+    -fx-background-image: url("../icon2/全选.png");
+}
+#Delete_Button{
+    -fx-background-image: url("../icon2/删除.png");
+}
+#Flushed_Button{
+    -fx-background-image: url("../icon2/刷新.png");
+}
+#Slideshow_Button{
+    -fx-background-image: url("../icon2/幻灯片.png");
+}
+#Help_Button{
+    -fx-background-image: url("../icon2/帮助.png");
+}
+
+#SortMenu:hover ,#SelectAll_Button:hover,#Delete_Button:hover,
+#Flushed_Button:hover,#Slideshow_Button:hover,#Help_Button:hover
+{
+    -fx-border-color: #3BCCE2;
+    -fx-cursor: hand;
+}
+#SortMenu:pressed ,#SelectAll_Button:pressed,#Delete_Button:pressed,
+#Flushed_Button:pressed,#Slideshow_Button:pressed,#Help_Button:pressed
+{
+    -fx-background-color:#C641EC;
+}
+
+/* 主容器样式 */
+#treeView {
+    -fx-border-width: 0 2px 0 0;
+}
+
+/* 单元格基础样式 */
+.tree-cell {
+    -fx-background-color: transparent; /* 透明背景 */
+    -fx-font-size: 13px;
+    -fx-padding: 6px 10px;             /* 与图片预览区对齐 */
+}
+
+/* 展开/折叠箭头 */
+.tree-disclosure-node .arrow {
+    -fx-background-color: #e0e0e0;     /* 浅蓝色箭头 */
+    -fx-shape: "M 0 0 L 5 5 L 0 10 Z";/* 自定义箭头形状 */
+}
+
+/* 选中状态 */
+.tree-cell:selected {
+    -fx-background-color: #2B579A55;   /* 半透明选中效果 */
+    -fx-text-fill: #fff;
+}
+
+
+/* 连接线样式 */
+.tree-cell > .tree-disclosure-node > .arrow {
+    -fx-effect: dropshadow(gaussian, #2B579A, 4, 0.5, 0, 0);
+}
+
+/* 滚动条同步 */
+#treeView .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8px;
+}
+
+
+
+#About_Button{
+    -fx-cursor: hand;
+    -fx-background-color:#D173EA ;
+}
+
+#root
+{
+    -fx-background-color:linear-gradient(to right,#091532,#D173EA,#3BCCE2)
+}
+
+#AppName
+{
+    -fx-text-fill: linear-gradient(/*文本渐变色*/
+            from 0% 19.32% to 100% 19.32%,  /* 根据startY=0.193转换的百分比 */
+            #3923e1 0%,    /* RGB(57,35,225) */
+            #ffffff 100%   /* 白色 */
+    );
+}

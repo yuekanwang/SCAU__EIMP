@@ -4,16 +4,86 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="图片属性面板可以拖拽移动,幻灯片按主界面初始排序">
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/RenameDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/SlideWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/SlideWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ImageInfoWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ImageInfoWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowMainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowMainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/css/Slide.css" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/css/Slide.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/css/imageInfoPane.css" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/css/CustomPane.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowSlide.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowSlide.fxml" afterDir="false" />
+    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="重新实现图片属性面板重命名功能,同步功能">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/App.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/CropWindow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/SlideWindow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/component/CropRectMasker.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/component/DirectoryLoader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/component/FileTreeItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/component/ImageInfoWindow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/component/PreviewFlowPane.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/component/RenameDialog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/component/ThumbnailPanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/controller/ControllerMap.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/controller/WindowCropController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/controller/WindowMainController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/controller/WindowSlideController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/util/DragUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/util/FileUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/util/ImageUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/util/SortOrder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/util/SortUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/eimp/util/ZoomUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/css/Crop.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/css/CustomPane.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/css/Main_Night.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/css/Main_Sun.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/css/Slide.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/fxml/WindowCrop.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/fxml/WindowMain.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/fxml/WindowSlide.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon/CloseFilled.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon/FullScreen.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon/MinusFilled.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon/MoreMenu.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon/Recover.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon/arrow-left-circle.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon/arrow-right-circle.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon/ashbin.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon/compress.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon/original-fit.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon/play.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon/prompt.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon/rotate.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon/zoom-in.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon/zoom-out.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/CloseFilled.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/EIMP.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/FullScreen.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/MinusFilled.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/Recover.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/arrow-left-circle.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/arrow-right-circle.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/全选.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/全选2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/删除.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/删除2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/刷新.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/刷新2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/夜间模式.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/帮助.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/帮助2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/幻灯片.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/幻灯片2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/排序.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/排序2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/搜索1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/搜索2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon2/日间模式.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon3/1-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon3/16-9.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon3/2-3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon3/3-2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon3/3-4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon3/4-3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon3/9-16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon3/free.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon3/license.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon3/origin.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon3/pc.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icon3/phone.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,41 +120,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Application.JavaFx.executor": "Run",
-    "Application.RenameDialog.executor": "Run",
-    "Application.SlideWindow.executor": "Run",
-    "Application.Slide_test.executor": "Run",
-    "Application.Slide_testW.executor": "Run",
-    "Downloaded.Files.Path.Enabled": "false",
-    "Maven.EIMP [clean].executor": "Run",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "jdk.selected.JAVA_MODULE": "22",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/code/GitHub项目/EIMP",
-    "list.type.of.created.stylesheet": "CSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "模块",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "File.Encoding",
-    "vue.rearranger.settings.migration": "true",
-    "应用程序.App.executor": "Run",
-    "应用程序.JavaFx.executor": "Run"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Application.JavaFx.executor&quot;: &quot;Run&quot;,
+    &quot;Application.RenameDialog.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SlideWindow.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Slide_test.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Slide_testW.executor&quot;: &quot;Run&quot;,
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Maven.EIMP [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;22&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/code/GitHub项目/EIMP&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;File.Encoding&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
+    &quot;应用程序.App.executor&quot;: &quot;Run&quot;,
+    &quot;应用程序.JavaFx.executor&quot;: &quot;Run&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="ExtractSuperBase.RECENT_KEYS">
       <recent name="com.eimp.component" />
@@ -145,6 +215,14 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -177,6 +255,7 @@
       <workItem from="1743422585214" duration="3074000" />
       <workItem from="1743593950898" duration="4442000" />
       <workItem from="1744444498749" duration="7113000" />
+      <workItem from="1745676662447" duration="189000" />
     </task>
     <task id="LOCAL-00001" summary="修改幻灯片UI,大部分已修改,缩略图UI待确定">
       <option name="closed" value="true" />

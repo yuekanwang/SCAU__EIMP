@@ -1,0 +1,29 @@
+#closeBtn {
+    -fx-background-color: #ff4444;
+    -fx-background-image: url("../icon/CloseFilled.png");  /* 图片路径（相对于CSS文件） */
+    -fx-background-size: 10px 10px;         /* 图片尺寸 */
+    -fx-background-repeat: no-repeat;       /* 禁止重复 */
+    -fx-background-position: center;        /* 图片居中 */
+    -fx-background-radius: 999;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+}
+
+#CustomPane {
+    -fx-padding: 15;
+    -fx-background-color: #333333;
+    -fx-border-color: #666666;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 6, 0, 0, 2); /* 阴影效果 */
+}
+
+.label{
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+#actionbutton {
+    -fx-background-color: #e0e0e0;
+    -fx-text-fill: #d173ea;
+    -fx-pref-width: 60;
+    -fx-min-width: 60;
+}
