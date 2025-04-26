@@ -27,6 +27,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import javafx.util.Pair;
 import org.controlsfx.control.Notifications;
 
 import javax.swing.filechooser.FileSystemView;
@@ -36,7 +37,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class WindowMainController implements Initializable {
     @FXML
@@ -146,6 +146,7 @@ public class WindowMainController implements Initializable {
         this.setUpWindowControls();//调用窗口控制函数
 
         initButton();
+        initSearch();
         initFileTreeView();
         initPreviewPane();
         intPaneColor();
@@ -217,6 +218,39 @@ public class WindowMainController implements Initializable {
             }
             updateFlowPane();
         });
+    }
+
+    /**
+     * 为搜索框加上监听事件，实现搜索内容的高亮显示
+     * 当前为实时搜索，不用按下回车键
+     */
+    private void initSearch() {
+        Search_Path.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            List<ThumbnailPanel> thumbnailPanels = previewFlowPane.getThumbnailPanels();
+
+            //为空时显示全部
+            if (Search_Path.getText().isEmpty()) {
+                previewFlowPane.getChildren().setAll(thumbnailPanels);
+                return;
+            }
+
+            // 非空时开始过滤匹配
+            List<ThumbnailPanel> filtered = new ArrayList<>();
+            for (ThumbnailPanel pane : thumbnailPanels) {
+                String fileName = pane.getImageUtil().getFileName();
+                pane.updateHighlight(newValue);  // 更新高亮
+                if (fileName.contains(newValue))  {
+                    filtered.add(pane);
+                }
+            }
+
+            previewFlowPane.getChildren().setAll(filtered);
+        });
+    }
+
+    public TextField getSearch_Path() {
+        return Search_Path;
     }
 
     /**

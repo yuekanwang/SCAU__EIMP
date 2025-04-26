@@ -51,6 +51,10 @@ public class ThumbnailPanel extends BorderPane {
     // 主界面搜索框
     private static TextField searchKey;
 
+    static {
+        searchKey = MAIN_WINDOWS_CONTROLLER.getSearch_Path();
+    }
+
     public ThumbnailPanel(ImageUtil imageUtil) {
         this.setMaxSize(150, 190);
         this.setMinSize(150, 190);
@@ -156,10 +160,6 @@ public class ThumbnailPanel extends BorderPane {
                 resetName();
             }
         });
-
-        //searchKey = MAIN_WINDOWS_CONTROLLER.getSearchPath();
-        // 绑定主界面搜索框
-        //imageName.textProperty().bindBidirectional(searchKey.textProperty());
 
         setCenter(imageView);
         setBottom(imageName);
@@ -393,5 +393,9 @@ public class ThumbnailPanel extends BorderPane {
         PreviewFlowPane parent = (PreviewFlowPane) this.getParent();
         parent.update();
         MAIN_WINDOWS_CONTROLLER.imagePreviewPane.setFocusTraversable(true);
+    }
+
+    public void updateHighlight(String newValue) {
+
     }
 }
