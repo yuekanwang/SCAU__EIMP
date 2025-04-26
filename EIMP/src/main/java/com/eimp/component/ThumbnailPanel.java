@@ -6,6 +6,7 @@ import com.eimp.controller.WindowMainController;
 import com.eimp.util.ImageUtil;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -71,6 +72,7 @@ public class ThumbnailPanel extends BorderPane {
         imageName.setManaged(true);
 
         imageName.setOnAction(this::confirmRename);
+        imageName.setOnContextMenuRequested(Event::consume);
         imageName.addEventFilter(KeyEvent.KEY_PRESSED, this::handleEscape);
         // 双击事件：进入编辑模式
         imageName.setOnMouseClicked(event  -> {

@@ -447,6 +447,15 @@ public class WindowMainController implements Initializable {
         );
         // 设置无限循环
         scrollTimeLine.setCycleCount(Timeline.INDEFINITE);
+        previewFlowPane.setOnKeyPressed(event -> {
+            if (event.isControlDown()) {
+                if (event.getCode() == KeyCode.V) {
+                    pasteAll();
+                } else if (event.getCode() == KeyCode.C) {
+                    copyImage();
+                }
+            }
+        });
         // 对previewFlowPane进行鼠标监听
         previewFlowPane.setOnMousePressed(event -> {
             x = event.getX();
@@ -915,11 +924,21 @@ public class WindowMainController implements Initializable {
 
         Menu() {
             copy.setOnAction(e -> copyImage());
+            // 设置Ctrl+C作为快捷键
+            copy.setAccelerator(new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN));
             copyaddress.setOnAction(e -> copyAddress());
+            // 设置ctrl+shift+C作为快捷键
+            copyaddress.setAccelerator(new KeyCodeCombination(KeyCode.C, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN));
             paste.setOnAction(e -> pasteAll());
+            // 设置Ctrl+V作为快捷键
+            paste.setAccelerator(new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN));
             delete.setOnAction(e -> deleteImage());
+            // 设置Delete作为快捷键
+            delete.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
             rename.setOnAction(e -> renameImage());
             attribute.setOnAction(e -> showImageAttribute());
+            // 设置Alt+Enter作为快捷键
+            attribute.setAccelerator(new KeyCodeCombination(KeyCode.ENTER, KeyCombination.ALT_DOWN));
             getItems().addAll(copy, copyaddress, paste, delete, rename, attribute);
         }
 
@@ -944,7 +963,7 @@ public class WindowMainController implements Initializable {
      */
     @FXML
     public void copyImage() {
-        if (!previewFlowPane.getNewSelected().isEmpty())  {
+        if (!previewFlowPane.newSelectedIsEmpty())  {
             // 获取用户选中的多个图片文件
             File src;
             File directory = previewFlowPane.getDirectory();
