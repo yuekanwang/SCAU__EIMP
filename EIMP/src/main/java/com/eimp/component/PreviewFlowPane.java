@@ -31,6 +31,15 @@ public class PreviewFlowPane extends FlowPane {
 
     private SortOrder sortOrder;
 
+    public boolean isRename() {
+        for (ThumbnailPanel pane : thumbnailPanels) {
+            if (pane.isRename()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public File getDirectory() {
         return directory;
     }

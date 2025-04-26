@@ -36,6 +36,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class WindowMainController implements Initializable {
     @FXML
@@ -520,14 +521,22 @@ public class WindowMainController implements Initializable {
                 scrollTimeLine.stop();
             }
         });
+
         previewFlowPane.setOnMouseReleased(event -> {
             rectangle.setVisible(false);
             scrollTimeLine.stop();
         });
 
-        previewFlowPane.requestFocus();
+        // 快捷键监听事件
+        imagePreviewPane.setFocusTraversable(true);
+        imagePreviewPane.setOnMouseClicked(event -> {
+            imagePreviewPane.requestFocus();
+        });
 
-        root.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+        imagePreviewPane.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (!imagePreviewPane.isFocused()) {
+                return;
+            }
             if (new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN).match(event)) {
                 copyImage();
             } else if (new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN).match(event)) {
@@ -975,19 +984,31 @@ public class WindowMainController implements Initializable {
     @FXML
     public void copyImage() {
         if (!previewFlowPane.newSelectedIsEmpty())  {
+            boolean yes = true;
             // 获取用户选中的多个图片文件
             File src;
             File directory = previewFlowPane.getDirectory();
             List<File> selectedFiles = new ArrayList<>();
+            String text = null;
             for (ThumbnailPanel image : previewFlowPane.getNewSelected()) {
+                if (image.isRename()) {
+                    text = image.getImageName().getSelectedText();
+                    yes = false;
+                    break;
+                }
                 src = image.getImageUtil().getFile();
                 String in = directory.getAbsolutePath() + "\\" + src.getName();
                 selectedFiles.add(new File(in));
             }
             // 将文件列表存入剪贴板
-            content.putFiles(selectedFiles);
-            clipboard.setContent(content);
+            if (yes) {
+                content.putFiles(selectedFiles);
+            } else {
+                content.putString(text);
+            }
         }
+        clipboard.clear();
+        clipboard.setContent(content);
         menu.close();
     }
 
