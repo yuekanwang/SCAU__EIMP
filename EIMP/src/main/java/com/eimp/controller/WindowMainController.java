@@ -14,23 +14,28 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 import javax.swing.filechooser.FileSystemView;
+import java.awt.*;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.List;
 
 public class WindowMainController implements Initializable {
     @FXML
@@ -519,6 +524,23 @@ public class WindowMainController implements Initializable {
             rectangle.setVisible(false);
             scrollTimeLine.stop();
         });
+
+        previewFlowPane.requestFocus();
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN).match(event)) {
+                copyImage();
+            } else if (new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN).match(event)) {
+                pasteAll();
+            } else if (new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN).match(event)) {
+                copyAddress();
+            } else if (new KeyCodeCombination(KeyCode.DELETE).match(event)) {
+                deleteImage();
+            } else if (new KeyCodeCombination(KeyCode.ENTER, KeyCodeCombination.ALT_DOWN).match(event)) {
+                showImageAttribute();
+            }
+            event.consume();
+        });
     }
 
     /**
@@ -923,21 +945,11 @@ public class WindowMainController implements Initializable {
 
         Menu() {
             copy.setOnAction(e -> copyImage());
-            // 设置Ctrl+C作为快捷键
-            copy.setAccelerator(new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN));
             copyaddress.setOnAction(e -> copyAddress());
-            // 设置ctrl+shift+C作为快捷键
-            copyaddress.setAccelerator(new KeyCodeCombination(KeyCode.C, KeyCodeCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN));
             paste.setOnAction(e -> pasteAll());
-            // 设置Ctrl+V作为快捷键
-            paste.setAccelerator(new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN));
             delete.setOnAction(e -> deleteImage());
-            // 设置Delete作为快捷键
-            delete.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
             rename.setOnAction(e -> renameImage());
             attribute.setOnAction(e -> showImageAttribute());
-            // 设置Alt+Enter作为快捷键
-            attribute.setAccelerator(new KeyCodeCombination(KeyCode.ENTER, KeyCombination.ALT_DOWN));
             getItems().addAll(copy, copyaddress, paste, delete, rename, attribute);
         }
 
@@ -976,6 +988,7 @@ public class WindowMainController implements Initializable {
             content.putFiles(selectedFiles);
             clipboard.setContent(content);
         }
+        menu.close();
     }
 
     // 存储复制的图片地址
@@ -1000,6 +1013,7 @@ public class WindowMainController implements Initializable {
         // 将字符串存入剪贴板
         content.putString(copyAddr);
         clipboard.setContent(content);
+        menu.close();
     }
 
     /**
@@ -1034,6 +1048,7 @@ public class WindowMainController implements Initializable {
         } else if (clipboard.hasString()) {
             pastedText = clipboard.getString();
         }
+        menu.close();
         updateFlowPane();
     }
 
@@ -1049,11 +1064,14 @@ public class WindowMainController implements Initializable {
      */
     @FXML
     public void deleteImage() {
-        File chooose;
+        File choose;
         for (ThumbnailPanel image : previewFlowPane.getNewSelected()) {
-            chooose = image.getImageUtil().getFile();
-            if (chooose.exists() && chooose.isFile()) {
-                boolean isDeleted = chooose.delete();  // 返回删除结果
+            choose = image.getImageUtil().getFile();
+            if (choose.exists() && choose.isFile()) {
+                if (Desktop.isDesktopSupported())  {
+                    Desktop.getDesktop().moveToTrash(choose);
+                }
+                boolean isDeleted = choose.delete();  // 返回删除结果
                 if (isDeleted) {
                     // System.out.println(" 文件删除成功");
                 } else {
@@ -1061,6 +1079,7 @@ public class WindowMainController implements Initializable {
                 }
             }
         }
+        menu.close();
         updateFlowPane();
     }
 
@@ -1073,6 +1092,7 @@ public class WindowMainController implements Initializable {
             ThumbnailPanel image = previewFlowPane.getNewSelected().getLast();
             image.startReName();
         }
+        menu.close();
     }
 
     /**
@@ -1082,6 +1102,7 @@ public class WindowMainController implements Initializable {
     public void showImageAttribute() {
         // 图片信息面板
         ImageInfoWindow.main(previewFlowPane.getNewSelected().getLast().getImageUtil(),340,250);
+        menu.close();
     }
 
 
