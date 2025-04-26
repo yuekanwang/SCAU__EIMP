@@ -37,6 +37,12 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
+import javafx.scene.web.WebView;
+import javafx.scene.web.WebEngine;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.ScrollPane;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
 
 public class WindowMainController implements Initializable {
     @FXML
@@ -77,7 +83,7 @@ public class WindowMainController implements Initializable {
     @FXML
     public Button closeBtn;//窗口关闭按钮
     @FXML
-    public Button About_Button;//右下角“关于”
+    public Button About_Button;//右下角"关于"
     
     @FXML
     public Button SelectAll_Button;//全选按钮
@@ -165,6 +171,7 @@ public class WindowMainController implements Initializable {
         Flushed_Button.setOnAction(e->flushImage());
         SelectAll_Button.setOnAction(e->selectedAll());
         Delete_Button.setOnAction(e->deleteImage());
+        Help_Button.setOnAction(e->HelpWindow());
 
         Delete_Button.setOnKeyPressed(e->{//键盘视奸
             if(e.getCode() == KeyCode.DELETE)
@@ -172,7 +179,7 @@ public class WindowMainController implements Initializable {
         });
 
 /*        @FXML
-        public Button About_Button;//有下角“关于”
+        public Button About_Button;//有下角"关于"
 
         @FXML
         public Button SelectAll_Button;//全选按钮
@@ -183,6 +190,95 @@ public class WindowMainController implements Initializable {
 
         public Button Help_Button;//帮助按钮*/
     }
+
+    private void HelpWindow() {//帮助窗口
+        Stage helpStage = new Stage();
+        helpStage.setTitle("帮助信息");
+
+        // 允许缩放
+        helpStage.setResizable(true);
+        // 禁止最大化（监听并强制还原）
+        helpStage.maximizedProperty().addListener((obs, wasMax, isMax) -> {
+            if (isMax) helpStage.setMaximized(false);
+        });
+
+        // Create WebView and WebEngine
+        WebView webView = new WebView();
+        WebEngine webEngine = webView.getEngine();
+
+        // Create markdown content
+        String markdownContent = """
+            # 使用指南
+
+            ## 基本操作
+            - **浏览图片**: 双击图片可打开查看
+            - **选择图片**: 点击图片可选中，按住Ctrl可多选
+            - **删除图片**: 选中图片后按Delete键或右键选择删除
+
+            ## 快捷键
+            - `Ctrl + C`: 复制图片
+            - `Ctrl + V`: 粘贴图片
+            - `Ctrl + A`: 全选图片
+            - `Delete`: 删除选中图片
+
+            ## 图片查看
+            - 支持格式: JPG, JPEG, PNG, GIF, BMP
+            - 可缩放、旋转图片
+            - 支持幻灯片播放模式
+
+            ## 排序功能
+            - 可按名称、大小、时间排序
+            - 支持升序和降序排列
+
+            ## 主题切换
+            - 点击右上角按钮可切换日间/夜间模式
+            """;
+
+        // Convert markdown to HTML using a simple converter
+        String htmlContent = convertMarkdownToHtml(markdownContent);
+
+        // Load HTML content
+        webEngine.loadContent(htmlContent);
+
+        // 设置WebView宽高自适应
+        webView.setPrefWidth(600);
+        webView.setPrefHeight(400);
+
+        // Create scene and show stage
+        Scene scene = new Scene(webView, 600, 400);
+
+        helpStage.setMinWidth(578);
+        helpStage.setMinHeight(389);
+        helpStage.setMaxWidth(1000);
+        helpStage.setMaxHeight(700);
+
+        helpStage.setScene(scene);
+        helpStage.show();
+    }
+
+    private String convertMarkdownToHtml(String markdown) {
+        // Simple markdown to HTML conversion with enhanced styling
+        return "<html><head><style>" +
+               "html, body { width: 100vw; height: 100vh; margin: 0; padding: 0; overflow-x: hidden; overflow-y: auto; }" +
+               "body { font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; line-height: 1.6; color: #333; background: #f8f9fa; padding-left: 32px; box-sizing: border-box; width: 100%; }" +
+               "h1 { color: #2B579A; margin-top: 0; margin-bottom: 20px; font-size: 24px; font-weight: 600; border-bottom: 2px solid #e9ecef; padding-bottom: 10px; }" +
+               "h2 { color: #2B579A; margin-top: 25px; margin-bottom: 15px; font-size: 18px; font-weight: 500; }" +
+               "ul { margin-left: 20px; padding-left: 0; list-style-type: none; }" +
+               "li { margin: 8px 0; padding-left: 20px; position: relative; }" +
+               "li:before { content: '•'; color: #2B579A; position: absolute; left: 0; }" +
+               "code { background: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 0.9em; color: #495057; }" +
+               "strong { color: #2B579A; }" +
+               "</style></head><body>" +
+               markdown
+                   .replaceAll("# (.*)", "<h1>$1</h1>")
+                   .replaceAll("## (.*)", "<h2>$1</h2>")
+                   .replaceAll("- \\*\\*(.*)\\*\\*", "<li><strong>$1</strong></li>")
+                   .replaceAll("- `(.*)`", "<li><code>$1</code></li>")
+                   .replaceAll("- (.*)", "<li>$1</li>") +
+               "</body></html>";
+    }
+
+
 
     /**
      * 初始化界面主题的设置和控制
@@ -1088,7 +1184,7 @@ public class WindowMainController implements Initializable {
                     String out = directory.getAbsolutePath() + "\\" + file.getName();
                     target = new File(out);
                     try {
-                        //目标文件已存在时，在文件名后加“-副本后缀”
+                        //目标文件已存在时，在文件名后加"副本后缀"
                         while (target.exists()) {
                             String suffix = out.substring(out.lastIndexOf("."));
                             out = out.replace(suffix, "-副本") + suffix;
