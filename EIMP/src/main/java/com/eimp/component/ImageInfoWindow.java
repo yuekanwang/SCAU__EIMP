@@ -4,49 +4,142 @@ import com.eimp.CropWindow;
 import com.eimp.util.DragUtil;
 import com.eimp.util.FileUtil;
 import com.eimp.util.ImageUtil;
-import javafx.fxml.FXML;
+import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
-
-import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collectors;
+
+
+public class ImageInfoWindow extends Application {
+    /**
+     * 属性窗口映射
+     */
+    private static Map<String,Stage> imageInfoWindowMap = new HashMap<>();
+    /**
+     * 当前图片属性面板
+     */
+    private static ImageInfoPane imageInfoPane;
+    @Override
+    public void start(Stage stage) throws Exception {
+        imageInfoPane.getStylesheets().setAll(getClass().getResource("/css/imageInfoPane.css").toExternalForm());
+        Scene scene = new Scene(imageInfoPane);
+        stage.setScene(scene);
+        stage.setTitle("图像属性");
+
+        Image Appicon = new Image(getClass().getResourceAsStream("/icon2/EIMP.png"));
+        stage.getIcons().add(Appicon);
+        stage.initStyle(StageStyle.UNDECORATED);
+
+        stage.show();
+    }
+
+    /**
+     * 构造图像属性窗口
+     * @param imageUtil 图像属性工具包
+     * @param width 窗口宽
+     * @param height 窗口高
+     */
+    public static void main(ImageUtil imageUtil,double width,double height) {
+        if (Platform.isFxApplicationThread()&&!imageInfoWindowMap.containsKey(imageUtil.getAbsolutePath())) {
+            Stage stage = new Stage();
+            imageInfoWindowMap.put(imageUtil.getAbsolutePath(),stage);
+            stage.setWidth(width);
+            stage.setHeight(height);
+            ImageInfoWindow.imageInfoPane = new ImageInfoPane(imageUtil, width, width);
+
+
+            ImageInfoWindow imageInfoWindow = new ImageInfoWindow();
+            try {
+                imageInfoWindow.start(stage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            imageInfoWindowMap.get(imageUtil.getAbsolutePath()).requestFocus();
+        }
+    }
+
+    /**
+     * 获取窗口
+     * @param absolutePath 图像绝对路径
+     * @return 窗口
+     */
+    public static Stage getStage(String absolutePath) {
+        return imageInfoWindowMap.get(absolutePath);
+    }
+
+    /**
+     * 关闭并移除窗口的映射
+     * @param absolutePath 图像绝对路径
+     * @return 结果
+     */
+    public static boolean removeStage(String absolutePath) {
+        if (imageInfoWindowMap.containsKey(absolutePath)) {
+            imageInfoWindowMap.get(absolutePath).close();
+            imageInfoWindowMap.remove(absolutePath);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 更新图片属性
+     * @param imageUtil 图片属性工具包
+     */
+    public static void updateImageInfo(ImageUtil imageUtil) {
+        if (imageInfoWindowMap.size()>0) {
+            Stage stage = imageInfoWindowMap.entrySet().iterator().next().getValue();
+            String key = imageInfoWindowMap.entrySet().iterator().next().getKey();
+            imageInfoWindowMap.remove(key);
+            imageInfoPane.setImageUtil(imageUtil);
+            imageInfoWindowMap.put(imageUtil.getAbsolutePath(), stage);
+            stage.requestFocus();
+        }
+    }
+}
+
 
 /**
  * 图片属性面板
  */
-public class ImageInfoPane extends VBox{
+class ImageInfoPane extends VBox{
     private ImageUtil imageUtil;
     private Image image;
+    private Stage stage;// 所属窗口
     /**
      * 色卡列表
      */
     private List<Color> dominantColors;
-    private DragUtil dragUtil = new DragUtil(this);
+
 
     public ImageInfoPane(double width, double height) {
         this.setId("imageInfoPane");
         this.setPrefWidth(width);
         this.setPrefHeight(height);
+        this.stage = ImageInfoWindow.getStage(imageUtil.getAbsolutePath());
+        DragUtil dragUtil = new DragUtil(this,stage);
     }
 
     public ImageInfoPane(ImageUtil imageUtil,double width, double height) {
         this.setId("imageInfoPane");
+        this.stage = ImageInfoWindow.getStage(imageUtil.getAbsolutePath());
+        DragUtil dragUtil = new DragUtil(this,stage);       //添加拖拽逻辑
         this.imageUtil = imageUtil;
         this.setPrefWidth(width);
         this.setPrefHeight(height);
@@ -230,7 +323,11 @@ public class ImageInfoPane extends VBox{
         Button closeBtn = new Button();
         closeBtn.setId("closeBtn");
         closeBtn.setTooltip(new Tooltip("关闭"));
-        closeBtn.setOnAction(e-> this.setVisible(false));
+        closeBtn.setOnAction(e-> {
+            if(!ImageInfoWindow.removeStage(imageUtil.getAbsolutePath())){
+                System.out.println("bug");
+            }
+        });
         // 色卡标签
         Label label = new Label("色卡: ");
         label.setStyle("-fx-min-width: 40;-fx-pref-width: 40");
@@ -288,5 +385,7 @@ public class ImageInfoPane extends VBox{
         this.image = new Image(imageUtil.getURL());
         initialize();
     }
+
+
 
 }

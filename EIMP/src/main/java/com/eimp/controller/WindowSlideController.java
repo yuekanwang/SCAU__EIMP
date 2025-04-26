@@ -1,6 +1,6 @@
 package com.eimp.controller;
 import com.eimp.SlideWindow;
-import com.eimp.component.ImageInfoPane;
+import com.eimp.component.ImageInfoWindow;
 import com.eimp.util.FileUtil;
 import com.eimp.util.ImageUtil;
 import com.eimp.util.SortOrder;
@@ -211,7 +211,6 @@ public class WindowSlideController implements Initializable {
         this.setUpDynamicButtonContainerListener();
         this.initButtonStyle();
         this.setUpWindowControls();
-        this.initImageInfoPane();
         this.setUpFullScreenListener();
 //        this.secondaryPane.setVisible(false);// 暂时隐藏缩略图栏,待实现
     }
@@ -294,10 +293,6 @@ public class WindowSlideController implements Initializable {
     }
 
     /**
-     * 图片信息面板
-     */
-    private ImageInfoPane imageInfoPane = new ImageInfoPane(320,250);
-    /**
      * 信息面板容器
      */
     @FXML private HBox infoPane;
@@ -307,23 +302,15 @@ public class WindowSlideController implements Initializable {
      */
     @FXML
     private void showImageInfo(){
-        if(!this.imageInfoPane.isVisible()){
-            this.imageInfoPane.setVisible(true);
+        if(ImageInfoWindow.getStage(imageUtil.getAbsolutePath())!=null){
+            if(ImageInfoWindow.removeStage(imageUtil.getAbsolutePath())){
+                System.out.println("bug");
+            }
         }else{
-            this.imageInfoPane.setVisible(false);
+            ImageInfoWindow.main(this.imageUtil,340,250);
         }
     }
 
-    /**
-     * 初始化图片信息面板
-     */
-    private void initImageInfoPane() {
-        this.imageInfoPane.getStylesheets().setAll(getClass().getResource("/css/imageInfoPane.css").toExternalForm());
-//        this.imageInfoPane.setPrefWidth(320);
-//        this.imageInfoPane.setPrefHeight(250);
-        this.infoPane.getChildren().add(this.imageInfoPane);
-        this.imageInfoPane.setVisible(false);
-    }
     /**
      * 旋转变换类
      */
@@ -522,7 +509,7 @@ public class WindowSlideController implements Initializable {
     private void updateMainImageView() {
         this.originalWidth = this.image.getWidth();
         this.originalHeight = this.image.getHeight();
-        this.imageInfoPane.setImageUtil(this.imageUtil);
+        ImageInfoWindow.updateImageInfo(this.imageUtil);
         this.updateWindowInfo();
         this.initImageScale();
         this.mainImageView.setImage(this.image);
@@ -696,52 +683,9 @@ public class WindowSlideController implements Initializable {
      * @return 适应后的缩小比例
      */
     private int getAdaptedPercent(double fitWidth, double fitHeight) {
-//        double displayWidth = 0;
-//        double displayHeight = 0;
-//
-//        //按比例适应
-//        if (this.mainImageView.isPreserveRatio()) {
-//            double actualRatio = actualWidth / actualHeight;
-//            double fitRatio = fitWidth / fitHeight;
-//            if (actualRatio > fitRatio) {   //宽填满,高缩放
-//                displayWidth = fitWidth;
-//                displayHeight = fitWidth / actualRatio;
-//            } else {
-//                displayHeight = fitHeight;  //高填满,宽缩放
-//                displayWidth = fitHeight * actualRatio;
-//            }
-//        } else {  // 不按比例适应
-//            displayWidth = fitWidth;
-//            displayHeight = fitHeight;
-//        }
-//        int ScaleX = (int) (100 * displayWidth / actualWidth);
-//        int ScaleY = (int) (100 * displayHeight / actualHeight);
-//        return Math.min(ScaleX, ScaleY);
         return (int)(100 * Math.min(fitWidth / originalWidth, fitHeight / originalHeight));
     }
 
-//    private boolean isFilledImage(double actualWidth, double actualHeight, double fitWidth, double fitHeight){
-//        double displayWidth = 0;
-//        double displayHeight = 0;
-//
-//        //按比例适应
-//        if (this.mainImageView.isPreserveRatio()) {
-//            double actualRatio = actualWidth / actualHeight;
-//            double fitRatio = fitWidth / fitHeight;
-//            if (actualRatio > fitRatio) {   //宽填满,高缩放
-//                displayWidth = fitWidth;
-//                displayHeight = fitWidth / actualRatio;
-//            } else {
-//                displayHeight = fitHeight;  //高填满,宽缩放
-//                displayWidth = fitHeight * actualRatio;
-//            }
-//        } else {  // 不按比例适应
-//            displayWidth = fitWidth;
-//            displayHeight = fitHeight;
-//        }
-//
-//        return
-//    }
 
     private double lastX, lastY;    // 拖拽前鼠标位置
     private double translateX = 0 , translateY = 0;  // 当前偏移量

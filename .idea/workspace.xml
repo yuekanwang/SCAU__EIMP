@@ -4,13 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="修改jpg等图像裁剪无法保存bug,统一存储为png副本">
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/util/DragUtil.java" afterDir="false" />
+    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="图片属性面板可以拖拽移动,幻灯片按主界面初始排序">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ImageInfoPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ImageInfoPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ImageInfoPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ImageInfoWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowMainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowMainController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/util/SortUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/util/SortUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/util/DragUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/util/DragUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,45 +46,59 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Application.JavaFx.executor&quot;: &quot;Run&quot;,
-    &quot;Application.SlideWindow.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Slide_test.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Slide_testW.executor&quot;: &quot;Run&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Maven.EIMP [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;22&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/code/GitHub项目/EIMP&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;File.Encoding&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;,
-    &quot;应用程序.App.executor&quot;: &quot;Run&quot;,
-    &quot;应用程序.JavaFx.executor&quot;: &quot;Run&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Application.FloatingWindowExample.executor": "Run",
+    "Application.JavaFx.executor": "Run",
+    "Application.SlideWindow.executor": "Run",
+    "Application.Slide_test.executor": "Run",
+    "Application.Slide_testW.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "Maven.EIMP [clean].executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "jdk.selected.JAVA_MODULE": "22",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/code/GitHub项目/EIMP",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "模块",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "File.Encoding",
+    "vue.rearranger.settings.migration": "true",
+    "应用程序.App.executor": "Run",
+    "应用程序.JavaFx.executor": "Run"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="ExtractSuperBase.RECENT_KEYS">
       <recent name="com.eimp.component" />
     </key>
   </component>
   <component name="RunManager" selected="Application.JavaFx">
+    <configuration name="FloatingWindowExample" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.eimp.component.FloatingWindowExample" />
+      <module name="EIMP" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.eimp.component.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="JavaFx" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="22" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -121,6 +134,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.FloatingWindowExample" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -171,7 +189,8 @@
       <workItem from="1745495734438" duration="671000" />
       <workItem from="1745504041004" duration="1470000" />
       <workItem from="1745578211069" duration="7785000" />
-      <workItem from="1745588888285" duration="3227000" />
+      <workItem from="1745588888285" duration="3350000" />
+      <workItem from="1745631863206" duration="16125000" />
     </task>
     <task id="LOCAL-00001" summary="修改幻灯片UI,大部分已修改,缩略图UI待确定">
       <option name="closed" value="true" />
@@ -285,7 +304,23 @@
       <option name="project" value="LOCAL" />
       <updated>1745489489132</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="图片属性面板可以拖拽移动,幻灯片按主界面初始排序">
+      <option name="closed" value="true" />
+      <created>1745596732679</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1745596732679</updated>
+    </task>
+    <task id="LOCAL-00016" summary="图片属性面板可以拖拽移动,幻灯片按主界面初始排序">
+      <option name="closed" value="true" />
+      <created>1745596743760</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1745596743760</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -312,7 +347,8 @@
     <MESSAGE value="新增幻灯片窗口查看图片信息及其相关操作功能,幻灯片播放功能" />
     <MESSAGE value="新增图片裁剪功能,主界面幻灯片播放功能" />
     <MESSAGE value="修改jpg等图像裁剪无法保存bug,统一存储为png副本" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改jpg等图像裁剪无法保存bug,统一存储为png副本" />
+    <MESSAGE value="图片属性面板可以拖拽移动,幻灯片按主界面初始排序" />
+    <option name="LAST_COMMIT_MESSAGE" value="图片属性面板可以拖拽移动,幻灯片按主界面初始排序" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

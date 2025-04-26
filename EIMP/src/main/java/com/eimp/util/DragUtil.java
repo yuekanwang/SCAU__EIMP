@@ -1,34 +1,49 @@
 package com.eimp.util;
 
 import javafx.scene.Node;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 
 /**
- * 给结点添加可拖拽逻辑
+ * 可拖拽逻辑
  */
 public class DragUtil {
-    private Node node;
     private double startLayoutX, startLayoutY;
     private double startX,startY;
 
-    public DragUtil(Node node) {
-        this.node = node;
-        this.setUpDragHandler();
+    /**
+     * 通过拖拽结点控制窗口
+     * @param node 拖拽结点
+     * @param stage 关联窗口
+     */
+    public DragUtil(Node node, Stage stage) {
+        if(node== null || stage == null) return;
+
+        node.setOnMousePressed(e->{
+            startX =e.getSceneX();
+            startY =e.getSceneY();
+        });
+        node.setOnMouseDragged(e->{
+            //控制窗口
+            stage.setX(getFixedOffset(e.getScreenX() - startX,0, Screen.getPrimary().getBounds().getWidth()));
+            stage.setY(getFixedOffset(e.getScreenY() - startY,0, Screen.getPrimary().getBounds().getHeight()));
+        });
     }
 
     /**
-     * 设置结点的拖拽逻辑处理
+     * 为节点添加拖拽功能（相对于父容器移动）
+     * @param node 需要拖拽的节点
      */
-    private void setUpDragHandler(){
-        this.node.setOnMousePressed(e->{
+    public DragUtil(Node node) {
+        node.setOnMousePressed(e->{
             startX = e.getSceneX();
             startY = e.getSceneY();
             startLayoutX = node.getLayoutX();
             startLayoutY = node.getLayoutY();
         });
-        this.node.setOnMouseDragged(e->{
+        node.setOnMouseDragged(e->{
             double deltaX = e.getSceneX() - startX;
             double deltaY = e.getSceneY() - startY;
-
             node.setLayoutX(getFixedOffset(startLayoutX + deltaX,0,node.getParent().prefWidth(-1)-node.prefWidth(-1)));
             node.setLayoutY(getFixedOffset(startLayoutY + deltaY,0,node.getParent().prefHeight(-1)-node.prefHeight(-1)));
         });

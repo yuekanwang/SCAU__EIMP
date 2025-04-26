@@ -11,11 +11,13 @@ import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
@@ -60,7 +62,7 @@ public class WindowMainController implements Initializable {
     // 图片信息面板容器
     private Pane infoPane = new Pane();
     // 图片信息面板
-    private ImageInfoPane imageInfoPane = new ImageInfoPane(320,250);
+//    private ImageInfoPane imageInfoPane = new ImageInfoPane(320,250);
     /*这些是按钮*/
     @FXML
     public Button minBtn;//窗口最小化按钮
@@ -138,9 +140,10 @@ public class WindowMainController implements Initializable {
         this.stage = App.getStage();//这里的stage写上App里的stage
         this.setUpWindowControls();//调用窗口控制函数
 
+        infoPane.toFront();
         infoPane.setPickOnBounds(false);        // 鼠标可穿透性
-        infoPane.prefWidthProperty().bind(stage.widthProperty());   // 图片属性面板绑定全局宽高
-        infoPane.prefHeightProperty().bind(stage.heightProperty());
+        infoPane.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth());   // 图片属性面板绑定全局宽高
+        infoPane.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight());
 
         initButton();
         initFileTreeView();
@@ -984,26 +987,9 @@ public class WindowMainController implements Initializable {
     @FXML
     public void showImageAttribute() {
         // 图片信息面板
-        ImageInfoPane imageInfoPane = new ImageInfoPane(previewFlowPane.getNewSelected().getLast().getImageUtil(),320,250);
-        initImageInfoPane(imageInfoPane);
-        showImageInfo(imageInfoPane);
+        ImageInfoWindow.main(previewFlowPane.getNewSelected().getLast().getImageUtil(),340,250);
     }
 
-    /**
-     * 初始化图片信息面板
-     */
-    private void initImageInfoPane(ImageInfoPane imageInfoPane) {
-        imageInfoPane.getStylesheets().setAll(Objects.requireNonNull(getClass().getResource("/css/imageInfoPane.css")).toExternalForm());
-        infoPane.getChildren().add(imageInfoPane);
-        imageInfoPane.setVisible(false);
-    }
-
-    /**
-     * 显示图片信息面板
-     */
-    private void showImageInfo(ImageInfoPane imageInfoPane){
-        imageInfoPane.setVisible(!imageInfoPane.isVisible());
-    }
 
     /**
      * 压缩图片
