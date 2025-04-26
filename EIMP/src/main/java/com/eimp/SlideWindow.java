@@ -15,8 +15,13 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SlideWindow extends Application {
+    private static Map<String, List<WindowSlideController>> slideWindowControllers = new HashMap<>();
     private WindowSlideController controller;
     private static Stage stage;
     /**
@@ -70,12 +75,19 @@ public class SlideWindow extends Application {
         stage.initStyle(StageStyle.UNDECORATED);
         controller.setUpKeyEvent(scene);
 
+        // 同文件夹的controller映射
+        if(!slideWindowControllers.containsKey(imageUtil.getDirectory().getAbsolutePath())){
+            slideWindowControllers.put(imageUtil.getDirectory().getAbsolutePath(), new ArrayList<>());
+        }
+        slideWindowControllers.get(imageUtil.getDirectory().getAbsolutePath()).add(controller);
+
         switch(launchMethodEnum){
             case PLAY:
                 stage.show();
                 //导入所选图片的信息工具
                 controller.importImage(SlideWindow.imageUtil);
                 controller.playing();
+
                 break;
             case CLICK:
                 // 添加淡入效果
@@ -110,5 +122,22 @@ public class SlideWindow extends Application {
 
     public static Stage getStage() {
         return stage;
+    }
+
+    /**
+     * 刷新所有同一文件夹下的幻灯片窗口
+     * @param oldPath 旧的图像绝对路径
+     * @param newImageUtil 更新后的图片属性包
+     */
+    public static void flushSlideWindows(String oldPath,ImageUtil newImageUtil){
+        if(slideWindowControllers.containsKey(newImageUtil.getDirectory().getAbsolutePath())){
+            System.out.println( slideWindowControllers.get(newImageUtil.getDirectory().getAbsolutePath()).size());
+            for(WindowSlideController windowSlideController : slideWindowControllers.get(newImageUtil.getDirectory().getAbsolutePath())){
+                windowSlideController.flush(oldPath, newImageUtil);
+            }
+        }
+    }
+    public static void removeSlideWindowController(String key,WindowSlideController controller){
+        slideWindowControllers.get(key).remove(controller);
     }
 }

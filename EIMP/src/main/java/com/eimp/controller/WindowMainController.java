@@ -1081,7 +1081,7 @@ public class WindowMainController implements Initializable {
     @FXML
     public void showImageAttribute() {
         // 图片信息面板
-        ImageInfoWindow.main(previewFlowPane.getNewSelected().getLast().getImageUtil(),340,250);
+        ImageInfoWindow.main(previewFlowPane.getNewSelected().getLast().getImageUtil(),340,250,this.stage);
     }
 
 

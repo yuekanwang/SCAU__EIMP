@@ -9,7 +9,7 @@
     -fx-min-height: 20px;
 }
 
-#imageInfoPane {
+#CustomPane {
     -fx-padding: 15;
     -fx-background-color: #333333;
     -fx-border-color: #666666;

@@ -1,6 +1,9 @@
 package com.eimp.component;
 
 import com.eimp.CropWindow;
+import com.eimp.SlideWindow;
+import com.eimp.controller.ControllerMap;
+import com.eimp.controller.WindowMainController;
 import com.eimp.util.DragUtil;
 import com.eimp.util.FileUtil;
 import com.eimp.util.ImageUtil;
@@ -20,7 +23,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
+
 import java.io.File;
 import java.util.*;
 import java.util.List;
@@ -37,7 +43,7 @@ public class ImageInfoWindow extends Application {
     private static ImageInfoPane imageInfoPane;
     @Override
     public void start(Stage stage) throws Exception {
-        imageInfoPane.getStylesheets().setAll(getClass().getResource("/css/imageInfoPane.css").toExternalForm());
+        imageInfoPane.getStylesheets().setAll(getClass().getResource("/css/CustomPane.css").toExternalForm());
         Scene scene = new Scene(imageInfoPane);
         stage.setScene(scene);
         stage.setTitle("图像属性");
@@ -45,7 +51,6 @@ public class ImageInfoWindow extends Application {
         Image Appicon = new Image(getClass().getResourceAsStream("/icon2/EIMP.png"));
         stage.getIcons().add(Appicon);
         stage.initStyle(StageStyle.UNDECORATED);
-
         stage.show();
     }
 
@@ -55,15 +60,14 @@ public class ImageInfoWindow extends Application {
      * @param width 窗口宽
      * @param height 窗口高
      */
-    public static void main(ImageUtil imageUtil,double width,double height) {
+    public static void main(ImageUtil imageUtil, double width, double height, Window Owner) {
         if (Platform.isFxApplicationThread()&&!imageInfoWindowMap.containsKey(imageUtil.getAbsolutePath())) {
             Stage stage = new Stage();
+            stage.initOwner(Owner);
             imageInfoWindowMap.put(imageUtil.getAbsolutePath(),stage);
             stage.setWidth(width);
             stage.setHeight(height);
             ImageInfoWindow.imageInfoPane = new ImageInfoPane(imageUtil, width, width);
-
-
             ImageInfoWindow imageInfoWindow = new ImageInfoWindow();
             try {
                 imageInfoWindow.start(stage);
@@ -100,16 +104,21 @@ public class ImageInfoWindow extends Application {
 
     /**
      * 更新图片属性
-     * @param imageUtil 图片属性工具包
+     * @param newImageUtil 图片属性工具包
      */
-    public static void updateImageInfo(ImageUtil imageUtil) {
+    public static void updateImageInfo(String originalKey,ImageUtil newImageUtil) {
+        if(originalKey==null||newImageUtil==null) {return;}
         if (imageInfoWindowMap.size()>0) {
-            Stage stage = imageInfoWindowMap.entrySet().iterator().next().getValue();
-            String key = imageInfoWindowMap.entrySet().iterator().next().getKey();
-            imageInfoWindowMap.remove(key);
-            imageInfoPane.setImageUtil(imageUtil);
-            imageInfoWindowMap.put(imageUtil.getAbsolutePath(), stage);
-            stage.requestFocus();
+            Stage stage = imageInfoWindowMap.get(originalKey);
+            if(stage!=null) {
+                stage.requestFocus();
+                imageInfoWindowMap.remove(originalKey);
+                if(imageInfoWindowMap.containsKey(newImageUtil.getAbsolutePath())) {
+                    ImageInfoWindow.removeStage(newImageUtil.getAbsolutePath());
+                }
+                imageInfoPane.setImageUtil(newImageUtil);
+                imageInfoWindowMap.put(newImageUtil.getAbsolutePath(), stage);
+            }
         }
     }
 }
@@ -129,7 +138,7 @@ class ImageInfoPane extends VBox{
 
 
     public ImageInfoPane(double width, double height) {
-        this.setId("imageInfoPane");
+        this.setId("CustomPane");
         this.setPrefWidth(width);
         this.setPrefHeight(height);
         this.stage = ImageInfoWindow.getStage(imageUtil.getAbsolutePath());
@@ -137,7 +146,7 @@ class ImageInfoPane extends VBox{
     }
 
     public ImageInfoPane(ImageUtil imageUtil,double width, double height) {
-        this.setId("imageInfoPane");
+        this.setId("CustomPane");
         this.stage = ImageInfoWindow.getStage(imageUtil.getAbsolutePath());
         DragUtil dragUtil = new DragUtil(this,stage);       //添加拖拽逻辑
         this.imageUtil = imageUtil;
@@ -325,7 +334,7 @@ class ImageInfoPane extends VBox{
         closeBtn.setTooltip(new Tooltip("关闭"));
         closeBtn.setOnAction(e-> {
             if(!ImageInfoWindow.removeStage(imageUtil.getAbsolutePath())){
-                System.out.println("bug");
+                System.out.println("图片属性面板移除bug");
             }
         });
         // 色卡标签
@@ -363,15 +372,20 @@ class ImageInfoPane extends VBox{
     }
 
     private void showRenameDialog() {
-        TextInputDialog dialog = new TextInputDialog(imageUtil.getFileName().substring(0,imageUtil.getFileName().lastIndexOf(".")));
-        dialog.setTitle("重命名");
-        dialog.setHeaderText("输入新文件名：");
-        dialog.showAndWait().ifPresent(newName -> {
-            File newFile = new File(imageUtil.getDirectory(), newName+imageUtil.getFileType().toLowerCase());
-            if (imageUtil.getFile().renameTo(newFile)) {
-                // 更新UI
-
-            }
+        RenameDialog.show(this.stage, imageUtil,result->{
+            WindowMainController controller = (WindowMainController) ControllerMap.getController(WindowMainController.class);
+            controller.flushImage();
+            ImageUtil newImageUtil = new ImageUtil(new File(result));
+            SlideWindow.flushSlideWindows(imageUtil.getAbsolutePath(),newImageUtil);
+            ImageInfoWindow.removeStage(imageUtil.getAbsolutePath());
+            ImageInfoWindow.main(newImageUtil,340,250,stage.getOwner());
+            Notifications.create()
+                    .text("重命名成功")
+                    .hideAfter(Duration.seconds(1))
+                    .position(Pos.CENTER)
+                    .owner(ImageInfoWindow.getStage(result))
+                    .darkStyle()
+                    .show();
         });
     }
 
@@ -385,7 +399,4 @@ class ImageInfoPane extends VBox{
         this.image = new Image(imageUtil.getURL());
         initialize();
     }
-
-
-
 }

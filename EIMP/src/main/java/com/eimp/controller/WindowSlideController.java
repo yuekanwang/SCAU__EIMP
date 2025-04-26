@@ -216,6 +216,28 @@ public class WindowSlideController implements Initializable {
     }
 
     /**
+     * 刷新幻灯片所有内容
+     * 可能存在未知bug
+     */
+    public void flush(String oldImageAbsolutePath,ImageUtil newImageUtil){
+        this.imageUtilList.clear();
+        if(oldImageAbsolutePath.equals(imageUtil.getAbsolutePath()))
+        this.imageUtil = newImageUtil;
+
+        File directory = imageUtil.getDirectory();
+        File[] images = directory.listFiles(FileUtil::isSupportImageFormat);
+        if (images != null) {
+            for (File image : images) {
+                ImageUtil imageFile = new ImageUtil(image);
+                this.imageUtilList.add(imageFile);
+            }
+        }
+
+        this.initImageListOrder(imageUtil);
+        this.image = new Image(imageUtil.getURL());
+        this.updateMainImageView();
+    }
+    /**
      * 主窗口控制器
      */
     private WindowMainController mainController;
@@ -303,11 +325,11 @@ public class WindowSlideController implements Initializable {
     @FXML
     private void showImageInfo(){
         if(ImageInfoWindow.getStage(imageUtil.getAbsolutePath())!=null){
-            if(ImageInfoWindow.removeStage(imageUtil.getAbsolutePath())){
-                System.out.println("bug");
+            if(!ImageInfoWindow.removeStage(imageUtil.getAbsolutePath())){
+                System.out.println("图像属性面板显示bug");
             }
         }else{
-            ImageInfoWindow.main(this.imageUtil,340,250);
+            ImageInfoWindow.main(this.imageUtil,340,250,this.stage);
         }
     }
 
@@ -503,13 +525,15 @@ public class WindowSlideController implements Initializable {
             }
         }
     }
+
+    String oldImageAbsolutePath = null;
     /**
      * 更新当前窗口显示的图片及相关信息
      */
     private void updateMainImageView() {
         this.originalWidth = this.image.getWidth();
         this.originalHeight = this.image.getHeight();
-        ImageInfoWindow.updateImageInfo(this.imageUtil);
+        ImageInfoWindow.updateImageInfo(oldImageAbsolutePath,this.imageUtil);
         this.updateWindowInfo();
         this.initImageScale();
         this.mainImageView.setImage(this.image);
@@ -1029,6 +1053,7 @@ public class WindowSlideController implements Initializable {
      */
     @FXML
     private void preImage(Event event) {
+        oldImageAbsolutePath = imageUtil.getAbsolutePath();
         this.currentIndex.set(this.currentIndex.get()-1);
         if(this.currentIndex.get()<=0){
             this.currentIndex.set(0);
@@ -1054,6 +1079,7 @@ public class WindowSlideController implements Initializable {
      */
     @FXML
     private void nextImage(Event event) {
+        oldImageAbsolutePath = imageUtil.getAbsolutePath();
         this.currentIndex.set(this.currentIndex.get()+1);
         if(this.currentIndex.get()>=this.imageUtilList.size()-1){
             this.currentIndex.set(imageUtilList.size()-1);
@@ -1470,7 +1496,10 @@ public class WindowSlideController implements Initializable {
         this.setUpResizeListeners();
         maxBtn.getStyleClass().add("maxBtn-full");
         // 窗口控制按钮事件
-        closeBtn.setOnAction(e -> stage.close());
+        closeBtn.setOnAction(e -> {
+            SlideWindow.removeSlideWindowController(imageUtil.getDirectory().getAbsolutePath(), this);
+            stage.close();
+        });
         minBtn.setOnAction(e -> stage.setIconified(true));
         maxBtn.setOnAction(e -> toggleMaximize());
     }
