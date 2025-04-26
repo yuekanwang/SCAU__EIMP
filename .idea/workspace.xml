@@ -5,14 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="新增幻灯片窗口查看图片信息及其相关操作功能,幻灯片播放功能">
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/util/SortOrder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/util/SortUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/PreviewFlowPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/PreviewFlowPane.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ThumbnailPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ThumbnailPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowMainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowMainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowMain.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowMain.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/util/FileUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/util/FileUtil.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

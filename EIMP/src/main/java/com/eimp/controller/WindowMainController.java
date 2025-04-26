@@ -6,9 +6,12 @@ import com.eimp.component.*;
 
 import com.eimp.util.ImageUtil;
 import com.eimp.util.SortOrder;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -68,7 +71,7 @@ public class WindowMainController implements Initializable {
     @FXML
     public Button closeBtn;//窗口关闭按钮
     @FXML
-    public Button About_Button;//有下角“关于”
+    public Button About_Button;//右下角“关于”
     
     @FXML
     public Button SelectAll_Button;//全选按钮
@@ -143,6 +146,7 @@ public class WindowMainController implements Initializable {
         intPaneColor();
         initSortImage();
         sortOrder = new SortOrder();
+        updateTipsLabelText();
     }
 
     /**
@@ -270,6 +274,7 @@ public class WindowMainController implements Initializable {
             if (newValue instanceof FileTreeItem) {
                 previewFlowPane.update(((FileTreeItem) newValue).getDirectory());
                 File_URL.setText(((FileTreeItem) newValue).getDirectory().getAbsolutePath());
+                updateTipsLabelText();
             }
         });
 
@@ -403,15 +408,51 @@ public class WindowMainController implements Initializable {
     // 鼠标x，y坐标
     private double x;
     private double y;
+    private double mouseScreenY;
+    // 滑动速度
+    private double offsetUp;
+    private double offsetDown;
+    // 用于周期性更新ScrollPane面板
+    private Timeline scrollTimeLine;
+    // 是否在图片外
+    boolean flagMenu;
     // 右键弹窗菜单
-    private final Menu menu = new Menu();
+    public final Menu menu = new Menu();
+
+    public void setFlagMenu(boolean flag) {
+        flagMenu = flag;
+    }
 
     public void addHandle() {
+        Platform.runLater(() -> {
+            Point2D positionOfMid = mid.localToScreen(0, 0);
+            offsetUp = positionOfMid.getY() + 46;
+            Point2D positionOfButtom = buttom.localToScreen(0, 0);
+            offsetDown = positionOfButtom.getY();
+        });
+
+        // 初始化Timeline
+        scrollTimeLine = new Timeline(
+                new KeyFrame(Duration.millis(10), event -> {
+                    // 设置滚动速度
+                    if (mouseScreenY < offsetUp) {
+                        imagePreviewScrollPane.setVvalue(imagePreviewScrollPane.getVvalue() +
+                                (mouseScreenY - offsetUp) / 2000);
+                    }
+                    if (mouseScreenY > offsetDown) {
+                        imagePreviewScrollPane.setVvalue(imagePreviewScrollPane.getVvalue() +
+                                (mouseScreenY - offsetDown) / 2000);
+                    }
+                })
+        );
+        // 设置无限循环
+        scrollTimeLine.setCycleCount(Timeline.INDEFINITE);
         // 对previewFlowPane进行鼠标监听
         previewFlowPane.setOnMousePressed(event -> {
             x = event.getX();
             y = event.getY();
             menu.close();
+            mouseScreenY = event.getScreenY();
 
             // 处理点击空白区域后已选择的图片
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1 && !event.isControlDown()) {
@@ -419,11 +460,24 @@ public class WindowMainController implements Initializable {
                     previewFlowPane.clearSelected();
                     previewFlowPane.setIsShift(false);
                 }
+                updateTipsLabelText();
             }
 
             // 右键菜单
             if (event.getButton() == MouseButton.SECONDARY) {
-                menu.show(imagePreviewPane, event.getScreenX(), event.getScreenY());
+                flagMenu = true;
+                for (ThumbnailPanel pane : previewFlowPane.getThumbnailPanels()) {
+                    if (pane.isContains(x, y)) {
+                        flagMenu = false;
+                        previewFlowPane.clearSelected();
+                        previewFlowPane.addSelected(previewFlowPane.getThumbnailPanels().get(previewFlowPane.getThumbnailPanels().indexOf(pane)));
+                        menu.show(imagePreviewPane, event.getScreenX(), event.getScreenY());
+                        break;
+                    }
+                }
+                if (flagMenu) {
+
+                }
             }
         });
 
@@ -444,9 +498,18 @@ public class WindowMainController implements Initializable {
             if (width >= 10 && height >= 10){
                 imageSelected();
             }
+
+            mouseScreenY = event.getScreenY();
+            // 鼠标超出边界时，ScrollPane上滑/下滑
+            if (event.getScreenY() < offsetUp || event.getScreenY() > offsetDown) {
+                scrollTimeLine.play();
+            } else {
+                scrollTimeLine.stop();
+            }
         });
         previewFlowPane.setOnMouseReleased(event -> {
             rectangle.setVisible(false);
+            scrollTimeLine.stop();
         });
     }
 
@@ -468,6 +531,7 @@ public class WindowMainController implements Initializable {
         }
         previewFlowPane.setIsShift(true);
         previewFlowPane.setFrom(previewFlowPane.getThumbnailPanels().indexOf(endPane));
+        updateTipsLabelText();
     }
 
     /**
@@ -757,7 +821,6 @@ public class WindowMainController implements Initializable {
         }
     }
 
-
     private double xOffset = 0;
     private double yOffset = 0;
     /**
@@ -809,11 +872,35 @@ public class WindowMainController implements Initializable {
         }
     }
 
+    /**
+     * 更新左下角提示栏
+     */
+    public void updateTipsLabelText() {
+        updateTipsLabelText(previewFlowPane.getTotalCount(), previewFlowPane.getTotalSize(),
+                previewFlowPane.newSelectedSize(), previewFlowPane.getSelectedSize());
+    }
+
+    /**
+     * 更新左下角提示栏
+     *
+     * @param totalCount    当前目录的图片总数
+     * @param size          总大小
+     * @param selectedCount 被选中的图片的数量
+     * @param selectedSize  被选中的图片的大小
+     */
+    public void updateTipsLabelText(int totalCount, String size, int selectedCount, String selectedSize) {
+        imageSize_Label.setText(String.format("共 %d 张照片(%s) - 选中 %d 张照片(%s)",
+                totalCount,
+                size,
+                selectedCount,
+                selectedSize));
+    }
+
     public TextField getSearchPath() {
         return Search_Path;
     }
 
-    class Menu extends ContextMenu {
+    public class Menu extends ContextMenu {
         MenuItem copy = new MenuItem("复制");
 
         MenuItem copyaddress = new MenuItem("复制文件地址");
@@ -826,8 +913,6 @@ public class WindowMainController implements Initializable {
 
         MenuItem attribute = new MenuItem("属性");
 
-        MenuItem compress = new MenuItem("压缩到");
-
         Menu() {
             copy.setOnAction(e -> copyImage());
             copyaddress.setOnAction(e -> copyAddress());
@@ -835,8 +920,7 @@ public class WindowMainController implements Initializable {
             delete.setOnAction(e -> deleteImage());
             rename.setOnAction(e -> renameImage());
             attribute.setOnAction(e -> showImageAttribute());
-            compress.setOnAction(e -> compressImage());
-            getItems().addAll(copy, copyaddress, paste, delete, rename, attribute, compress);
+            getItems().addAll(copy, copyaddress, paste, delete, rename, attribute);
         }
 
         // 菜单显示
@@ -1015,9 +1099,9 @@ public class WindowMainController implements Initializable {
     private void playingSlide(){
         List<ThumbnailPanel> newSelected = this.previewFlowPane.getNewSelected();
         ImageUtil curImage;
-        if(newSelected==null || newSelected.size()==0){
+        if(newSelected==null || newSelected.isEmpty()){
             List<ThumbnailPanel> thumbnailPanels = this.previewFlowPane.getThumbnailPanels();
-            if(thumbnailPanels==null || thumbnailPanels.size()==0){
+            if(thumbnailPanels==null || thumbnailPanels.isEmpty()){
                 Notifications.create()
                         .text("当前文件夹没有图片!")
                         .hideAfter(Duration.seconds(0.5))
@@ -1042,6 +1126,7 @@ public class WindowMainController implements Initializable {
         for (ThumbnailPanel pane : previewFlowPane.getThumbnailPanels()) {
             previewFlowPane.addSelectedtoList(pane);
         }
+        updateTipsLabelText();
     }
 
     // 刷新函数

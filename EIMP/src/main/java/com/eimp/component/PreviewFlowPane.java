@@ -18,6 +18,7 @@ import java.util.List;
  * @author Cyberangel2023
  */
 public class PreviewFlowPane extends FlowPane {
+    private static final WindowMainController MAIN_WINDOWS_CONTROLLER = (WindowMainController) ControllerMap.getController(WindowMainController.class);
     // 图片列表
     private final List<ThumbnailPanel> thumbnailPanels = new ArrayList<>();
     // 当前展示的文件夹
@@ -100,6 +101,7 @@ public class PreviewFlowPane extends FlowPane {
             newSelected.clear();
             oldSelected.clear();
             update(directory);
+            MAIN_WINDOWS_CONTROLLER.updateTipsLabelText();
         }
     }
 
@@ -186,5 +188,34 @@ public class PreviewFlowPane extends FlowPane {
         for (ThumbnailPanel pane : newSelected) {
             pane.selected();
         }
+    }
+
+    /**
+     * @return 当前目录的图片总数
+     */
+    public int getTotalCount() {
+        return thumbnailPanels.size();
+    }
+
+    /**
+     * @return 所有图片的总大小 单位：B
+     */
+    public String getTotalSize() {
+        long totalSize = 0;
+        for (ThumbnailPanel thumbnailPanel : thumbnailPanels) {
+            totalSize += thumbnailPanel.getImageUtil().getSizeOfBytes();
+        }
+        return FileUtil.fileSizeByString(totalSize);
+    }
+
+    /**
+     * @return 被选中的图片的大小
+     */
+    public String getSelectedSize() {
+        long size = 0;
+        for (ThumbnailPanel thumbnailPanel : newSelected) {
+            size += thumbnailPanel.getImageUtil().getSizeOfBytes();
+        }
+        return FileUtil.fileSizeByString(size);
     }
 }

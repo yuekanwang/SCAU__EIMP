@@ -68,13 +68,22 @@ public class ThumbnailPanel extends BorderPane {
         }
         // 设置不可编辑
         imageName.setEditable(false);
+        imageName.setManaged(true);
 
         imageName.setOnAction(this::confirmRename);
         imageName.addEventFilter(KeyEvent.KEY_PRESSED, this::handleEscape);
         // 双击事件：进入编辑模式
         imageName.setOnMouseClicked(event  -> {
             PreviewFlowPane parent = (PreviewFlowPane) this.getParent();
-            if (event.getButton() == MouseButton.PRIMARY && event.getClickCount()  == 2) {
+            if (event.getButton() == MouseButton.SECONDARY) {
+                WindowMainController.Menu menu = MAIN_WINDOWS_CONTROLLER.menu;
+                MAIN_WINDOWS_CONTROLLER.setFlagMenu(false);
+                menu.close();
+                menu.show(MAIN_WINDOWS_CONTROLLER.imagePreviewPane, event.getScreenX(), event.getScreenY());
+                parent.clearSelected();
+                parent.addSelected(this);
+            }
+            if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                 parent.clearSelected();
                 parent.addSelectedtoList(this);
                 parent.setIsShift(true);
@@ -123,6 +132,7 @@ public class ThumbnailPanel extends BorderPane {
                     }
                 }
             }
+            MAIN_WINDOWS_CONTROLLER.updateTipsLabelText();
         });
 
         // 失去焦点事件
@@ -202,9 +212,11 @@ public class ThumbnailPanel extends BorderPane {
                     }
                 }
             }
+            MAIN_WINDOWS_CONTROLLER.updateTipsLabelText();
         });
     }
 
+    // 裁剪文字
     private void cutting() {
         int length = imageUtil.getFileName().length();
         //名字长度大于限定就剪切
@@ -214,6 +226,11 @@ public class ThumbnailPanel extends BorderPane {
         } else {
             this.imageName = new TextField(imageUtil.getFileName());
         }
+    }
+
+    // 检查是否在图片及文字范围内
+    public boolean isContains(double x, double y) {
+        return this.getBoundsInParent().contains(x, y) || imageName.getBoundsInParent().contains(x, y);
     }
 
     /**
