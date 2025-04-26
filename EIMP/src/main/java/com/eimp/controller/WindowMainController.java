@@ -62,10 +62,7 @@ public class WindowMainController implements Initializable {
 
     // 缩略图展示面板
     public PreviewFlowPane previewFlowPane;
-    // 图片信息面板容器
-    private Pane infoPane = new Pane();
-    // 图片信息面板
-//    private ImageInfoPane imageInfoPane = new ImageInfoPane(320,250);
+
     /*这些是按钮*/
     @FXML
     public Button minBtn;//窗口最小化按钮
@@ -139,14 +136,8 @@ public class WindowMainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        root.getChildren().add(infoPane);
         this.stage = App.getStage();//这里的stage写上App里的stage
         this.setUpWindowControls();//调用窗口控制函数
-
-        infoPane.toFront();
-        infoPane.setPickOnBounds(false);        // 鼠标可穿透性
-        infoPane.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth());   // 图片属性面板绑定全局宽高
-        infoPane.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight());
 
         initButton();
         initFileTreeView();
