@@ -202,11 +202,11 @@ public class WindowMainController implements Initializable {
             if (isMax) helpStage.setMaximized(false);
         });
 
-        // Create WebView and WebEngine
+        // 创建WebView和WebEngine
         WebView webView = new WebView();
         WebEngine webEngine = webView.getEngine();
 
-        // Create markdown content
+        // 创建 markdown content
         String markdownContent = """
             # 使用指南
 
@@ -232,24 +232,76 @@ public class WindowMainController implements Initializable {
 
             ## 主题切换
             - 点击右上角按钮可切换日间/夜间模式
-            """;
+            
+            # 使用指南
 
-        // Convert markdown to HTML using a simple converter
+            ## 基本操作
+            - **浏览图片**: 双击图片可打开查看
+            - **选择图片**: 点击图片可选中，按住Ctrl可多选
+            - **删除图片**: 选中图片后按Delete键或右键选择删除
+
+            ## 快捷键
+            - `Ctrl + C`: 复制图片
+            - `Ctrl + V`: 粘贴图片
+            - `Ctrl + A`: 全选图片
+            - `Delete`: 删除选中图片
+
+            ## 图片查看
+            - 支持格式: JPG, JPEG, PNG, GIF, BMP
+            - 可缩放、旋转图片
+            - 支持幻灯片播放模式
+
+            ## 排序功能
+            - 可按名称、大小、时间排序
+            - 支持升序和降序排列
+
+            ## 主题切换
+            - 点击右上角按钮可切换日间/夜间模式
+            
+            # 使用指南
+
+            ## 基本操作
+            - **浏览图片**: 双击图片可打开查看
+            - **选择图片**: 点击图片可选中，按住Ctrl可多选
+            - **删除图片**: 选中图片后按Delete键或右键选择删除
+
+            ## 快捷键
+            - `Ctrl + C`: 复制图片
+            - `Ctrl + V`: 粘贴图片
+            - `Ctrl + A`: 全选图片
+            - `Delete`: 删除选中图片
+
+            ## 图片查看
+            - 支持格式: JPG, JPEG, PNG, GIF, BMP
+            - 可缩放、旋转图片
+            - 支持幻灯片播放模式
+
+            ## 排序功能
+            - 可按名称、大小、时间排序
+            - 支持升序和降序排列
+
+            ## 主题切换
+            - 点击右上角按钮可切换日间/夜间模式
+            """
+
+                ;
+
+        // 使用简单转换器将 Markdown 转换为 HTML
         String htmlContent = convertMarkdownToHtml(markdownContent);
 
-        // Load HTML content
+        //加载 HTML content
         webEngine.loadContent(htmlContent);
 
         // 设置WebView宽高自适应
         webView.setPrefWidth(600);
         webView.setPrefHeight(400);
 
-        // Create scene and show stage
+        // 创建 scene 和 show stage
         Scene scene = new Scene(webView, 600, 400);
 
         helpStage.setMinWidth(578);
         helpStage.setMinHeight(389);
-        helpStage.setMaxWidth(1000);
+        helpStage.setMaxWidth(800);
         helpStage.setMaxHeight(700);
 
         helpStage.setScene(scene);
@@ -257,7 +309,7 @@ public class WindowMainController implements Initializable {
     }
 
     private String convertMarkdownToHtml(String markdown) {
-        // Simple markdown to HTML conversion with enhanced styling
+        // 简单的Markdown转HTML转换，并增强样式
         return "<html><head><style>" +
                "html, body { width: 100vw; height: 100vh; margin: 0; padding: 0; overflow-x: hidden; overflow-y: auto; }" +
                "body { font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; line-height: 1.6; color: #333; background: #f8f9fa; padding-left: 32px; box-sizing: border-box; width: 100%; }" +

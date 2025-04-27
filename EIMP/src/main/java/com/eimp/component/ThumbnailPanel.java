@@ -56,14 +56,45 @@ public class ThumbnailPanel extends BorderPane {
     }
 
     public ThumbnailPanel(ImageUtil imageUtil) {
+        // 增加缩略图尺寸
         this.setMaxSize(150, 190);
         this.setMinSize(150, 190);
         setCache(true);//这里丢进缓存里好一些
         this.imageUtil = imageUtil;
         this.isSelected = false;
 
-        //保持图片大小比例
-        this.imageView = new ImageView(new Image(imageUtil.getURL(),140,140,true,true));
+        // 优化图片加载和显示
+        Image image = new Image(
+            imageUtil.getURL(),
+            140, 140,  // 目标尺寸
+            true,      // 保持宽高比
+            true,      // 平滑缩放
+            true       // 后台加载
+        );
+        
+        // 设置图片加载完成后的处理
+        image.progressProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal.doubleValue() == 1.0) {
+                // 图片加载完成后设置到ImageView
+                this.imageView = new ImageView(image);
+                this.imageView.setPreserveRatio(true);
+                this.imageView.setSmooth(true);
+                this.imageView.setCache(true);
+                // 设置图片质量
+                this.imageView.setFitWidth(140);
+                this.imageView.setFitHeight(140);
+                setCenter(imageView);
+            }
+        });
+
+        // 设置图片加载失败的处理
+        image.errorProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                // 加载失败时显示占位图（这里其实啥图片都没有）
+                this.imageView = new ImageView(new Image("/images/error.png", 180, 180, true, true, true));
+                setCenter(imageView);
+            }
+        });
 
         // 裁剪文本
         cutting();
@@ -161,7 +192,6 @@ public class ThumbnailPanel extends BorderPane {
             }
         });
 
-        setCenter(imageView);
         setBottom(imageName);
 
         // 设置鼠标点击事件
