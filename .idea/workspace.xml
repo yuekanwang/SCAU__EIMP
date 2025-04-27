@@ -4,25 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="重新实现图片属性面板重命名功能,同步功能">
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/CompressDialog.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ImageConverter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/crop.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/icon/saveAs.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/SlideWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/SlideWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ImageInfoWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ImageInfoWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/RenameDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/RenameDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowCropController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowCropController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/util/FileUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/util/FileUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/css/Crop.css" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/css/Crop.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/css/CustomPane.css" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/css/CustomPane.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowSlide.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowSlide.fxml" afterDir="false" />
-    </list>
+    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="1. 重新实现图片裁剪功能,支持全部五种类型裁剪,&#10;2. 实现图像格式转换功能,&#10;3. 实现图像压缩功能(第三方,效果一般)&#10;4. 添加幻灯片更多菜单的裁剪功能,图像另存功能&#10;5. 重命名窗口等样式优化" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -193,7 +175,7 @@
       <workItem from="1743422585214" duration="3074000" />
       <workItem from="1743593950898" duration="4442000" />
       <workItem from="1744444498749" duration="7113000" />
-      <workItem from="1745717998141" duration="34136000" />
+      <workItem from="1745717998141" duration="34655000" />
     </task>
     <task id="LOCAL-00001" summary="修改幻灯片UI,大部分已修改,缩略图UI待确定">
       <option name="closed" value="true" />
@@ -275,7 +257,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745677213569</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="1. 重新实现图片裁剪功能,支持全部五种类型裁剪,&#10;2. 实现图像格式转换功能,&#10;3. 实现图像压缩功能(第三方,效果一般)&#10;4. 添加幻灯片更多菜单的裁剪功能,图像另存功能&#10;5. 重命名窗口等样式优化">
+      <option name="closed" value="true" />
+      <created>1745761477148</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1745761477148</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -301,7 +291,8 @@
     <MESSAGE value="修改幻灯片图片无法适应窗口bug,更新图片旋转功能和相关快捷键方式" />
     <MESSAGE value="新增幻灯片窗口查看图片信息及其相关操作功能,幻灯片播放功能" />
     <MESSAGE value="重新实现图片属性面板重命名功能,同步功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="重新实现图片属性面板重命名功能,同步功能" />
+    <MESSAGE value="1. 重新实现图片裁剪功能,支持全部五种类型裁剪,&#10;2. 实现图像格式转换功能,&#10;3. 实现图像压缩功能(第三方,效果一般)&#10;4. 添加幻灯片更多菜单的裁剪功能,图像另存功能&#10;5. 重命名窗口等样式优化" />
+    <option name="LAST_COMMIT_MESSAGE" value="1. 重新实现图片裁剪功能,支持全部五种类型裁剪,&#10;2. 实现图像格式转换功能,&#10;3. 实现图像压缩功能(第三方,效果一般)&#10;4. 添加幻灯片更多菜单的裁剪功能,图像另存功能&#10;5. 重命名窗口等样式优化" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
