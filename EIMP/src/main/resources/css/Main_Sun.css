@@ -243,3 +243,71 @@
             #ffffff 100%   /* 白色 */
     );
 }
+
+#imagePreviewPane,#item_HBox
+{
+    -fx-background-color:#D6E8FD
+}
+
+/* 垂直滚动条整体样式 */
+#imagePreviewScrollPane .scroll-bar:vertical {
+    -fx-background-color: #6BE3F5;
+    -fx-padding: 0 2px;                 /* 边缘留空 */
+}
+
+/* 垂直滚动条滑块 */
+#imagePreviewScrollPane .scroll-bar:vertical .thumb {
+    -fx-background-color: #2DA9BB;      /* 使用导航栏同款蓝色 */
+    -fx-background-radius: 4px;          /* 圆角效果 */
+    -fx-background-insets: 2px;         /* 内边距 */
+}
+
+#splitPane
+{
+    -fx-background-color: #B6D9FE;     /* 整体背景色 */
+}
+/* 主容器样式 */
+#treeView {
+    -fx-background-color: #B6D9FE;     /* 整体背景色 */
+    -fx-border-color: #B6D9FE;         /* 右侧边框（与导航栏同色） */
+    -fx-border-width: 0 2px 0 0;
+}
+
+/* 单元格基础样式 */
+.tree-cell {
+    -fx-background-color: transparent; /* 透明背景 */
+    -fx-text-fill: black;            /* 文字颜色 */
+    -fx-font-size: 13px;
+    -fx-padding: 6px 10px;             /* 与图片预览区对齐 */
+}
+
+/* 展开/折叠箭头 */
+.tree-disclosure-node .arrow {
+    -fx-background-color: #6b8cce;     /* 浅蓝色箭头 */
+    -fx-shape: "M 0 0 L 5 5 L 0 10 Z";/* 自定义箭头形状 */
+}
+
+/* 选中状态 */
+.tree-cell:selected {
+    -fx-background-color: #2B579A55;   /* 半透明选中效果 */
+    -fx-text-fill: black;
+}
+
+/* 悬停效果 */
+.tree-cell:hover {
+    -fx-background-color: #2B579A33;   /* 弱化悬停避免干扰 */
+}
+
+/* 连接线样式 */
+.tree-cell > .tree-disclosure-node > .arrow {
+    -fx-effect: dropshadow(gaussian, #F377FE, 4, 0.5, 0, 0);
+}
+
+/* 滚动条同步 */
+#treeView .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8px;
+}
+#treeView .scroll-bar:vertical .thumb {
+    -fx-background-color: #2DA9BB;
+}
