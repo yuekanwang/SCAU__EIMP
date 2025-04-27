@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="1. 重新实现图片裁剪功能,支持全部五种类型裁剪,&#10;2. 实现图像格式转换功能,&#10;3. 实现图像压缩功能(第三方,效果一般)&#10;4. 添加幻灯片更多菜单的裁剪功能,图像另存功能&#10;5. 重命名窗口等样式优化" />
+    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="1. 重新实现图片裁剪功能,支持全部五种类型裁剪,&#10;2. 实现图像格式转换功能,&#10;3. 实现图像压缩功能(第三方,效果一般)&#10;4. 添加幻灯片更多菜单的裁剪功能,图像另存功能&#10;5. 重命名窗口等样式优化">
+      <change beforePath="$PROJECT_DIR$/.idea/EIMP.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/EIMP.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/CropWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/CropWindow.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -66,7 +70,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "模块",
+    "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "File.Encoding",
@@ -175,7 +179,7 @@
       <workItem from="1743422585214" duration="3074000" />
       <workItem from="1743593950898" duration="4442000" />
       <workItem from="1744444498749" duration="7113000" />
-      <workItem from="1745717998141" duration="34655000" />
+      <workItem from="1745717998141" duration="35142000" />
     </task>
     <task id="LOCAL-00001" summary="修改幻灯片UI,大部分已修改,缩略图UI待确定">
       <option name="closed" value="true" />
@@ -265,7 +269,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745761477148</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="1. 重新实现图片裁剪功能,支持全部五种类型裁剪,&#10;2. 实现图像格式转换功能,&#10;3. 实现图像压缩功能(第三方,效果一般)&#10;4. 添加幻灯片更多菜单的裁剪功能,图像另存功能&#10;5. 重命名窗口等样式优化">
+      <option name="closed" value="true" />
+      <created>1745761642437</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1745761642437</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

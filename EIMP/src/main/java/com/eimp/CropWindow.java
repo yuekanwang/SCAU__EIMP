@@ -38,7 +38,7 @@ public class CropWindow extends Application {
         Image Appicon = new Image(getClass().getResourceAsStream("/icon2/EIMP.png"));
         stage.getIcons().add(Appicon);
         stage.initStyle(StageStyle.UNDECORATED);
-
+        stage.setTitle("图像裁剪");
         stage.show();
         controller.importImage(CropWindow.imageUtil);
     }
