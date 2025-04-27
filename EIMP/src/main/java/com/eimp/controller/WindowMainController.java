@@ -428,24 +428,19 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
     /**
      * 为搜索框加上监听事件，实现搜索内容的高亮显示
      * 当前为实时搜索，不用按下回车键
+     *
+     * @author Cyberangel2023
      */
     private void initSearch() {
         Search_Path.textProperty().addListener((observable, oldValue, newValue) -> {
-
-            List<ThumbnailPanel> thumbnailPanels = previewFlowPane.getThumbnailPanels();
-
+            previewFlowPane.setSearch_Text(newValue);
             //为空时显示全部
             if (Search_Path.getText().isEmpty()) {
                 updateFlowPane();
                 return;
             }
-            previewFlowPane.setSearch_Text(newValue);
             updateFlowPaneOfSearch();
         });
-    }
-
-    private void updateFlowPaneOfSearch() {
-        previewFlowPane.updateOfSearch();
     }
 
     public TextField getSearch_Path() {
@@ -1320,6 +1315,10 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
      */
     public void updateFlowPane() {
         previewFlowPane.update();
+    }
+
+    private void updateFlowPaneOfSearch() {
+        previewFlowPane.updateOfSearch();
     }
 
     /**
