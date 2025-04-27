@@ -417,7 +417,11 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
                 root.getStylesheets().setAll(
                         getClass().getResource("/css/Main_Sun.css").toExternalForm());
             }
-            updateFlowPane();
+            if (!Search_Path.getText().isEmpty()) {
+                updateFlowPaneOfSearch();
+            } else {
+                updateFlowPane();
+            }
         });
     }
 
@@ -432,22 +436,16 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
 
             //为空时显示全部
             if (Search_Path.getText().isEmpty()) {
-                previewFlowPane.getChildren().setAll(thumbnailPanels);
+                updateFlowPane();
                 return;
             }
-
-            // 非空时开始过滤匹配
-            List<ThumbnailPanel> filtered = new ArrayList<>();
-            for (ThumbnailPanel pane : thumbnailPanels) {
-                String fileName = pane.getImageUtil().getFileName();
-                pane.updateHighlight(newValue);  // 更新高亮
-                if (fileName.contains(newValue))  {
-                    filtered.add(pane);
-                }
-            }
-
-            previewFlowPane.getChildren().setAll(filtered);
+            previewFlowPane.setSearch_Text(newValue);
+            updateFlowPaneOfSearch();
         });
+    }
+
+    private void updateFlowPaneOfSearch() {
+        previewFlowPane.updateOfSearch();
     }
 
     public TextField getSearch_Path() {
@@ -515,6 +513,8 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
                 previewFlowPane.update(((FileTreeItem) newValue).getDirectory());
                 File_URL.setText(((FileTreeItem) newValue).getDirectory().getAbsolutePath());
                 updateTipsLabelText();
+                previewFlowPane.clearSelected();
+                previewFlowPane.setIsShift(false);
             }
         });
 
@@ -590,7 +590,11 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
         sortOrder.setOp(op);
         sortOrder.setNowString();
         changeSortCSS();
-        updateFlowPane();
+        if (!Search_Path.getText().isEmpty()) {
+            updateFlowPaneOfSearch();
+        } else {
+            updateFlowPane();
+        }
     }
 
     private void changeSortCSS() {
@@ -1277,6 +1281,9 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
      */
     @FXML
     public void pasteAll() {
+        if (!Search_Path.getText().isEmpty()) {
+            return;
+        }
         // 获取复制图片内容
         if (clipboard.hasFiles())  {
             List<File> files = clipboard.getFiles();
@@ -1336,7 +1343,11 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
             }
         }
         menu.close();
-        updateFlowPane();
+        if (!Search_Path.getText().isEmpty()) {
+            updateFlowPaneOfSearch();
+        } else {
+            updateFlowPane();
+        }
     }
 
     /**
@@ -1408,7 +1419,11 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
     // 刷新函数
     @FXML
     public void flushImage() {
-        updateFlowPane();
+        if (!Search_Path.getText().isEmpty()) {
+            updateFlowPaneOfSearch();
+        } else {
+            updateFlowPane();
+        }
     }
 }
 
