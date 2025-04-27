@@ -197,136 +197,189 @@ public class WindowMainController implements Initializable {
 
         // 允许缩放
         helpStage.setResizable(true);
-        // 禁止最大化（监听并强制还原）
-        helpStage.maximizedProperty().addListener((obs, wasMax, isMax) -> {
-            if (isMax) helpStage.setMaximized(false);
-        });
 
-        // 创建WebView和WebEngine
+        // Create WebView and WebEngine
         WebView webView = new WebView();
         WebEngine webEngine = webView.getEngine();
 
-        // 创建 markdown content
+        // Create markdown content
         String markdownContent = """
-            # 使用指南
+# EIMP 图像处理软件帮助文档
 
-            ## 基本操作
-            - **浏览图片**: 双击图片可打开查看
-            - **选择图片**: 点击图片可选中，按住Ctrl可多选
-            - **删除图片**: 选中图片后按Delete键或右键选择删除
+## 1. 软件介绍
 
-            ## 快捷键
-            - `Ctrl + C`: 复制图片
-            - `Ctrl + V`: 粘贴图片
-            - `Ctrl + A`: 全选图片
-            - `Delete`: 删除选中图片
+EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像处理软件，采用JavaFX技术开发，提供直观的用户界面和丰富的图像处理功能。软件支持多种图像格式，并提供专业的图像编辑工具。
 
-            ## 图片查看
-            - 支持格式: JPG, JPEG, PNG, GIF, BMP
-            - 可缩放、旋转图片
-            - 支持幻灯片播放模式
+### 1.1 主要特点
 
-            ## 排序功能
-            - 可按名称、大小、时间排序
-            - 支持升序和降序排列
+- 现代化的用户界面设计
 
-            ## 主题切换
-            - 点击右上角按钮可切换日间/夜间模式
-            
-            # 使用指南
+- 支持多种图像格式
 
-            ## 基本操作
-            - **浏览图片**: 双击图片可打开查看
-            - **选择图片**: 点击图片可选中，按住Ctrl可多选
-            - **删除图片**: 选中图片后按Delete键或右键选择删除
+- 提供专业的图像编辑工具
 
-            ## 快捷键
-            - `Ctrl + C`: 复制图片
-            - `Ctrl + V`: 粘贴图片
-            - `Ctrl + A`: 全选图片
-            - `Delete`: 删除选中图片
+- 支持批量处理功能
 
-            ## 图片查看
-            - 支持格式: JPG, JPEG, PNG, GIF, BMP
-            - 可缩放、旋转图片
-            - 支持幻灯片播放模式
+- 提供图像预览和缩略图功能
 
-            ## 排序功能
-            - 可按名称、大小、时间排序
-            - 支持升序和降序排列
+## 2. 功能介绍与教程
 
-            ## 主题切换
-            - 点击右上角按钮可切换日间/夜间模式
-            
-            # 使用指南
+### 2.1 主界面功能
 
-            ## 基本操作
-            - **浏览图片**: 双击图片可打开查看
-            - **选择图片**: 点击图片可选中，按住Ctrl可多选
-            - **删除图片**: 选中图片后按Delete键或右键选择删除
+主界面包含以下主要组件：
 
-            ## 快捷键
-            - `Ctrl + C`: 复制图片
-            - `Ctrl + V`: 粘贴图片
-            - `Ctrl + A`: 全选图片
-            - `Delete`: 删除选中图片
+- 文件树：用于浏览和管理图像文件
 
-            ## 图片查看
-            - 支持格式: JPG, JPEG, PNG, GIF, BMP
-            - 可缩放、旋转图片
-            - 支持幻灯片播放模式
+- 缩略图面板：显示当前目录下的图像缩略图
 
-            ## 排序功能
-            - 可按名称、大小、时间排序
-            - 支持升序和降序排列
+- 预览面板：显示选中图像的详细预览
 
-            ## 主题切换
-            - 点击右上角按钮可切换日间/夜间模式
-            """
+- 工具栏：提供常用功能的快捷访问
 
-                ;
+### 2.2 图像编辑功能
 
-        // 使用简单转换器将 Markdown 转换为 HTML
+#### 2.2.1 裁剪功能
+
+- 支持自由裁剪和固定比例裁剪
+
+- 提供裁剪区域预览
+
+- 支持裁剪区域调整
+
+#### 2.2.2 滑动窗口功能
+
+- 支持图像局部放大查看
+
+- 提供滑动窗口大小调整
+
+- 支持实时预览
+
+### 2.3 文件管理功能
+
+- 支持文件重命名
+
+- 支持批量处理
+
+- 提供文件信息查看
+
+- 支持目录快速加载
+
+### 2.4 图像信息查看
+
+- 显示图像基本信息
+
+- 支持EXIF信息查看
+
+- 提供图像属性编辑
+
+### 2.5 使用教程
+
+#### 2.5.1 基本操作
+
+1. 打开软件后，使用左侧文件树浏览到目标图像目录
+2. 在缩略图面板中查看目录下的所有图像
+3. 点击缩略图可在预览面板中查看大图
+
+#### 2.5.2 图像编辑
+
+1. 选择要编辑的图像
+2. 使用工具栏中的工具进行编辑
+3. 编辑完成后保存更改
+
+#### 2.5.3 批量处理
+
+1. 在文件树中选择多个文件
+2. 使用批量处理功能
+3. 设置处理参数
+4. 执行批量处理
+
+### 2.6 快捷键
+
+- Ctrl + O：打开文件
+
+- Ctrl + S：保存文件
+
+- Ctrl + Z：撤销
+
+- Ctrl + Y：重做
+
+- Ctrl + C：复制
+
+- Ctrl + V：粘贴
+
+- Ctrl + X：剪切
+
+### 2.7 注意事项
+
+1. 建议在处理大文件前先备份
+2. 批量处理时注意选择正确的目标目录
+3. 编辑前建议先查看图像信息
+4. 定期保存工作进度
+            """;
+
+        // Convert markdown to HTML using a simple converter
         String htmlContent = convertMarkdownToHtml(markdownContent);
 
-        //加载 HTML content
+        // Load HTML content
         webEngine.loadContent(htmlContent);
 
         // 设置WebView宽高自适应
         webView.setPrefWidth(600);
         webView.setPrefHeight(400);
 
-        // 创建 scene 和 show stage
+        // Create scene and show stage
         Scene scene = new Scene(webView, 600, 400);
 
         helpStage.setMinWidth(578);
         helpStage.setMinHeight(389);
-        helpStage.setMaxWidth(800);
-        helpStage.setMaxHeight(700);
 
         helpStage.setScene(scene);
         helpStage.show();
     }
 
     private String convertMarkdownToHtml(String markdown) {
-        // 简单的Markdown转HTML转换，并增强样式
+        // Enhanced markdown to HTML conversion with clear heading levels
         return "<html><head><style>" +
                "html, body { width: 100vw; height: 100vh; margin: 0; padding: 0; overflow-x: hidden; overflow-y: auto; }" +
                "body { font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; line-height: 1.6; color: #333; background: #f8f9fa; padding-left: 32px; box-sizing: border-box; width: 100%; }" +
-               "h1 { color: #2B579A; margin-top: 0; margin-bottom: 20px; font-size: 24px; font-weight: 600; border-bottom: 2px solid #e9ecef; padding-bottom: 10px; }" +
-               "h2 { color: #2B579A; margin-top: 25px; margin-bottom: 15px; font-size: 18px; font-weight: 500; }" +
+               // h1: 主标题，最大，带下边框
+               "h1 { color: #1a365d; margin-top: 0; margin-bottom: 32px; font-size: 2.5em; font-weight: 800; border-bottom: 3px solid #2B579A; padding-bottom: 16px; letter-spacing: -0.5px; }" +
+               // h2: 二级标题，稍小，带细下边框
+               "h2 { color: #2B579A; margin-top: 40px; margin-bottom: 24px; font-size: 2em; font-weight: 700; border-bottom: 2px solid #e9ecef; padding-bottom: 12px; }" +
+               // h3: 三级标题，再小，带左边框
+               "h3 { color: #1A4B7A; margin-top: 32px; margin-bottom: 16px; font-size: 1.5em; font-weight: 600; padding-left: 12px; border-left: 4px solid #2B579A; }" +
+               // h4: 四级标题，最小，使用不同颜色和字重区分
+               "h4 { color: #205080; margin-top: 24px; margin-bottom: 12px; font-size: 1.2em; font-weight: 500; padding-left: 16px; }" +
+               // 无序列表样式
                "ul { margin-left: 20px; padding-left: 0; list-style-type: none; }" +
                "li { margin: 8px 0; padding-left: 20px; position: relative; }" +
                "li:before { content: '•'; color: #2B579A; position: absolute; left: 0; }" +
-               "code { background: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 0.9em; color: #495057; }" +
+               // 有序列表样式
+               "ol { margin: 12px 0 12px 20px; padding-left: 20px; counter-reset: item; }" +
+               "ol li { display: block; margin: 8px 0; padding-left: 12px; color: #444; position: relative; }" +
+               "ol li:before { content: counter(item) '.'; counter-increment: item; color: #2B579A; position: absolute; left: -20px; font-weight: 500; }" +
+               // 嵌套列表的样式
+               "ol ol { margin-left: 30px; }" +
+               "ol ol li:before { content: counter(item, lower-alpha) '.'; }" +
+               "ol ol ol li:before { content: counter(item, decimal) '.'; }" +
+               // 其他样式
+               "code { background: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 0.95em; color: #495057; }" +
                "strong { color: #2B579A; }" +
                "</style></head><body>" +
                markdown
-                   .replaceAll("# (.*)", "<h1>$1</h1>")
+                   // 先替换h4，再h3，再h2，再h1，避免正则覆盖
+                   .replaceAll("#### (.*)", "<h4>$1</h4>")
+                   .replaceAll("### (.*)", "<h3>$1</h3>")
                    .replaceAll("## (.*)", "<h2>$1</h2>")
-                   .replaceAll("- \\*\\*(.*)\\*\\*", "<li><strong>$1</strong></li>")
-                   .replaceAll("- `(.*)`", "<li><code>$1</code></li>")
-                   .replaceAll("- (.*)", "<li>$1</li>") +
+                   .replaceAll("# (.*)", "<h1>$1</h1>")
+                   // 处理列表项，确保数字列表被正确转换为<ol>
+                   .replaceAll("(?m)^\\d+\\. \\d+\\.(.*)", "<li>$1</li>")  // 处理重复的数字
+                   .replaceAll("(?m)^\\d+\\. (.*?)(?=(?:\\d+\\.|$))", "<li>$1</li>")
+                   .replaceAll("(?s)(<li>.*?</li>\\s*){2,}", "<ol>$0</ol>")
+                   // 处理其他格式
+                   .replaceAll("(?m)^- \\*\\*(.*)\\*\\*", "<ul><li><strong>$1</strong></li></ul>")
+                   .replaceAll("(?m)^- `(.*)`", "<ul><li><code>$1</code></li></ul>")
+                   .replaceAll("(?m)^- (.*)", "<ul><li>$1</li></ul>") +
                "</body></html>";
     }
 
