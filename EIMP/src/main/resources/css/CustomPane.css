@@ -27,3 +27,28 @@
     -fx-pref-width: 60;
     -fx-min-width: 60;
 }
+
+.text-field,.combo-box {
+    -fx-background-radius: 3;
+    -fx-border-color: grey;
+    -fx-background-color: transparent;
+    -fx-border-radius: 3;
+    -fx-font-family: "Quicksand";
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+}
+.text-field:focused {
+    -fx-background-color: #2E2E2E;
+}
+.combo-box .list-cell {
+    -fx-text-fill: white;
+    -fx-background-color: #4D4D4D;
+}
+.combo-box .list-cell:hover {
+    -fx-background-color: #2E2E2E;
+}
+.combo-box .list-cell:selected {
+    -fx-background-color: #2E2E2E;
+    -fx-text-fill: white;
+}
+

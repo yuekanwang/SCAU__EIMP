@@ -131,7 +131,6 @@ public class SlideWindow extends Application {
      */
     public static void flushSlideWindows(String oldPath,ImageUtil newImageUtil){
         if(slideWindowControllers.containsKey(newImageUtil.getDirectory().getAbsolutePath())){
-            System.out.println( slideWindowControllers.get(newImageUtil.getDirectory().getAbsolutePath()).size());
             for(WindowSlideController windowSlideController : slideWindowControllers.get(newImageUtil.getDirectory().getAbsolutePath())){
                 windowSlideController.flush(oldPath, newImageUtil);
             }

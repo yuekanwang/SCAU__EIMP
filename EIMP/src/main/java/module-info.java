@@ -11,6 +11,11 @@ module com.eimp {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires javafx.swing;
+    requires org.apache.commons.imaging;
+    requires com.madgag.gif.fmsware;
+    requires thumbnailator;
+    requires cn.hutool;
+
 
     opens com.eimp.controller to javafx.fxml;
     exports com.eimp.controller;
