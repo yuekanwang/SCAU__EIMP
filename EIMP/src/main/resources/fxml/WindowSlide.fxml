@@ -98,7 +98,7 @@
                         <Insets />
                     </HBox.margin>
                 </Button>
-                <Button id="compress" fx:id="compress" maxWidth="30.0" minWidth="30.0" prefHeight="25.0" prefWidth="30.0" styleClass="funtionalButton" HBox.hgrow="ALWAYS" />
+                <Button id="compress" fx:id="compress" maxWidth="30.0" minWidth="30.0" onAction="#compressImage" prefHeight="25.0" prefWidth="30.0" styleClass="funtionalButton" HBox.hgrow="ALWAYS" />
             </HBox>
         </HBox>
         <HBox fx:id="topFillHbox" maxWidth="140.0" minWidth="0.0" style="-fx-background-color: #3c3f41;" HBox.hgrow="ALWAYS" />

@@ -15,9 +15,24 @@
         <javafx.version>22-ea</javafx.version>
     </properties>
 
-
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.rtyley</groupId>
+            <artifactId>animated-gif-lib-for-java</artifactId>
+            <version>05470cb</version>
+        </dependency>
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>0.4.14</version>
+        </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -42,6 +57,16 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>
             <version>22-ea+11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-imaging</artifactId>
+            <version>1.0.0-alpha5</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.16</version> <!-- 推荐最新版 -->
         </dependency>
         <dependency>
             <groupId>org.controlsfx</groupId>
