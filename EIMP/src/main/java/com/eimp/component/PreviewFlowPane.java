@@ -11,6 +11,7 @@ import javafx.scene.layout.FlowPane;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 /**
  * 图片预览面板
@@ -22,6 +23,8 @@ public class PreviewFlowPane extends FlowPane {
     private final List<ThumbnailPanel> thumbnailPanels = new ArrayList<>();
     // 当前展示的文件夹
     private File directory;
+    // 当前搜索框内容
+    private String search_Text;
     // 被选中图片数组
     private final List<ThumbnailPanel> newSelected = new ArrayList<>();
     // 提供回撤
@@ -42,6 +45,10 @@ public class PreviewFlowPane extends FlowPane {
 
     public File getDirectory() {
         return directory;
+    }
+
+    public void setSearch_Text(String search_Text) {
+        this.search_Text = search_Text;
     }
 
     public List<ThumbnailPanel> getNewSelected() {
@@ -101,14 +108,44 @@ public class PreviewFlowPane extends FlowPane {
         getChildren().setAll(thumbnailPanels);
     }
 
+    public void updateOfSearch(String newValue) {
+        if (windowMainController == null) {
+            windowMainController = (WindowMainController) ControllerMap.getController(WindowMainController.class);
+        }
+        update(this.directory);
+        List<ThumbnailPanel> list = new ArrayList<>(thumbnailPanels);
+        thumbnailPanels.clear();
+        // 过滤匹配
+        for (ThumbnailPanel pane : list) {
+            String fileName = pane.getImageUtil().getFileName();
+            pane.updateHighlight(newValue);  // 更新高亮
+            if (fileName.contains(newValue))  {
+                thumbnailPanels.add(pane);
+            }
+        }
+        sortOrder = windowMainController.getSortOrder();
+        SortUtil.sortThumbnailPanel(this.thumbnailPanels, sortOrder.getNowString());
+        getChildren().setAll(thumbnailPanels);
+    }
+
     /**
      * 当改变排序方式时刷新缩略图面板
      */
     public void update() {
         if (directory != null) {
-            newSelected.clear();
-            oldSelected.clear();
+            clearSelected();
             update(directory);
+            if (windowMainController == null) {
+                windowMainController = (WindowMainController) ControllerMap.getController(WindowMainController.class);
+            }
+            windowMainController.updateTipsLabelText();
+        }
+    }
+
+    public void updateOfSearch() {
+        if (search_Text != null) {
+            clearSelected();
+            updateOfSearch(search_Text);
             if (windowMainController == null) {
                 windowMainController = (WindowMainController) ControllerMap.getController(WindowMainController.class);
             }
