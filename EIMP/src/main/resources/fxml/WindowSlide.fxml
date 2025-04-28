@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -12,17 +11,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" minHeight="580.0" minWidth="590.0" prefHeight="700.0" prefWidth="900.0" styleClass="shadow-effect" stylesheets="@../css/Slide.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.controller.WindowSlideController">
+<AnchorPane fx:id="rootPane" minHeight="580.0" minWidth="590.0" prefHeight="700.0" prefWidth="900.0" styleClass="shadow-effect" stylesheets="@../css/Slide.css,@../css/ThumbnailGallery.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eimp.controller.WindowSlideController">
     <StackPane fx:id="imagePane" layoutX="204.0" layoutY="303.0" onScroll="#zoomByScroll" style="-fx-background-color: #1e1f22;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
         <ImageView fx:id="mainImageView" preserveRatio="true" />
         <AnchorPane fx:id="secondaryPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;">
-            <ScrollPane fx:id="scrollPane" hbarPolicy="AS_NEEDED" layoutX="164.0" layoutY="555.0" prefHeight="96.0" prefWidth="571.0" style="-fx-background-color: #3c3f41;" vbarPolicy="NEVER" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0">
-                <HBox fx:id="thumbnailContainer" alignment="CENTER" prefHeight="93.0" prefWidth="353.0" spacing="5" style="-fx-padding: 0; -fx-background-color: #3c3f41;">
-                    <ImageView fitHeight="90" preserveRatio="true" />
-                    <ImageView fitHeight="90" preserveRatio="true" />
-                </HBox>
-            </ScrollPane>
-            <HBox fx:id="infoPane" alignment="TOP_CENTER" maxHeight="250.0" minHeight="250.0" prefHeight="250.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         <children>
+            <HBox fx:id="thumbnailGalleryContainer" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" />
+         </children>
         </AnchorPane>
     </StackPane>
     <HBox fx:id="topFunctionalColumn" alignment="CENTER_LEFT" layoutX="13.0" layoutY="5.0" maxHeight="35.0" minHeight="35.0" minWidth="500.0" onMouseDragged="#handleMouseDragged" onMousePressed="#handleMousePressed" scaleShape="false" spacing="10.0" style="-fx-background-color: #3c3f41;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="260.0" AnchorPane.topAnchor="0.0">
@@ -73,7 +68,7 @@
                         <Insets />
                     </HBox.margin>
                 </Button>
-                <Button id="delete" fx:id="delete" maxWidth="30.0" minWidth="30.0" prefHeight="25.0" prefWidth="30.0" styleClass="funtionalButton">
+                <Button id="delete" fx:id="delete" maxWidth="30.0" minWidth="30.0" onAction="#delete" prefHeight="25.0" prefWidth="30.0" styleClass="funtionalButton">
                     <HBox.margin>
                         <Insets />
                     </HBox.margin>

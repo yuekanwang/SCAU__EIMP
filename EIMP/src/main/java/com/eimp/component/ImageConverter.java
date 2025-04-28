@@ -4,7 +4,6 @@ import com.eimp.util.FileUtil;
 import com.eimp.util.ImageUtil;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -28,7 +27,7 @@ public class ImageConverter {
      * @param imageUtil 待操作图片属性包
      * @param callback 回调函数
      */
-    public static void show(Stage owner, ImageUtil imageUtil, Consumer<Boolean> callback) {
+    public static void show(Stage owner, ImageUtil imageUtil, Consumer<File> callback) {
         Stage dialog = new Stage();
         dialog.initOwner(owner);
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -70,8 +69,9 @@ public class ImageConverter {
 
         root.getChildren().addAll(topBox,formatComboBox, bottomBox);
         confirmButton.setOnAction(e -> {
-            if(convertImage(imageUtil,formatComboBox.getValue(),feedbackLabel,dialog)){
-                callback.accept(true);
+            File ret = convertImage(imageUtil,formatComboBox.getValue(),feedbackLabel,dialog);
+            if(ret != null){
+                callback.accept(ret);
                 // 1秒后关闭窗口
                 Timeline timeline = new Timeline(
                         new KeyFrame(Duration.seconds(1), event -> dialog.close())
@@ -93,7 +93,7 @@ public class ImageConverter {
      * @param stage 所属窗口
      * @return 结果
      */
-    private static boolean convertImage(ImageUtil imageUtil,String format,Label feedbackLabel,Stage stage) {
+    private static File convertImage(ImageUtil imageUtil,String format,Label feedbackLabel,Stage stage) {
         try {
             // 读取原始图片
             BufferedImage image = Imaging.getBufferedImage(imageUtil.getFile());
@@ -104,7 +104,7 @@ public class ImageConverter {
             directoryChooser.setInitialDirectory(imageUtil.getDirectory());
 
             File outDirectory = directoryChooser.showDialog(stage);
-            if (outDirectory == null) return false;
+            if (outDirectory == null) return null;
 
             File outputFile = FileUtil.getOutputFile(outDirectory.getAbsolutePath(), imageUtil.getFileName(),format.substring(0,format.indexOf("格")));
             // 转换并保存图片
@@ -113,7 +113,7 @@ public class ImageConverter {
 
             feedbackLabel.setTextFill(Color.GREEN);
             feedbackLabel.setText("转换成功");
-            return true;
+            return outputFile;
         } catch (IOException e) {
             feedbackLabel.setTextFill(Color.RED);
             feedbackLabel.setText("转换失败: " + e.getMessage());
@@ -123,7 +123,7 @@ public class ImageConverter {
             feedbackLabel.setText("发生错误: " + e.getMessage());
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
 
     /**
