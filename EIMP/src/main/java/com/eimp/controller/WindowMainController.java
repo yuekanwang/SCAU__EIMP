@@ -31,6 +31,7 @@ import javafx.util.Pair;
 import org.controlsfx.control.Notifications;
 
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.text.html.ImageView;
 import java.awt.*;
 import java.io.File;
 import java.net.URL;
@@ -231,20 +232,27 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
 - 搜索框：用于搜索功能
 - 日间或夜间模式转换按钮：能够转换主界面的样式。
 - 左下角显示文件里的所有图片数量及其总大小和选中的图片数量及其总大小。
-- 右下角“关于”键是对该软件开发的一些情况交代。
+- 右下角"关于"键是对该软件开发的一些情况交代。
 
-**主界面可能需要提及到的功能：**
+**主界面可能需要提及到的功能:**
 
 - 关于文件树：文件树只会显示文件夹和文件夹的快捷模式。点击文件夹，便是进入了该文件夹，若文件夹里有图片或.gif文件，则在缩略图面板加载出来。
-- 关于删除功能：图片必须在被选中后才能进行删除，除了工具栏里的删除键，还有快捷键“**delete**”键。
+- 关于删除功能：图片必须在被选中后才能进行删除，除了工具栏里的删除键，还有快捷键"**delete**"键。
 - 关于选中功能：
+	
 	1. 单击图片，即可单个选中图片
+	
 	2. 按住clrl，可单击多个图片，选中它们
+	
 	3. 在缩略图面版空白处拖动(鼠标左键或右键)形成一个矩形，该矩形内的图片将被选中。
-	4. 点击工具栏的“全选按钮”，可选中全部图片。
+	
+	4. 点击工具栏的"全选按钮"，可选中全部图片。
 - 关于重命名功能：
+	
 	1. 双击图片的名字，可以修改图片文件字。
+	
 	2. 右键图片，可以选择修改图片文件名
+	
 	3. 注意，**小心修改文件后缀名**，如果修改后的后缀名不符合该软件的识别范围，改文件将在缩略图面板被隐藏。
 - 关于搜索功能：在搜索框里输入文字，根据这些文字，寻找文件名符合这些文字的图片，缩略图面板将显示这些图片。
 
@@ -256,14 +264,22 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
 
 - 对需要说明的顶部的组件的说明（从左到右）：
 	1. 该图片的文件名
-	2. ![图片大小](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/图片大小.jpg)该图片在该文件夹里所有图片的排位、该图片的大小和该图片的像素大小
-	3. ![选项键](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/选项键.jpg)选项键里有另存为和裁剪的选项。
-	4. ![旋转键](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/旋转键.jpg)旋转键，能够让图片顺时针旋转90°。
-	5. ![删除键](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/删除键.jpg)删除键，删除当前查看的图片。
-	6.   ![上一张图片](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/上一张图片.jpg)  ![上一张图片](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/下一张图片.jpg)查看上或下一张的图片。
-	7. ![播放键](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/播放键.jpg)按顺序播放图片。
-	8. ![属性键](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/属性键.jpg)查看该图片的属性。
-	9. ![压缩键jpg](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/压缩键jpg.jpg)压缩该图片。**注意**，这不是把图片做成压缩包的形式，而是修改图片的像素，让图片在降低质量的同时，降低文件大小。
+	
+	2. 该图片在该文件夹里所有图片的排位、该图片的大小和该图片的像素大小
+	
+	3. 选项键里有另存为和裁剪的选项。
+	
+	4. 旋转键，能够让图片顺时针旋转90°。
+	
+	5. 删除键，删除当前查看的图片。
+	
+	6.查看上或下一张的图片。
+	
+	7.按顺序播放图片。
+	
+	8.查看该图片的属性。
+	
+	9. 压缩该图片。**注意**，这不是把图片做成压缩包的形式，而是修改图片的像素，让图片在降低质量的同时，降低文件大小。
 - 中间呈现图片的查看。
 - 底部是对图片上面几个或下面几个图片的缩略图、
 
@@ -271,19 +287,12 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
 
 - 进入幻灯片的界面方式：在主界面里双击一张图片。
 - 对图片放大缩小查看的功能：
-	1. 可通过点击工具栏的“放大“键、”缩小“键进行查看。
-	2. 可按住“ctrl”键，滑动鼠标滚轮来控制图片的放大缩小进行查看。
+	1. 可通过点击工具栏的"放大"键、"缩小"键进行查看。
+	
+	2. 可按住"ctrl"键，滑动鼠标滚轮来控制图片的放大缩小进行查看。
+	
 	3. 放大后，可鼠标左键拖动图片进行查看
 
----
-
-### 2.3属性面板界面功能
-
-**属性面板如下**：
-
-![属性面板](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/属性面板.jpg)
-
-**裁剪尺寸面板**：
             """;
 
         // Convert markdown to HTML using a simple converter
@@ -301,55 +310,85 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
 
         helpStage.setMinWidth(578);
         helpStage.setMinHeight(389);
-
+        
         helpStage.setScene(scene);
         helpStage.show();
     }
 
     private String convertMarkdownToHtml(String markdown) {
-        // Enhanced markdown to HTML conversion with clear heading levels
+        // 先处理分割线
+        markdown = markdown.replaceAll("---", "<hr>");
+
+        // 处理加粗
+        markdown = markdown.replaceAll("\\*\\*(.*?)\\*\\*", "<strong style=\"color:black;\">$1</strong>");
+
+        // 处理标题
+        markdown = markdown.replaceAll("#### (.*)", "<h4>$1</h4>");
+        markdown = markdown.replaceAll("### (.*)", "<h3>$1</h3>");
+        markdown = markdown.replaceAll("## (.*)", "<h2>$1</h2>");
+        markdown = markdown.replaceAll("# (.*)", "<h1>$1</h1>");
+
+        markdown = markdown.replaceAll("1. (.*)", "<h5>1.$1</h5>");
+        markdown = markdown.replaceAll("2. (.*)", "<h5>2.$1</h5>");
+        markdown = markdown.replaceAll("3. (.*)", "<h5>3.$1</h5>");
+        markdown = markdown.replaceAll("4. (.*)", "<h5>4.$1</h5>");
+        markdown = markdown.replaceAll("5. (.*)", "<h5>5.$1</h5>");
+        markdown = markdown.replaceAll("6. (.*)", "<h5>6.$1</h5>");
+        markdown = markdown.replaceAll("7. (.*)", "<h5>7.$1</h5>");
+        markdown = markdown.replaceAll("8. (.*)", "<h5>8.$1</h5>");
+        markdown = markdown.replaceAll("9. (.*)", "<h5>9.$1</h5>");
+
+        // 处理图片（新增部分）
+        markdown = markdown.replaceAll("!\\[(.*?)\\]\\((.*?)\\)", "<img src=\"$2\" alt=\"$1\">");
+
+
+        // 列表处理
+        String[] lines = markdown.split("\\n");
+        StringBuilder html = new StringBuilder();
+        boolean inOl = false, inUl = false;
+        for (String line : lines) {
+            if (line.matches("^\\d+\\.\\s+.*")) {
+                if (!inOl) {
+                    if (inUl) { html.append("</ul>"); inUl = false; }
+                    html.append("<ol>");
+                    inOl = true;
+                }
+                html.append("<li>").append(line.replaceFirst("^\\d+\\.\\s+", "")).append("</li>");
+            } else if (line.matches("^-\\s+.*")) {
+                if (!inUl) {
+                    if (inOl) { html.append("</ol>"); inOl = false; }
+                    html.append("<ul>");
+                    inUl = true;
+                }
+                html.append("<li>").append(line.replaceFirst("^-\\s+", "")).append("</li>");
+            } else {
+                if (inOl) { html.append("</ol>"); inOl = false; }
+                if (inUl) { html.append("</ul>"); inUl = false; }
+                html.append(line);
+            }
+            html.append("\n");
+        }
+        if (inOl) html.append("</ol>");
+        if (inUl) html.append("</ul>");
+
+        // 包裹body和样式
         return "<html><head><style>" +
-               "html, body { width: 100vw; height: 100vh; margin: 0; padding: 0; overflow-x: hidden; overflow-y: auto; }" +
-               "body { font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; line-height: 1.6; color: #333; background: #f8f9fa; padding-left: 32px; box-sizing: border-box; width: 100%; }" +
-               // h1: 主标题，最大，带下边框
-               "h1 { color: #1a365d; margin-top: 0; margin-bottom: 32px; font-size: 2.5em; font-weight: 800; border-bottom: 3px solid #2B579A; padding-bottom: 16px; letter-spacing: -0.5px; }" +
-               // h2: 二级标题，稍小，带细下边框
-               "h2 { color: #2B579A; margin-top: 40px; margin-bottom: 24px; font-size: 2em; font-weight: 700; border-bottom: 2px solid #e9ecef; padding-bottom: 12px; }" +
-               // h3: 三级标题，再小，带左边框
-               "h3 { color: #1A4B7A; margin-top: 32px; margin-bottom: 16px; font-size: 1.5em; font-weight: 600; padding-left: 12px; border-left: 4px solid #2B579A; }" +
-               // h4: 四级标题，最小，使用不同颜色和字重区分
-               "h4 { color: #205080; margin-top: 24px; margin-bottom: 12px; font-size: 1.2em; font-weight: 500; padding-left: 16px; }" +
-               // 无序列表样式
-               "ul { margin-left: 20px; padding-left: 0; list-style-type: none; }" +
-               "li { margin: 8px 0; padding-left: 20px; position: relative; }" +
-               "li:before { content: '•'; color: #2B579A; position: absolute; left: 0; }" +
-               // 有序列表样式
-               "ol { margin: 12px 0 12px 20px; padding-left: 20px; counter-reset: item; }" +
-               "ol li { display: block; margin: 8px 0; padding-left: 12px; color: #444; position: relative; }" +
-               "ol li:before { content: counter(item) '.'; counter-increment: item; color: #2B579A; position: absolute; left: -20px; font-weight: 500; }" +
-               // 嵌套列表的样式
-               "ol ol { margin-left: 30px; }" +
-               "ol ol li:before { content: counter(item, lower-alpha) '.'; }" +
-               "ol ol ol li:before { content: counter(item, decimal) '.'; }" +
-               // 其他样式
-               "code { background: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 0.95em; color: #495057; }" +
-               "strong { color: #2B579A; }" +
-               "</style></head><body>" +
-               markdown
-                   // 先替换h4，再h3，再h2，再h1，避免正则覆盖
-                   .replaceAll("#### (.*)", "<h4>$1</h4>")
-                   .replaceAll("### (.*)", "<h3>$1</h3>")
-                   .replaceAll("## (.*)", "<h2>$1</h2>")
-                   .replaceAll("# (.*)", "<h1>$1</h1>")
-                   // 处理列表项，确保数字列表被正确转换为<ol>
-                   .replaceAll("(?m)^\\d+\\. \\d+\\.(.*)", "<li>$1</li>")  // 处理重复的数字
-                   .replaceAll("(?m)^\\d+\\. (.*?)(?=(?:\\d+\\.|$))", "<li>$1</li>")
-                   .replaceAll("(?s)(<li>.*?</li>\\s*){2,}", "<ol>$0</ol>")
-                   // 处理其他格式
-                   .replaceAll("(?m)^- \\*\\*(.*)\\*\\*", "<ul><li><strong>$1</strong></li></ul>")
-                   .replaceAll("(?m)^- `(.*)`", "<ul><li><code>$1</code></li></ul>")
-                   .replaceAll("(?m)^- (.*)", "<ul><li>$1</li></ul>") +
-               "</body></html>";
+                "body { font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; line-height: 1.6; color: #333; background: #f8f9fa; padding-left: 32px; box-sizing: border-box; width: 100%; overflow-x: hidden; }" +
+                "h1 { color: #1a365d; margin-top: 0; margin-bottom: 32px; font-size: 2.5em; font-weight: 800; border-bottom: 3px solid #2B579A; padding-bottom: 16px; letter-spacing: -0.5px; }" +
+                "h2 { color: #2B579A; margin-top: 40px; margin-bottom: 24px; font-size: 2em; font-weight: 700; border-bottom: 2px solid #e9ecef; padding-bottom: 12px; }" +
+                "h3 { color: #1A4B7A; margin-top: 32px; margin-bottom: 16px; font-size: 1.5em; font-weight: 600; padding-left: 12px; border-left: 4px solid #2B579A; }" +
+                "h4 { color: #205080; margin-top: 24px; margin-bottom: 12px; font-size: 1.2em; font-weight: 500; padding-left: 16px; }" +
+                "h5 { color: black; margin-top: 20px; margin-bottom: 10px; font-size: 1.1em; font-weight: 500; " +
+                "padding-left: 20px; }"+
+                "ul { margin-left: 20px; padding-left: 0; list-style-type: disc; }" +
+                "ol { margin-left: 20px; padding-left: 0; }" +
+                "li { margin: 8px 0; padding-left: 0; position: relative; color: #444; }" +
+                "code { background: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 0.95em; color: #495057; }" +
+                "strong { font-weight: 1600; }" +
+                "hr { border: none; border-top: 2px solid #e9ecef; margin: 24px 0; }" +
+                "</style></head><body>" +
+                html.toString() +
+                "</body></html>";
     }
 
 
