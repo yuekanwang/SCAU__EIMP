@@ -359,6 +359,7 @@ public class WindowCropController implements Initializable {
         // gif图像单独处理
         if(isGif){
             if(cropGIFImage((int)x, (int)y, (int)width, (int)height,this.outPath,imageUtil)){
+                synchronize(new ImageUtil(new File(outPath)));
                 showNotification("裁剪成功", true);
                 // 1秒后关闭窗口
                 Timeline timeline = new Timeline(
@@ -380,6 +381,7 @@ public class WindowCropController implements Initializable {
         boolean success = saveImage(croppedImage, originalFilename, extension);
 
         if (success) {
+            synchronize(new ImageUtil(new File(outPath)));
             showNotification("裁剪成功", true);
             // 1秒后关闭窗口
             Timeline timeline = new Timeline(
@@ -401,6 +403,7 @@ public class WindowCropController implements Initializable {
      */
     public static boolean cropGIFImage(final int x, final int y, final int width, final int height,String outPath,ImageUtil imageUtil) {
         File outFile = FileUtil.getOutputFile(outPath,imageUtil.getFileName(), imageUtil.getFileType().substring(1)); // 封装文件名生成逻辑
+        outPath = outFile.getAbsolutePath();
         try {
             // 读取原始帧和延迟数据
             List<BufferedImage> frames = Imaging.getAllBufferedImages(imageUtil.getFile());
@@ -475,7 +478,7 @@ public class WindowCropController implements Initializable {
      */
     private boolean saveImage(WritableImage croppedImage, String filename, String extension) {
         File file = FileUtil.getOutputFile(this.outPath,filename,extension);
-
+        this.outPath = file.getAbsolutePath();
         try {
             BufferedImage bufferedImage = SwingFXUtils.fromFXImage(croppedImage, null);
 
@@ -528,14 +531,18 @@ public class WindowCropController implements Initializable {
     }
 
     /**
+     * 主界面与幻灯片窗口同步
+     * @param newImageUtil 幻灯片所在目录下的任意图片工具包
+     */
+    private void synchronize(ImageUtil newImageUtil){
+        WindowMainController controller = (WindowMainController) ControllerMap.getController(WindowMainController.class);
+        controller.flushImage();
+        SlideWindow.flushSlideWindows(null,newImageUtil);
+    }
+    /**
      * 显示通知消息并同步刷新
      */
     private void showNotification(String message, boolean isSuccess) {
-        if(isSuccess) {
-            WindowMainController controller = (WindowMainController) ControllerMap.getController(WindowMainController.class);
-            controller.flushImage();
-            SlideWindow.flushSlideWindows(null,imageUtil);
-        }
         Notifications.create()
                 .text(message)
                 .hideAfter(Duration.seconds(1))

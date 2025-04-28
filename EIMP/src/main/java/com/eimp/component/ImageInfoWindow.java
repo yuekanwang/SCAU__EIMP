@@ -526,10 +526,10 @@ class ImageInfoPane extends VBox{
      */
     private void formatConvert(){
         ImageConverter.show(this.stage,this.imageUtil,result->{
-            if(result){
+            if(result != null){
                 WindowMainController controller = (WindowMainController) ControllerMap.getController(WindowMainController.class);
                 controller.flushImage();
-                SlideWindow.flushSlideWindows(null,imageUtil);
+                SlideWindow.flushSlideWindows(null,new ImageUtil(result));
             }
         });
     }

@@ -1306,6 +1306,7 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
                             target = new File(out);
                         }
                         Files.copy(file.toPath(), target.toPath());
+                        SlideWindow.flushSlideWindows(null,new ImageUtil(target));      //幻灯片同步
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1334,12 +1335,17 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
      */
     @FXML
     public void deleteImage() {
+        List<String> oldPaths = new ArrayList<>();
+        boolean flag=false;
         File choose;
         for (ThumbnailPanel image : previewFlowPane.getNewSelected()) {
             choose = image.getImageUtil().getFile();
             if (choose.exists() && choose.isFile()) {
                 if (Desktop.isDesktopSupported())  {
-                    Desktop.getDesktop().moveToTrash(choose);
+                    if(Desktop.getDesktop().moveToTrash(choose)){
+                        oldPaths.add(choose.getAbsolutePath());
+                        flag=true;
+                    }
                 }
                 boolean isDeleted = choose.delete();  // 返回删除结果
                 if (isDeleted) {
@@ -1350,6 +1356,10 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
             }
         }
         menu.close();
+        // 如果幻灯片窗口存在则刷新
+        if(flag){
+            SlideWindow.flushSlideWindows(oldPaths,previewFlowPane.getNewSelected().get(0).getImageUtil().getDirectory().getAbsolutePath());
+        }
         if (!Search_Path.getText().isEmpty()) {
             updateFlowPaneOfSearch();
         } else {

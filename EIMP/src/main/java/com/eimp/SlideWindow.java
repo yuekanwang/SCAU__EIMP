@@ -136,6 +136,19 @@ public class SlideWindow extends Application {
             }
         }
     }
+
+    /**
+     * 刷新被删除的幻灯片
+     * @param oldPaths 被删除的照片路径
+     * @param directory 原目录
+     */
+    public static void flushSlideWindows(List<String> oldPaths,String directory){
+        if(slideWindowControllers.containsKey(directory)){
+            for(WindowSlideController windowSlideController : slideWindowControllers.get(directory)){
+                windowSlideController.flush(oldPaths);
+            }
+        }
+    }
     public static void removeSlideWindowController(String key,WindowSlideController controller){
         slideWindowControllers.get(key).remove(controller);
     }
