@@ -19,8 +19,8 @@ module com.eimp {
 
     opens com.eimp.controller to javafx.fxml;
     exports com.eimp.controller;
-
-
+    requires flexmark;
+    requires flexmark.util.data; // 添加这一行
     opens com.eimp to javafx.fxml;
     exports com.eimp;
 }
