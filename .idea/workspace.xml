@@ -4,18 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="1. 重新实现图片裁剪功能,支持全部五种类型裁剪,&#10;2. 实现图像格式转换功能,&#10;3. 实现图像压缩功能(第三方,效果一般)&#10;4. 添加幻灯片更多菜单的裁剪功能,图像另存功能&#10;5. 重命名窗口等样式优化">
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/DeleteDialog.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ThumbnailGallery.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EIMP/src/main/resources/css/ThumbnailGallery.css" afterDir="false" />
+    <list default="true" id="5131d40a-f0c4-48a5-9cf6-27261ba6054f" name="Changes" comment="1. 实现幻灯片删除功能&#10;2. 实现幻灯片底部缩略图栏&#10;3. 修复幻灯片播放缩放动效bug&#10;4. 实现主界面幻灯片增删操作同步">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/SlideWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/SlideWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ImageConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ImageConverter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ImageInfoWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/component/ImageInfoWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowCropController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowCropController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowMainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowMainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/java/com/eimp/controller/WindowSlideController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowCrop.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowCrop.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowSlide.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/EIMP/src/main/resources/fxml/WindowSlide.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -190,7 +181,9 @@
       <workItem from="1745717998141" duration="35250000" />
       <workItem from="1745805766403" duration="7887000" />
       <workItem from="1745818867408" duration="25282000" />
-      <workItem from="1745851863057" duration="3480000" />
+      <workItem from="1745851863057" duration="3839000" />
+      <workItem from="1745905111092" duration="74000" />
+      <workItem from="1745934297708" duration="3054000" />
     </task>
     <task id="LOCAL-00001" summary="修改幻灯片UI,大部分已修改,缩略图UI待确定">
       <option name="closed" value="true" />
@@ -296,7 +289,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745762051107</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="1. 实现幻灯片删除功能&#10;2. 实现幻灯片底部缩略图栏&#10;3. 修复幻灯片播放缩放动效bug&#10;4. 实现主界面幻灯片增删操作同步">
+      <option name="closed" value="true" />
+      <created>1745855636451</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1745855636451</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -323,7 +324,8 @@
     <MESSAGE value="新增幻灯片窗口查看图片信息及其相关操作功能,幻灯片播放功能" />
     <MESSAGE value="重新实现图片属性面板重命名功能,同步功能" />
     <MESSAGE value="1. 重新实现图片裁剪功能,支持全部五种类型裁剪,&#10;2. 实现图像格式转换功能,&#10;3. 实现图像压缩功能(第三方,效果一般)&#10;4. 添加幻灯片更多菜单的裁剪功能,图像另存功能&#10;5. 重命名窗口等样式优化" />
-    <option name="LAST_COMMIT_MESSAGE" value="1. 重新实现图片裁剪功能,支持全部五种类型裁剪,&#10;2. 实现图像格式转换功能,&#10;3. 实现图像压缩功能(第三方,效果一般)&#10;4. 添加幻灯片更多菜单的裁剪功能,图像另存功能&#10;5. 重命名窗口等样式优化" />
+    <MESSAGE value="1. 实现幻灯片删除功能&#10;2. 实现幻灯片底部缩略图栏&#10;3. 修复幻灯片播放缩放动效bug&#10;4. 实现主界面幻灯片增删操作同步" />
+    <option name="LAST_COMMIT_MESSAGE" value="1. 实现幻灯片删除功能&#10;2. 实现幻灯片底部缩略图栏&#10;3. 修复幻灯片播放缩放动效bug&#10;4. 实现主界面幻灯片增删操作同步" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
