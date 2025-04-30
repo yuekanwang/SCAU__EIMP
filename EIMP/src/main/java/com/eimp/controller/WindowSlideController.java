@@ -1,6 +1,7 @@
 package com.eimp.controller;
+import com.eimp.CropWindow;
 import com.eimp.SlideWindow;
-import com.eimp.component.ImageInfoWindow;
+import com.eimp.component.*;
 import com.eimp.util.FileUtil;
 import com.eimp.util.ImageUtil;
 import com.eimp.util.SortOrder;
@@ -11,6 +12,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -23,17 +25,25 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.transform.Rotate;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
+
+import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 
 
 public class WindowSlideController implements Initializable {
@@ -48,7 +58,8 @@ public class WindowSlideController implements Initializable {
     /**
      * 图片缩略图栏容器
      */
-    @FXML private HBox thumbnailContainer;
+    @FXML private ThumbnailGallery thumbnailGallery;
+    @FXML private HBox thumbnailGalleryContainer;
     @FXML private Button rotate;
     @FXML private Button delete;
     @FXML private Button prePage;
@@ -212,17 +223,99 @@ public class WindowSlideController implements Initializable {
         this.initButtonStyle();
         this.setUpWindowControls();
         this.setUpFullScreenListener();
-//        this.secondaryPane.setVisible(false);// 暂时隐藏缩略图栏,待实现
     }
 
+    /**
+     * 初始化缩略图栏
+     */
+    private void initThumbnailGallery(){
+        thumbnailGalleryContainer.setOnMouseEntered(e->thumbnailGallery.setVisible(true));
+        thumbnailGalleryContainer.setOnMouseExited(e->{
+            thumbnailGallery.setVisible(false);
+        });
+        thumbnailGallery = new ThumbnailGallery();
+        thumbnailGallery.setVisible(false);
+        thumbnailGalleryContainer.getChildren().add(thumbnailGallery);
+        thumbnailGallery.setThumbnailSize(60);
+        if(imageUtilList.size()<=0) return;
+
+        for (ImageUtil imageUtil : imageUtilList) {
+            thumbnailGallery.addImage(imageUtil.getFile());
+        }
+        // 设置选中事件处理
+        thumbnailGallery.setSelectionHandler(idx -> {
+            try {
+                currentIndex.set(idx);
+                imageUtil = imageUtilList.get(idx);
+                this.updateMainImageView();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    /**
+     * 刷新缩略图栏
+     */
+    private void flushThumbnailGallery() {
+        thumbnailGallery.clear();
+        for (ImageUtil imageUtil : imageUtilList) {
+            thumbnailGallery.addImage(imageUtil.getFile());
+        }
+        thumbnailGallery.updateSelectedThumbnail(currentIndex.get());
+    }
+    /**
+     * 调用第三方库压缩图像
+     */
+    @FXML
+    private void compressImage(){
+        CompressDialog.show(this.stage,this.imageUtil, result->{
+            if(result){
+                synchronize(null,imageUtil);
+            }
+        });
+    }
     /**
      * 刷新幻灯片所有内容
      * 可能存在未知bug
      */
     public void flush(String oldImageAbsolutePath,ImageUtil newImageUtil){
         this.imageUtilList.clear();
-        if(oldImageAbsolutePath.equals(imageUtil.getAbsolutePath()))
+        if(imageUtil.getAbsolutePath().equals(oldImageAbsolutePath))
         this.imageUtil = newImageUtil;
+        File directory = imageUtil.getDirectory();
+        File[] images = directory.listFiles(FileUtil::isSupportImageFormat);
+        if (images != null) {
+            for (File image : images) {
+                ImageUtil imageFile = new ImageUtil(image);
+                this.imageUtilList.add(imageFile);
+            }
+        }
+        if(this.imageUtilList.isEmpty()){                       // 幻灯片无内容关闭窗口
+            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(500), event -> {
+                this.stage.close();
+            }));
+            timeline.play();
+        }
+
+        this.initImageListOrder(imageUtil);
+        this.initButtonStatus();
+        this.updateMainImageView();
+        this.flushThumbnailGallery();
+    }
+
+    /**
+     * 刷新被删除的幻灯片
+     * @param oldPaths 被删除的图片路径
+     */
+    public void flush(List<String> oldPaths){
+        int oldIndex = -1;
+        for(String oldPath : oldPaths){
+            if(imageUtil.getAbsolutePath().equals(oldPath)) {
+                oldIndex = currentIndex.get();
+            }
+        }
+        this.imageUtilList.clear();
 
         File directory = imageUtil.getDirectory();
         File[] images = directory.listFiles(FileUtil::isSupportImageFormat);
@@ -232,11 +325,22 @@ public class WindowSlideController implements Initializable {
                 this.imageUtilList.add(imageFile);
             }
         }
-
+        if(this.imageUtilList.isEmpty()){                       // 幻灯片无内容关闭窗口
+            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(500), event -> {
+                this.stage.close();
+            }));
+            timeline.play();
+        }else if(oldIndex != -1 && oldIndex>imageUtilList.size()-1){
+            imageUtil = imageUtilList.getFirst();
+        }else if(oldIndex !=-1){
+            imageUtil = imageUtilList.get(oldIndex);
+        }
         this.initImageListOrder(imageUtil);
-        this.image = new Image(imageUtil.getURL());
+        this.initButtonStatus();
         this.updateMainImageView();
+        this.flushThumbnailGallery();
     }
+
     /**
      * 主窗口控制器
      */
@@ -308,16 +412,12 @@ public class WindowSlideController implements Initializable {
         this.setUpZoomScaleListener();
         this.setUpRotationListener();
         this.initButtonStatus();
+        this.setUpPageButtonListener();
         this.setUpMovementConstraints();
         this.initImageListOrder(imageUtil);
-        this.image = new Image(imageUtil.getURL());
+        this.initThumbnailGallery();
         this.updateMainImageView();
     }
-
-    /**
-     * 信息面板容器
-     */
-    @FXML private HBox infoPane;
 
     /**
      * 显示图片信息面板
@@ -348,6 +448,29 @@ public class WindowSlideController implements Initializable {
     }
 
     /**
+     * 删除图片
+     */
+    @FXML
+    private void delete(){
+        DeleteDialog.show(this.stage,imageUtil,result->{
+            if(result){
+                if(ImageInfoWindow.getStage(imageUtil.getAbsolutePath())!=null) {
+                    if (!ImageInfoWindow.removeStage(imageUtil.getAbsolutePath())) {
+                        System.out.println("图像属性面板图片删除bug");
+                    }
+                }
+                String oldImageAbsolutePath = imageUtil.getAbsolutePath();
+                imageUtil = imageUtilList.get((currentIndex.get()+1)%imageUtilList.size());
+                synchronize(oldImageAbsolutePath,imageUtil);
+                showNotification("删除成功");
+            }else{
+                showNotification("删除失败,文件被占用或无权限");
+            }
+        });
+    }
+
+
+    /**
      * 幻灯片混合播放
      */
     @FXML
@@ -361,7 +484,7 @@ public class WindowSlideController implements Initializable {
             }
         }));
         this.zoomingTimeLine = new Timeline(new KeyFrame(Duration.millis(100),e->{
-            if(this.MIN_SCALE<100){
+            if(this.MIN_SCALE<100 || this.isAboutToFitScreen(0.7)){
                 this.zoom(1/1.01,null);
             }else{
                 this.zoom(1.01,null);
@@ -393,6 +516,16 @@ public class WindowSlideController implements Initializable {
     }
 
     /**
+     * 判断原始图像是否在给定的影响因子条件下,接近适应屏幕大小
+     * 例如 factor为0.8,则返回原始图像的宽高大于适应屏幕的0.8大小宽高时为真,表示原始图像很接近适应屏幕大小,否则返回假
+     * @param factor 适应屏幕大小的比例
+     * @return 结果
+     */
+    private boolean isAboutToFitScreen(double factor){
+        return (originalWidth>=imagePane.getWidth()*factor) || (originalHeight>=imagePane.getHeight()*factor);
+    }
+
+    /**
      * 顶部左功能栏
      */
     @FXML
@@ -419,21 +552,7 @@ public class WindowSlideController implements Initializable {
         }
     }
 
-//    private static final int MAX_VISIBLE_THUMBNAILS = 10;
-//    private static final double THUMBNAIL_WIDTH = 120;
-//
-//    // 添加缩略图的方法
-//    private void addThumbnail(Image image) {
-//        ImageView thumbnail = new ImageView(image);
-//        thumbnail.setFitHeight(90);
-//        thumbnail.setPreserveRatio(true);
-//        thumbnailContainer.getChildren().add(thumbnail);
-//
-//        // 当超过10个时启用固定宽度
-//        if (thumbnailContainer.getChildren().size() > MAX_VISIBLE_THUMBNAILS) {
-//            thumbnailContainer.setPrefWidth(MAX_VISIBLE_THUMBNAILS * THUMBNAIL_WIDTH);
-//        }
-//    }
+
     /**
      * 监听图片旋转中心
      */
@@ -450,28 +569,31 @@ public class WindowSlideController implements Initializable {
     }
 
     /**
-     * 初始化并监听左右切换图片按钮禁用状态
+     * 初始化左右切换图片按钮禁用状态
      */
     private void initButtonStatus(){
         this.prePage.setDisable(this.currentIndex.get() <= 0);
         this.nextPage.setDisable(this.currentIndex.get() >= imageUtilList.size() - 1);
+    }
 
+    /**
+     * 设置换页按钮禁用监听器
+     */
+    private void setUpPageButtonListener(){
         // 待同步功能实现再进一步完善
         this.currentIndex.addListener((obs,oldvalue,newvalue)->{
             if(newvalue.intValue()<=0){
                 this.setMenuItemDisable(this.prePage,true);
-                this.setMenuItemDisable(this.nextPage,false);
-            } else if (newvalue.intValue()>=imageUtilList.size()-1) {
+            } else {
+                this.setMenuItemDisable(this.prePage,false);
+            }
+            if (newvalue.intValue()>=imageUtilList.size()-1) {
                 this.setMenuItemDisable(this.nextPage,true);
-                this.setMenuItemDisable(this.prePage,false);
             }else{
-                this.setMenuItemDisable(this.prePage,false);
                 this.setMenuItemDisable(this.nextPage,false);
             }
         });
-
     }
-
     /**
      * 初始化并监听放缩比例及功能禁用状态
      */
@@ -531,6 +653,7 @@ public class WindowSlideController implements Initializable {
      * 更新当前窗口显示的图片及相关信息
      */
     private void updateMainImageView() {
+        this.image = new Image(imageUtil.getURL());
         this.originalWidth = this.image.getWidth();
         this.originalHeight = this.image.getHeight();
         ImageInfoWindow.updateImageInfo(oldImageAbsolutePath,this.imageUtil);
@@ -538,6 +661,26 @@ public class WindowSlideController implements Initializable {
         this.initImageScale();
         this.mainImageView.setImage(this.image);
         this.updateCursor();
+        this.banCompressButton();
+        this.updateThumbnailGallery();
+    }
+
+    /**
+     * 更新缩略图显示
+     */
+    private void updateThumbnailGallery(){
+        thumbnailGallery.updateSelectedThumbnail(this.currentIndex.get());
+    }
+
+    /**
+     * 禁用gif,bmp格式的图片压缩功能,未实现
+     */
+    private void banCompressButton(){
+        if(".GIF".equals(imageUtil.getFileType())||".BMP".equals(imageUtil.getFileType())){
+            this.compress.setDisable(true);
+        }else{
+            this.compress.setDisable(false);
+        }
     }
 
     /**
@@ -1061,7 +1204,6 @@ public class WindowSlideController implements Initializable {
             this.showPageTip();
         }
         this.imageUtil = this.imageUtilList.get(this.currentIndex.get());
-        this.image = new Image(imageUtil.getURL());
         this.updateMainImageView();
     }
 
@@ -1087,7 +1229,6 @@ public class WindowSlideController implements Initializable {
             this.showPageTip();
         }
         this.imageUtil = this.imageUtilList.get(this.currentIndex.get());
-        this.image = new Image(imageUtil.getURL());
         this.updateMainImageView();
     }
 
@@ -1176,6 +1317,12 @@ public class WindowSlideController implements Initializable {
                     this.displayMode = DisplayMode.ORIGINAL;
                     this.updateOriginalScaleStatus();
                 }
+                case D->{
+                    this.delete();
+                }
+                case S->{
+                    this.saveAs();
+                }
                 case R-> {
                     this.rotate();
                 }
@@ -1184,6 +1331,10 @@ public class WindowSlideController implements Initializable {
                 }
                 case P->{
                     this.playing();
+                }
+                case C->{
+                    if(compress.isDisabled()) return;
+                    this.compressImage();
                 }
             }
         }else{
@@ -1237,9 +1388,8 @@ public class WindowSlideController implements Initializable {
         urlMap.put("zoomIn", "/icon/zoom-in.png");
         urlMap.put("zoomOut", "/icon/zoom-out.png");
         urlMap.put("originalScale","/icon/original-fit.png");
-        urlMap.put("item1","/icon/MoreMenu.png");
-        urlMap.put("item2","/icon/MoreMenu.png");
-        urlMap.put("item3","/icon/MoreMenu.png");
+        urlMap.put("saveAs","/icon/saveAs.png");
+        urlMap.put("crop","/icon/crop.png");
         textMap.put("moreMenuButton", "更多功能");
         textMap.put("rotate", "顺时针旋转90°|Ctrl+R");
         textMap.put("delete", "删除|Ctrl+D");
@@ -1254,9 +1404,9 @@ public class WindowSlideController implements Initializable {
         textMap.put("minBtn","最小化");
         textMap.put("maxBtn","最大化");
         textMap.put("closeBtn","关闭");
-        textMap.put("item1","选项1");
-        textMap.put("item2","选项2");
-        textMap.put("item3","选项3");
+        textMap.put("saveAs","另存为|Ctrl+S");
+        textMap.put("crop","裁剪");
+
         buttonMap.put("rotate",this.rotate );
         buttonMap.put("delete", this.delete );
         buttonMap.put("prePage",this.prePage );
@@ -1331,20 +1481,20 @@ public class WindowSlideController implements Initializable {
 
 
     // 创建菜单项
-    private CustomMenuItem item1  =createMenuItem("选项1","/icon/prompt.png");
-    private CustomMenuItem item2  =createMenuItem("选项2","/icon/prompt.png");
-    private CustomMenuItem item3  =createMenuItem("选项3","/icon/prompt.png");
+    private CustomMenuItem saveAsBtn  =createMenuItem("另存为|Ctrl+S","/icon/saveAs.png");
+    private CustomMenuItem cropBtn  =createMenuItem("裁剪","/icon/crop.png");
     private ContextMenu moreMenu = new ContextMenu();
     /**
      * 菜单按钮初始化
      */
     private void initMoreMenuButton() {
-        item1.setId("item1");
-        item2.setId("item2");
-        item3.setId("item3");
+        saveAsBtn.setId("saveAs");
+        cropBtn.setId("crop");
+        saveAsBtn.setOnAction(e->saveAs());
+        cropBtn.setOnAction(e-> CropWindow.main(this.imageUtil));
         moreMenu.setAutoHide(true);
         moreMenu.setAutoFix(true);
-        moreMenu.getItems().addAll(item1, item2, item3);
+        moreMenu.getItems().addAll(saveAsBtn, cropBtn);
         // 点击按钮切换菜单
         moreMenuButton.setOnAction(e -> toggleMenu());
     }
@@ -1363,6 +1513,78 @@ public class WindowSlideController implements Initializable {
         return item;
     }
 
+    /**
+     * 另存为功能
+     */
+    private void saveAs(){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("保存图像");
+        fileChooser.setInitialDirectory(imageUtil.getDirectory());
+        fileChooser.setInitialFileName(imageUtil.getFileName().substring(0,imageUtil.getFileName().lastIndexOf("."))+"-副本");
+        // 设置支持的格式过滤器
+        this.setTypeFilter(fileChooser);
+        File file = fileChooser.showSaveDialog(this.stage);
+
+        if (file != null) {
+            // gif图像单独处理
+            if(file.getName().endsWith("gif")){
+                if(WindowCropController.cropGIFImage(0,0,(int)image.getWidth(),(int)image.getHeight(),imageUtil.getDirectory().getAbsolutePath(),imageUtil)){
+                    synchronize(null,new ImageUtil(file));
+                    this.showNotification("保存成功");
+                }
+                return;
+            }
+            try {
+                String format = file.getName().substring(file.getName().lastIndexOf(".") + 1);
+                if (format != null) {
+                    if(ImageIO.write(SwingFXUtils.fromFXImage(mainImageView.getImage(), null), format, file)){
+                        synchronize(null,new ImageUtil(file));
+                        this.showNotification("保存成功");
+                    }else{
+                        this.showNotification("保存失败");
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 主界面与幻灯片窗口同步
+     * @param newImageUtil 幻灯片所在目录下的任意图片工具包
+     */
+    private void synchronize(String oldPath,ImageUtil newImageUtil){
+        WindowMainController controller = (WindowMainController) ControllerMap.getController(WindowMainController.class);
+        controller.flushImage();
+        SlideWindow.flushSlideWindows(oldPath,newImageUtil);
+    }
+    /**
+     * 显示通知消息并同步刷新
+     */
+    private void showNotification(String message) {
+        Notifications.create()
+                .text(message)
+                .hideAfter(Duration.seconds(1))
+                .position(Pos.CENTER)
+                .owner(this.stage)
+                .darkStyle()
+                .show();
+    }
+
+    /**
+     * 设置文件过滤器
+     * @param fileChooser 文件选择器
+     */
+    private void setTypeFilter(FileChooser fileChooser){
+       String format = imageUtil.getFileType().substring(1).toLowerCase();
+        switch (format){
+            case "jpg","jpeg" -> fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JPEG 图像", "*.jpg", "*.jpeg"));
+            case "png" -> fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("PNG 图像", "*.png"));
+            case "bmp" -> fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("BMP 图像", "*.bmp"));
+            case "gif" -> fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("GIF 图像", "*.gif"));
+       }
+    }
 
     /**
      * 在菜单按钮下方打开菜单
