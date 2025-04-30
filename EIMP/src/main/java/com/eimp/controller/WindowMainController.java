@@ -3,7 +3,7 @@ package com.eimp.controller;
 import com.eimp.App;
 import com.eimp.SlideWindow;
 import com.eimp.component.*;
-
+import javafx.scene.image.Image;
 import com.eimp.util.ImageUtil;
 import com.eimp.util.SortOrder;
 import javafx.animation.KeyFrame;
@@ -177,11 +177,14 @@ public class WindowMainController implements Initializable {
         SelectAll_Button.setOnAction(e->selectedAll());
         Delete_Button.setOnAction(e->deleteImage());
         Help_Button.setOnAction(e->HelpWindow());
+        About_Button.setOnAction(e->AboutWindow());
 
         Delete_Button.setOnKeyPressed(e->{//键盘视奸
             if(e.getCode() == KeyCode.DELETE)
                 Delete_Button.fire();//触发按钮的点击
         });
+        Left_Button.setOnAction(e->goBack());
+        Right_Button.setOnAction(e->goForward());
 
 /*        @FXML
         public Button About_Button;//有下角"关于"
@@ -194,6 +197,41 @@ public class WindowMainController implements Initializable {
         public Button Flushed_Button;//刷新按钮
 
         public Button Help_Button;//帮助按钮*/
+    }
+
+    private void goBack() {
+    }
+
+    private void goForward() {
+    }
+
+
+    private  void AboutWindow()
+    {
+        Stage AboutStage = new Stage();
+        AboutStage.setTitle("关于");
+
+        AboutStage.setResizable(false);
+
+        AboutStage.setWidth(430);
+        AboutStage.setHeight(330);
+
+        WebView webView = new WebView();
+        WebEngine webEngine = webView.getEngine();
+        String markdownContent = """
+# 关于EIMP
+---
+### 开发者：shanmu，yuekanwang，Cyberangel2023
+### 源码网址：https://github.com/yuekanwang/EIMP
+        """;
+
+        webEngine.loadContent(convertMarkdownToHtml(markdownContent));
+        javafx.scene.image.Image Appicon = new Image(getClass().getResourceAsStream("/icon2/EIMP.png"));
+        AboutStage.getIcons().add(Appicon);
+        Scene scene = new Scene(webView, 400, 400);
+        AboutStage.setScene(scene);
+        AboutStage.show();
+
     }
 
     private void HelpWindow() {
@@ -256,14 +294,14 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
 
 - 对需要说明的顶部的组件的说明（从左到右）：
 	1. 该图片的文件名
-	2. ![图片大小]("C:/Users/UserX/Downloads/EIMP/src/main/resources/icon4/图片大小.jpg")该图片在该文件夹里所有图片的排位、该图片的大小和该图片的像素大小
-	3. ![选项键](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/选项键.jpg)选项键里有另存为和裁剪的选项。
-	4. ![旋转键](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/旋转键.jpg)旋转键，能够让图片顺时针旋转90°。
-	5. ![删除键](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/删除键.jpg)删除键，删除当前查看的图片。
-	6. ![上一张图片](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/上一张图片.jpg)  ![上一张图片](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/下一张图片.jpg)查看上或下一张的图片。
-	7. ![播放键](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/播放键.jpg)按顺序播放图片。
-	8. ![属性键](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/属性键.jpg)查看该图片的属性。
-	9. ![压缩键jpg](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/压缩键jpg.jpg)压缩该图片。**注意**，这不是把图片做成压缩包的形式，而是修改图片的像素，让图片在降低质量的同时，降低文件大小。
+	2. 该图片在该文件夹里所有图片的排位、该图片的大小和该图片的像素大小
+	3. 选项键里有另存为和裁剪的选项。
+	4. 旋转键，能够让图片顺时针旋转90°。
+	5. 删除键，删除当前查看的图片。
+	6. 查看上或下一张的图片。
+	7. 按顺序播放图片。
+	8. 查看该图片的属性。
+	9. 压缩该图片。**注意**，这不是把图片做成压缩包的形式，而是修改图片的像素，让图片在降低质量的同时，降低文件大小。
 - 中间呈现图片的查看。
 - 底部是对图片上面几个或下面几个图片的缩略图、
 
@@ -275,20 +313,11 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
 	2. 可按住“ctrl”键，滑动鼠标滚轮来控制图片的放大缩小进行查看。
 	3. 放大后，可鼠标左键拖动图片进行查看
 
----
-
-### 2.3属性面板界面功能
-
-**属性面板如下**：
-
-![属性面板](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/属性面板.jpg)
-
-**裁剪尺寸面板**：
-![裁剪界面](../Documents/GitHub/-glcx/EIMP/src/main/resources/icon4/裁剪界面.jpg)
         """;
 
         webEngine.loadContent(convertMarkdownToHtml(markdownContent));
-
+        javafx.scene.image.Image Appicon = new Image(getClass().getResourceAsStream("/icon2/EIMP.png"));
+        helpStage.getIcons().add(Appicon);
         Scene scene = new Scene(webView, 600, 400);
         helpStage.setScene(scene);
         helpStage.show();
@@ -303,7 +332,7 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
 
         return "<html><head>"
                 + "<style>"
-                + "body { font-family: Arial; padding: 20px; }"
+                + "body { font-family: Microsoft YaHei; padding: 25px; }"
                 + "h1 { color: #2B579A; }"
                 + "</style>"
                 + "</head><body>"
@@ -325,9 +354,9 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
 
     private void intPaneColor()
     {
-        f=false;//true表示日间，false表示夜间
+        f=true;//true表示日间，false表示夜间
         root.getStylesheets().setAll(//初始化为日间模式
-                getClass().getResource("/css/Main_Night.css").toExternalForm());
+                getClass().getResource("/css/Main_Sun.css").toExternalForm());
 
         LightButton.setOnAction(e->{//按钮控制日间模式或夜间模式的切换
             if(f)
