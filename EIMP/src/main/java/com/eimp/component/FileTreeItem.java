@@ -97,11 +97,20 @@ public class FileTreeItem extends TreeItem<String> {
         completableFuture = null;
     }
 
+    @Override
+    public String toString() {
+        return directory.getAbsolutePath();
+    }
+
     public File getDirectory() {
         return directory;
     }
 
     public boolean getInit() {
         return isInit;
+    }
+
+    public void setInit(boolean isInit) {
+        this.isInit = isInit;
     }
 }

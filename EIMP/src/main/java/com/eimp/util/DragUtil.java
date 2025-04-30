@@ -17,7 +17,7 @@ public class DragUtil {
      * @param stage 关联窗口
      */
     public DragUtil(Node node, Stage stage) {
-        if(node== null || stage == null) return;
+        if(node == null || stage == null) return;
 
         node.setOnMousePressed(e->{
             startX =e.getSceneX();
