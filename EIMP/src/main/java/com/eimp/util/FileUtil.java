@@ -122,28 +122,4 @@ public class FileUtil {
         }
         return size;
     }
-
-    /**
-     * 获得输出副本文件
-     * @param filename 原文件名
-     * @param extension 扩展名
-     * @return 输出文件名
-     */
-    public static File getOutputFile(String directory,String filename, String extension){
-        extension = extension.toLowerCase();
-        // 移除原扩展名并添加"-副本"后缀
-        String baseName = filename.substring(0, filename.lastIndexOf("."));
-        String outputFilename = directory + File.separator + baseName + "-副本." + extension;
-
-        // 处理文件名冲突
-        File file = new File(outputFilename);
-        int counter = 1;
-        while (file.exists()) {
-            outputFilename = directory + File.separator + baseName + "-副本(" + counter + ")." + extension;
-            file = new File(outputFilename);
-            counter++;
-        }
-        return file;
-    }
-
 }

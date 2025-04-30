@@ -1,13 +1,10 @@
 package com.eimp.controller;
 
 import com.eimp.CropWindow;
-import com.eimp.SlideWindow;
 import com.eimp.component.CropRectMasker;
-import com.eimp.component.ImageInfoWindow;
 import com.eimp.util.FileUtil;
 import com.eimp.util.ImageUtil;
 import com.eimp.util.ZoomUtil;
-import com.madgag.gif.fmsware.AnimatedGifEncoder;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -32,23 +29,17 @@ import javafx.scene.layout.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.apache.commons.imaging.Imaging;
 import org.controlsfx.control.Notifications;
 import javax.imageio.*;
-import javax.imageio.metadata.IIOMetadata;
-import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.ResourceBundle;
-import com.madgag.gif.fmsware.*;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.NodeList;
 
 public class WindowCropController implements Initializable {
     /**
@@ -334,305 +325,85 @@ public class WindowCropController implements Initializable {
     }
 
     /**
-     * 裁剪功能（支持多种图像格式）
+     * 裁剪功能
      */
     @FXML
-    private void crop() {
+    private void crop(){
         if (mainImageView.getImage() == null) return;
-        // 检查是否为GIF图像
-        boolean isGif = image.getUrl() != null && image.getUrl().toLowerCase().endsWith(".gif");
         // 计算实际裁剪区域（考虑缩放）
-        double scaleX = originalWidth / cropRectPane.getWidth();
-        double scaleY = originalHeight / cropRectPane.getHeight();
+        double scaleX =originalWidth / cropRectPane.getWidth();
+        double scaleY =originalHeight / cropRectPane.getHeight();
         double x = cropRect.getLayoutX() * scaleX;
         double y = cropRect.getLayoutY() * scaleY;
         double width = cropRect.getWidth() * scaleX;
         double height = cropRect.getHeight() * scaleY;
-
-        // 验证裁剪区域是否有效
-        if (width <= 0 || height <= 0 ||
-                width > originalWidth || height > originalHeight ||
-                x < 0 || y < 0 || x + width > originalWidth || y + height > originalHeight) {
-            showNotification("裁剪区域无效", false);
-            return;
-        }
-        // gif图像单独处理
-        if(isGif){
-            if(cropGIFImage((int)x, (int)y, (int)width, (int)height,this.outPath,imageUtil)){
-                synchronize(new ImageUtil(new File(outPath)));
-                showNotification("裁剪成功", true);
-                // 1秒后关闭窗口
-                Timeline timeline = new Timeline(
-                        new KeyFrame(Duration.seconds(1), event -> this.stage.close())
-                );
-                timeline.play();
-            }
-            return;
-        }
-        // 创建裁剪后的图像
-        PixelReader reader = mainImageView.getImage().getPixelReader();
-        WritableImage croppedImage = new WritableImage(reader, (int) x, (int) y, (int) width, (int) height);
-
-        // 获取原始文件扩展名
-        String originalFilename = imageUtil.getFileName();
-        String extension = getFileExtension(originalFilename).toLowerCase();
-
-        // 根据原始格式保存裁剪后的图像
-        boolean success = saveImage(croppedImage, originalFilename, extension);
-
-        if (success) {
-            synchronize(new ImageUtil(new File(outPath)));
-            showNotification("裁剪成功", true);
-            // 1秒后关闭窗口
-            Timeline timeline = new Timeline(
-                    new KeyFrame(Duration.seconds(1), event -> this.stage.close())
-            );
-            timeline.play();
-        } else {
-            showNotification("保存失败", false);
-        }
-    }
-
-    /**
-     * 裁剪gif图像
-     * @param x 裁剪框最小x
-     * @param y 裁剪框最小y
-     * @param width 裁剪框宽
-     * @param height 裁剪框高
-     * @return 裁剪结果
-     */
-    public static boolean cropGIFImage(final int x, final int y, final int width, final int height,String outPath,ImageUtil imageUtil) {
-        File outFile = FileUtil.getOutputFile(outPath,imageUtil.getFileName(), imageUtil.getFileType().substring(1)); // 封装文件名生成逻辑
-        outPath = outFile.getAbsolutePath();
-        try {
-            // 读取原始帧和延迟数据
-            List<BufferedImage> frames = Imaging.getAllBufferedImages(imageUtil.getFile());
-            List<BufferedImage> croppedFrames = new ArrayList<>();
-            List<Integer> originalDelays = parseDelays(imageUtil.getFile());
-
-            // 裁剪所有帧
-            for (BufferedImage frame : frames) {
-                croppedFrames.add(frame.getSubimage(x, y, width, height));
-            }
-            // 编码时应用原始延迟
-            try (FileOutputStream fos = new FileOutputStream(outFile)) {
-                AnimatedGifEncoder encoder = new AnimatedGifEncoder();
-                // 关键设置：保留透明格式
-                encoder.setTransparent(Color.WHITE); // 设置透明色
-                encoder.setRepeat(0);// 无限循环
-                encoder.start(fos);
-
-                for (int i = 0; i < croppedFrames.size(); i++) {
-                    encoder.setDelay(originalDelays.get(i)*10); // 关键：设置原始延迟
-                    encoder.addFrame(croppedFrames.get(i));
-                }
-
-                return encoder.finish();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("GIF处理失败", e);
-        }
-    }
-
-    /**
-     * 解析原gif帧延迟
-     * @param gifFile 原gif文件
-     * @return 帧延迟列表
-     * @throws IOException
-     */
-    private static List<Integer> parseDelays(File gifFile) throws IOException {
-        List<Integer> delays = new ArrayList<>();
-        ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
-
-        try (ImageInputStream stream = ImageIO.createImageInputStream(gifFile)) {
-            reader.setInput(stream);
-
-            // 遍历所有帧
-            for (int i = 0; i < reader.getNumImages(true); i++) {
-                IIOMetadata metadata = reader.getImageMetadata(i);
-                org.w3c.dom.Node tree = metadata.getAsTree("javax_imageio_gif_image_1.0");
-
-                // 查找GraphicControlExtension节点
-                NodeList children = tree.getChildNodes();
-                for (int j = 0; j < children.getLength(); j++) {
-                    org.w3c.dom.Node node = children.item(j);
-                    if ("GraphicControlExtension".equals(node.getNodeName())) {
-                        String delay = node.getAttributes().getNamedItem("delayTime").getNodeValue();
-                        delays.add(Integer.parseInt(delay)); // 单位：1/100秒
-                        break;
-                    }
-                }
-            }
-        }
-        return delays;
-    }
-
-
-    /**
-     * 保存裁剪后的图像（支持多种格式）
-     *
-     * @param croppedImage 裁剪后的图像
-     * @param filename     原文件名
-     * @param extension    文件扩展名（决定保存格式）
-     * @return 保存结果
-     */
-    private boolean saveImage(WritableImage croppedImage, String filename, String extension) {
-        File file = FileUtil.getOutputFile(this.outPath,filename,extension);
-        this.outPath = file.getAbsolutePath();
-        try {
-            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(croppedImage, null);
-
-            // 根据扩展名选择适当的图像写入器
-            switch (extension) {
-                case "jpg":
-                case "jpeg":
-                    // JPEG格式需要处理透明度问题
-                    if (hasTransparency(bufferedImage)) {
-                        BufferedImage noAlpha = new BufferedImage(
-                                bufferedImage.getWidth(),
-                                bufferedImage.getHeight(),
-                                BufferedImage.TYPE_INT_RGB);
-                        Graphics2D g = noAlpha.createGraphics();
-                        g.drawImage(bufferedImage, 0, 0, null);
-                        g.dispose();
-                        bufferedImage = noAlpha;
-                    }
-                    return ImageIO.write(bufferedImage, "jpg", file);
-
-                case "png":
-                    return ImageIO.write(bufferedImage, "png", file);
-
-                case "bmp":
-                    return ImageIO.write(bufferedImage, "bmp", file);
-
-                default:
-                    // 默认保存为PNG
-                    return ImageIO.write(bufferedImage, "png", file);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * 获取文件扩展名
-     */
-    private String getFileExtension(String filename) {
-        int dotIndex = filename.lastIndexOf(".");
-        return (dotIndex == -1) ? "png" : filename.substring(dotIndex + 1);
-    }
-
-    /**
-     * 检查图像是否有透明通道
-     */
-    private boolean hasTransparency(BufferedImage image) {
-        return image.getTransparency() != Transparency.OPAQUE;
-    }
-
-    /**
-     * 主界面与幻灯片窗口同步
-     * @param newImageUtil 幻灯片所在目录下的任意图片工具包
-     */
-    private void synchronize(ImageUtil newImageUtil){
-        WindowMainController controller = (WindowMainController) ControllerMap.getController(WindowMainController.class);
-        controller.flushImage();
-        SlideWindow.flushSlideWindows(null,newImageUtil);
-    }
-    /**
-     * 显示通知消息并同步刷新
-     */
-    private void showNotification(String message, boolean isSuccess) {
-        Notifications.create()
-                .text(message)
+        if(width > originalWidth || height > originalHeight || x < 0 || y< 0 || x > rectPaneW || y > rectPaneH || x+rectW>rectPaneW || y+rectH>rectPaneH){
+            Notifications.create()
+                .text("BUG")
                 .hideAfter(Duration.seconds(1))
                 .position(Pos.CENTER)
                 .owner(this.stage)
                 .darkStyle()
                 .show();
+            return;
+        }
+        // 创建裁剪后的图像
+        PixelReader reader = mainImageView.getImage().getPixelReader();
+        WritableImage croppedImage = new WritableImage(reader, (int)x, (int)y, (int)width, (int)height);
+
+        // 保存裁剪后的图像
+        boolean success = saveImage(croppedImage, imageUtil.getFileName());
+        if(success){
+            Notifications.create()
+                    .text("裁剪成功")
+                    .hideAfter(Duration.seconds(1))
+                    .position(Pos.CENTER)
+                    .owner(this.stage)
+                    .darkStyle()
+                    .show();
+            // 创建一个Timeline，在3秒后执行操作
+            Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.seconds(1), event -> {
+                        this.stage.close();
+                    })
+            );
+            timeline.play();
+
+        }else{
+            Notifications.create()
+                    .text("BUG")
+                    .hideAfter(Duration.seconds(1))
+                    .position(Pos.CENTER)
+                    .owner(this.stage)
+                    .darkStyle()
+                    .show();
+        }
     }
 
-
-//    /**
-//     * 裁剪功能
-//     */
-//    @FXML
-//    private void crop(){
-//        if (mainImageView.getImage() == null) return;
-//        // 计算实际裁剪区域（考虑缩放）
-//        double scaleX =originalWidth / cropRectPane.getWidth();
-//        double scaleY =originalHeight / cropRectPane.getHeight();
-//        double x = cropRect.getLayoutX() * scaleX;
-//        double y = cropRect.getLayoutY() * scaleY;
-//        double width = cropRect.getWidth() * scaleX;
-//        double height = cropRect.getHeight() * scaleY;
-//        if(width > originalWidth || height > originalHeight || x < 0 || y< 0 || x > rectPaneW || y > rectPaneH || x+rectW>rectPaneW || y+rectH>rectPaneH){
-//            Notifications.create()
-//                .text("BUG")
-//                .hideAfter(Duration.seconds(1))
-//                .position(Pos.CENTER)
-//                .owner(this.stage)
-//                .darkStyle()
-//                .show();
-//            return;
-//        }
-//        // 创建裁剪后的图像
-//        PixelReader reader = mainImageView.getImage().getPixelReader();
-//        WritableImage croppedImage = new WritableImage(reader, (int)x, (int)y, (int)width, (int)height);
-//
-//        // 保存裁剪后的图像
-//        boolean success = saveImage(croppedImage, imageUtil.getFileName());
-//        if(success){
-//            Notifications.create()
-//                    .text("裁剪成功")
-//                    .hideAfter(Duration.seconds(1))
-//                    .position(Pos.CENTER)
-//                    .owner(this.stage)
-//                    .darkStyle()
-//                    .show();
-//            // 创建一个Timeline，在3秒后执行操作
-//            Timeline timeline = new Timeline(
-//                    new KeyFrame(Duration.seconds(1), event -> {
-//                        this.stage.close();
-//                    })
-//            );
-//            timeline.play();
-//
-//        }else{
-//            Notifications.create()
-//                    .text("BUG")
-//                    .hideAfter(Duration.seconds(1))
-//                    .position(Pos.CENTER)
-//                    .owner(this.stage)
-//                    .darkStyle()
-//                    .show();
-//        }
-//    }
-//
-//    /**
-//     * 保存裁剪后的图像
-//     * @param croppedImage 裁剪后的图像
-//     * @param filename 原文件名
-//     * @return 保存结果
-//     */
-//    private boolean saveImage(WritableImage croppedImage,String filename){
-//        filename = this.outPath +"\\" + filename.substring(0, filename.lastIndexOf(".")) +"-副本.png";
-//        File file = new File(filename);
-//        if(file.exists()){
-//            filename=filename.substring(0,filename.lastIndexOf("."))+"-副本.png";
-//        }
-//        // 使用ImageWriter保存图像
-//        // TODO 目前只能保存png格式 ,jpg jpeg,gif,bmp格式保存存在问题
-//        try {
-//            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(croppedImage, null);
-//            if(ImageIO.write(bufferedImage,"png",new File(filename))){
-//                return true;
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
+    /**
+     * 保存裁剪后的图像
+     * @param croppedImage 裁剪后的图像
+     * @param filename 原文件名
+     * @return 保存结果
+     */
+    private boolean saveImage(WritableImage croppedImage,String filename){
+        filename = this.outPath +"\\" + filename.substring(0, filename.lastIndexOf(".")) +"-副本.png";
+        File file = new File(filename);
+        if(file.exists()){
+            filename=filename.substring(0,filename.lastIndexOf("."))+"-副本.png";
+        }
+        // 使用ImageWriter保存图像
+        // TODO 目前只能保存png格式 ,jpg jpeg格式保存存在问题
+        try {
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(croppedImage, null);
+            if(ImageIO.write(bufferedImage,"png",new File(filename))){
+                return true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     /**
      * 输出尺寸标签

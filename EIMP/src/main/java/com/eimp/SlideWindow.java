@@ -131,21 +131,9 @@ public class SlideWindow extends Application {
      */
     public static void flushSlideWindows(String oldPath,ImageUtil newImageUtil){
         if(slideWindowControllers.containsKey(newImageUtil.getDirectory().getAbsolutePath())){
+            System.out.println( slideWindowControllers.get(newImageUtil.getDirectory().getAbsolutePath()).size());
             for(WindowSlideController windowSlideController : slideWindowControllers.get(newImageUtil.getDirectory().getAbsolutePath())){
                 windowSlideController.flush(oldPath, newImageUtil);
-            }
-        }
-    }
-
-    /**
-     * 刷新被删除的幻灯片
-     * @param oldPaths 被删除的照片路径
-     * @param directory 原目录
-     */
-    public static void flushSlideWindows(List<String> oldPaths,String directory){
-        if(slideWindowControllers.containsKey(directory)){
-            for(WindowSlideController windowSlideController : slideWindowControllers.get(directory)){
-                windowSlideController.flush(oldPaths);
             }
         }
     }

@@ -2,6 +2,8 @@ package com.eimp.component;
 
 import com.eimp.util.DragUtil;
 import com.eimp.util.ImageUtil;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,17 +15,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 import java.io.File;
 import java.util.function.Consumer;
 
 
 public class RenameDialog {
-    /**
-     * 显示重命名操作窗口
-     * @param owner 所属舞台
-     * @param imageUtil 待操作图片工具包
-     * @param callback 回调函数
-     */
     public static void show(Stage owner, ImageUtil imageUtil, Consumer<String> callback) {
         Stage dialog = new Stage();
         dialog.initOwner(owner);

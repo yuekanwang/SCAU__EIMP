@@ -16,7 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -28,14 +27,7 @@ import javafx.stage.Window;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.*;
 import java.util.List;
 
@@ -49,7 +41,6 @@ public class ImageInfoWindow extends Application {
      * 当前图片属性面板
      */
     private static ImageInfoPane imageInfoPane;
-
     @Override
     public void start(Stage stage) throws Exception {
         imageInfoPane.getStylesheets().setAll(getClass().getResource("/css/CustomPane.css").toExternalForm());
@@ -140,7 +131,6 @@ class ImageInfoPane extends VBox{
     private ImageUtil imageUtil;
     private Image image;
     private Stage stage;// 所属窗口
-    private Map<String,Button> buttonMap = new HashMap<>();
     /**
      * 色卡列表
      */
@@ -176,88 +166,14 @@ class ImageInfoPane extends VBox{
 
         createColorPalette();
         createInfoSection();
-        if(".GIF".equals(imageUtil.getFileType())){
-            buttonMap.get("1").setDisable(true);    //gif不提供转格式和压缩
-            buttonMap.get("2").setDisable(true);
-        } else if(".BMP".equals(imageUtil.getFileType())){
-            buttonMap.get("2").setDisable(true);    //bmp不提供压缩
-        }
     }
 
-//    /**
-//     * 提取图片色彩频率前五的互斥色号
-//     * @param step 采样步长
-//     * @param threshold 色差阈值 - 颜色差异阈值，决定颜色是否互斥。基于RGB欧氏距离，值越大允许的颜色差异越小。
-//     */
-//    private void extractDominantColors(int step,double threshold) {
-//        PixelReader pixelReader = image.getPixelReader();
-//        Map<Color, Integer> colorCount = new HashMap<>();
-//
-//        // 采样策略（减少计算量）
-//        for (int y = 0; y < image.getHeight(); y += step) {
-//            for (int x = 0; x < image.getWidth(); x += step) {
-//                Color color = pixelReader.getColor(x, y);
-//                // 忽略透明或半透明像素
-//                if (color.getOpacity() < 0.5) {
-//                    continue;
-//                }
-//                colorCount.put(color, colorCount.getOrDefault(color, 0) + 1);
-//            }
-//        }
-//
-//        // 按频率排序
-//        List<Map.Entry<Color, Integer>> sortedEntries = new ArrayList<>(colorCount.entrySet());
-//        sortedEntries.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
-//
-//        // 选择互斥颜色
-//        List<Color> selectedColors = new ArrayList<>();
-//        for (Map.Entry<Color, Integer> entry : sortedEntries) {
-//            Color current = entry.getKey();
-//            if (isDifferentEnough(current, selectedColors, threshold)) {
-//                selectedColors.add(current);
-//                if (selectedColors.size() >= 5) {
-//                    break;
-//                }
-//            }
-//        }
-//
-////        dominantColors = colorCount.entrySet().stream()
-////                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-////                .limit(5) // 取前5种主要颜色
-////                .map(Map.Entry::getKey)
-////                .collect(Collectors.toList());
-////        List<Color> dominantColorsSorted = new ArrayList<>();
-////        threshold = 50;
-////        for(Color c : selectedColors) {
-////            if (isDifferentEnough(c, dominantColorsSorted, threshold)) {
-////                dominantColorsSorted.add(c);
-////            }
-////        }
-////
-////        dominantColors = dominantColorsSorted;
-//        dominantColors = selectedColors;
-//    }
-
     /**
-     * 提取GIF图像色彩频率前五的互斥色号
-     *
-     * @param step      采样步长
+     * 提取图片色彩频率前五的互斥色号
+     * @param step 采样步长
      * @param threshold 色差阈值 - 颜色差异阈值，决定颜色是否互斥。基于RGB欧氏距离，值越大允许的颜色差异越小。
      */
-    private void extractDominantColors(int step, double threshold) {
-        // 如果是GIF图像
-        if (image instanceof WritableImage == false && image.getUrl() != null && image.getUrl().toLowerCase().endsWith(".gif")) {
-            extractGifDominantColors(step, threshold);
-        } else {
-            // 普通图像处理
-            extractStaticImageDominantColors(step, threshold);
-        }
-    }
-
-    /**
-     * 处理静态图像(非GIF)的色卡提取
-     */
-    private void extractStaticImageDominantColors(int step, double threshold) {
+    private void extractDominantColors(int step,double threshold) {
         PixelReader pixelReader = image.getPixelReader();
         Map<Color, Integer> colorCount = new HashMap<>();
 
@@ -273,74 +189,6 @@ class ImageInfoPane extends VBox{
             }
         }
 
-        // 按频率排序并选择互斥颜色
-        dominantColors = selectDistinctColorsByFrequency(colorCount, 5, threshold);
-    }
-
-    /**
-     * 处理GIF图像的色卡提取
-     */
-    private void extractGifDominantColors(int step, double threshold) {
-        try {
-            // 使用ImageIO读取GIF
-            InputStream input = new URL(image.getUrl()).openStream();
-            ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
-            ImageInputStream stream = ImageIO.createImageInputStream(input);
-            reader.setInput(stream);
-
-            Map<Color, Integer> colorCount = new HashMap<>();
-            int numFrames = reader.getNumImages(true);
-
-            // 采样每帧的颜色
-            for (int i = 0; i < numFrames; i++) {
-                BufferedImage frame = reader.read(i);
-                sampleFrameColors(frame, step, colorCount);
-            }
-
-            // 按频率排序并选择互斥颜色
-            dominantColors = selectDistinctColorsByFrequency(colorCount, 5, threshold);
-
-            reader.dispose();
-            stream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            // 如果GIF处理失败，回退到静态图像处理
-            extractStaticImageDominantColors(step, threshold);
-        }
-    }
-
-    /**
-     * 采样单帧的颜色
-     */
-    private void sampleFrameColors(BufferedImage frame, int step, Map<Color, Integer> colorCount) {
-        for (int y = 0; y < frame.getHeight(); y += step) {
-            for (int x = 0; x < frame.getWidth(); x += step) {
-                int rgb = frame.getRGB(x, y);
-                Color color = convertRgbToColor(rgb);
-                // 忽略透明或半透明像素
-                if (color.getOpacity() < 0.5) {
-                    continue;
-                }
-                colorCount.put(color, colorCount.getOrDefault(color, 0) + 1);
-            }
-        }
-    }
-
-    /**
-     * 将BufferedImage的RGB值转换为JavaFX Color对象
-     */
-    private Color convertRgbToColor(int rgb) {
-        int red = (rgb >> 16) & 0xFF;
-        int green = (rgb >> 8) & 0xFF;
-        int blue = rgb & 0xFF;
-        int alpha = (rgb >> 24) & 0xFF;
-        return Color.rgb(red, green, blue, alpha / 255.0);
-    }
-
-    /**
-     * 从颜色计数中选择指定数量的互斥颜色
-     */
-    private List<Color> selectDistinctColorsByFrequency(Map<Color, Integer> colorCount, int maxColors, double threshold) {
         // 按频率排序
         List<Map.Entry<Color, Integer>> sortedEntries = new ArrayList<>(colorCount.entrySet());
         sortedEntries.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
@@ -351,13 +199,29 @@ class ImageInfoPane extends VBox{
             Color current = entry.getKey();
             if (isDifferentEnough(current, selectedColors, threshold)) {
                 selectedColors.add(current);
-                if (selectedColors.size() >= maxColors) {
+                if (selectedColors.size() >= 5) {
                     break;
                 }
             }
         }
-        return selectedColors;
+
+//        dominantColors = colorCount.entrySet().stream()
+//                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+//                .limit(5) // 取前5种主要颜色
+//                .map(Map.Entry::getKey)
+//                .collect(Collectors.toList());
+//        List<Color> dominantColorsSorted = new ArrayList<>();
+//        threshold = 50;
+//        for(Color c : selectedColors) {
+//            if (isDifferentEnough(c, dominantColorsSorted, threshold)) {
+//                dominantColorsSorted.add(c);
+//            }
+//        }
+//
+//        dominantColors = dominantColorsSorted;
+        dominantColors = selectedColors;
     }
+
 
     /**
      * 检查颜色差异是否足够大
@@ -377,7 +241,7 @@ class ImageInfoPane extends VBox{
 
 
     /**
-     * 计算两个颜色RGB欧氏距离
+     * 计算RGB欧氏距离
      * @param c1 颜色1
      * @param c2 颜色2
      * @return RGB欧氏距离
@@ -439,11 +303,10 @@ class ImageInfoPane extends VBox{
 
         Button actionButton = new Button(buttonText);
         actionButton.setId("actionbutton");
-        buttonMap.put(String.valueOf(row),actionButton);
+
         // 按钮事件绑定
         actionButton.setOnAction(e -> handleAction(buttonText));
         grid.add(actionButton, 1, row);
-
     }
 
     /**
@@ -492,13 +355,13 @@ class ImageInfoPane extends VBox{
                 showRenameDialog();
                 break;
             case "转格式":
-                formatConvert();
+//                showConvertDialog();
                 break;
             case "改尺寸":
                 CropWindow.main(this.imageUtil);
                 break;
             case "压缩":
-                compress();
+//                compressImage();
                 break;
             case "打开":
                 FileUtil.openContainingFolder(imageUtil.getAbsolutePath());
@@ -508,34 +371,6 @@ class ImageInfoPane extends VBox{
         }
     }
 
-    /**
-     * 压缩图片,保存副本
-     */
-    private void compress(){
-        CompressDialog.show(this.stage,this.imageUtil,result->{
-            if(result){
-                WindowMainController controller = (WindowMainController) ControllerMap.getController(WindowMainController.class);
-                controller.flushImage();
-                SlideWindow.flushSlideWindows(null,imageUtil);
-            }
-        });
-    }
-
-    /**
-     * 转换格式保存副本
-     */
-    private void formatConvert(){
-        ImageConverter.show(this.stage,this.imageUtil,result->{
-            if(result != null){
-                WindowMainController controller = (WindowMainController) ControllerMap.getController(WindowMainController.class);
-                controller.flushImage();
-                SlideWindow.flushSlideWindows(null,new ImageUtil(result));
-            }
-        });
-    }
-    /**
-     * 图像重命名
-     */
     private void showRenameDialog() {
         RenameDialog.show(this.stage, imageUtil,result->{
             WindowMainController controller = (WindowMainController) ControllerMap.getController(WindowMainController.class);
