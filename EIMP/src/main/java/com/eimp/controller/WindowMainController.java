@@ -3,7 +3,7 @@ package com.eimp.controller;
 import com.eimp.App;
 import com.eimp.SlideWindow;
 import com.eimp.component.*;
-
+import javafx.scene.image.Image;
 import com.eimp.util.ImageUtil;
 import com.eimp.util.SortOrder;
 import javafx.animation.KeyFrame;
@@ -31,6 +31,7 @@ import javafx.util.Pair;
 import org.controlsfx.control.Notifications;
 
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.text.html.ImageView;
 import java.awt.*;
 import java.io.File;
 import java.net.URL;
@@ -43,6 +44,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.ScrollPane;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.data.MutableDataSet;
 
 public class WindowMainController implements Initializable {
     @FXML
@@ -172,11 +177,14 @@ public class WindowMainController implements Initializable {
         SelectAll_Button.setOnAction(e->selectedAll());
         Delete_Button.setOnAction(e->deleteImage());
         Help_Button.setOnAction(e->HelpWindow());
+        About_Button.setOnAction(e->AboutWindow());
 
         Delete_Button.setOnKeyPressed(e->{//键盘视奸
             if(e.getCode() == KeyCode.DELETE)
                 Delete_Button.fire();//触发按钮的点击
         });
+        Left_Button.setOnAction(e->goBack());
+        Right_Button.setOnAction(e->goForward());
 
 /*        @FXML
         public Button About_Button;//有下角"关于"
@@ -191,18 +199,48 @@ public class WindowMainController implements Initializable {
         public Button Help_Button;//帮助按钮*/
     }
 
-    private void HelpWindow() {//帮助窗口
+    private void goBack() {
+    }
+
+    private void goForward() {
+    }
+
+
+    private  void AboutWindow()
+    {
+        Stage AboutStage = new Stage();
+        AboutStage.setTitle("关于");
+
+        AboutStage.setResizable(false);
+
+        AboutStage.setWidth(430);
+        AboutStage.setHeight(330);
+
+        WebView webView = new WebView();
+        WebEngine webEngine = webView.getEngine();
+        String markdownContent = """
+# 关于EIMP
+---
+### 开发者：shanmu，yuekanwang，Cyberangel2023
+### 源码网址：https://github.com/yuekanwang/EIMP
+        """;
+
+        webEngine.loadContent(convertMarkdownToHtml(markdownContent));
+        javafx.scene.image.Image Appicon = new Image(getClass().getResourceAsStream("/icon2/EIMP.png"));
+        AboutStage.getIcons().add(Appicon);
+        Scene scene = new Scene(webView, 400, 400);
+        AboutStage.setScene(scene);
+        AboutStage.show();
+
+    }
+
+    private void HelpWindow() {
         Stage helpStage = new Stage();
         helpStage.setTitle("帮助信息");
 
-        // 允许缩放
-        helpStage.setResizable(true);
-
-        // Create WebView and WebEngine
         WebView webView = new WebView();
         WebEngine webEngine = webView.getEngine();
 
-        // Create markdown content
         String markdownContent = """
 # EIMP 图像处理软件帮助文档
 
@@ -213,176 +251,94 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
 ### 1.1 主要特点
 
 - 现代化的用户界面设计
-
-- 支持多种图像格式
-
+- 支持多种图像格式（如：.JPG、.JPEG、.GIF、.PNG、和.BMP。）
 - 提供专业的图像编辑工具
-
 - 支持批量处理功能
-
 - 提供图像预览和缩略图功能
 
 ## 2. 功能介绍与教程
 
 ### 2.1 主界面功能
 
-主界面包含以下主要组件：
+**主界面包含以下主要组件：**
 
-- 文件树：用于浏览和管理图像文件
-
+- 文件树：用于浏览和管理图像文件	
 - 缩略图面板：显示当前目录下的图像缩略图
+- 工具栏：提供常用功能的快捷访问，包括排序方式、全选、删除、刷新、幻灯片播放、帮助。部分功能可以参考下面对幻灯片界面功能的说明。
+- 文件路径框：显示缩略图面板的所在路径
+- 搜索框：用于搜索功能
+- 日间或夜间模式转换按钮：能够转换主界面的样式。
+- 左下角显示文件里的所有图片数量及其总大小和选中的图片数量及其总大小。
+- 右下角“关于”键是对该软件开发的一些情况交代。
 
-- 预览面板：显示选中图像的详细预览
+**主界面可能需要提及到的功能：**
 
-- 工具栏：提供常用功能的快捷访问
+- 关于文件树：文件树只会显示文件夹和文件夹的快捷模式。点击文件夹，便是进入了该文件夹，若文件夹里有图片或.gif文件，则在缩略图面板加载出来。
+- 关于删除功能：图片必须在被选中后才能进行删除，除了工具栏里的删除键，还有快捷键“**delete**”键。
+- 关于选中功能：
+	1. 单击图片，即可单个选中图片
+	2. 按住clrl，可单击多个图片，选中它们
+	3. 在缩略图面版空白处拖动(鼠标左键或右键)形成一个矩形，该矩形内的图片将被选中。
+	4. 点击工具栏的“全选按钮”，可选中全部图片。
+- 关于重命名功能：
+	1. 双击图片的名字，可以修改图片文件字。
+	2. 右键图片，可以选择修改图片文件名
+	3. 注意，**小心修改文件后缀名**，如果修改后的后缀名不符合该软件的识别范围，改文件将在缩略图面板被隐藏。
+- 关于搜索功能：在搜索框里输入文字，根据这些文字，寻找文件名符合这些文字的图片，缩略图面板将显示这些图片。
 
-### 2.2 图像编辑功能
+---
 
-#### 2.2.1 裁剪功能
+### 2.2 幻灯片界面功能
 
-- 支持自由裁剪和固定比例裁剪
+**幻灯片界面包含以下主要组件：**
 
-- 提供裁剪区域预览
+- 对需要说明的顶部的组件的说明（从左到右）：
+	1. 该图片的文件名
+	2. 该图片在该文件夹里所有图片的排位、该图片的大小和该图片的像素大小
+	3. 选项键里有另存为和裁剪的选项。
+	4. 旋转键，能够让图片顺时针旋转90°。
+	5. 删除键，删除当前查看的图片。
+	6. 查看上或下一张的图片。
+	7. 按顺序播放图片。
+	8. 查看该图片的属性。
+	9. 压缩该图片。**注意**，这不是把图片做成压缩包的形式，而是修改图片的像素，让图片在降低质量的同时，降低文件大小。
+- 中间呈现图片的查看。
+- 底部是对图片上面几个或下面几个图片的缩略图、
 
-- 支持裁剪区域调整
+**幻灯片界面可能需要提及的功能：**
 
-#### 2.2.2 滑动窗口功能
+- 进入幻灯片的界面方式：在主界面里双击一张图片。
+- 对图片放大缩小查看的功能：
+	1. 可通过点击工具栏的“放大“键、”缩小“键进行查看。
+	2. 可按住“ctrl”键，滑动鼠标滚轮来控制图片的放大缩小进行查看。
+	3. 放大后，可鼠标左键拖动图片进行查看
 
-- 支持图像局部放大查看
+        """;
 
-- 提供滑动窗口大小调整
-
-- 支持实时预览
-
-### 2.3 文件管理功能
-
-- 支持文件重命名
-
-- 支持批量处理
-
-- 提供文件信息查看
-
-- 支持目录快速加载
-
-### 2.4 图像信息查看
-
-- 显示图像基本信息
-
-- 支持EXIF信息查看
-
-- 提供图像属性编辑
-
-### 2.5 使用教程
-
-#### 2.5.1 基本操作
-
-1. 打开软件后，使用左侧文件树浏览到目标图像目录
-2. 在缩略图面板中查看目录下的所有图像
-3. 点击缩略图可在预览面板中查看大图
-
-#### 2.5.2 图像编辑
-
-1. 选择要编辑的图像
-2. 使用工具栏中的工具进行编辑
-3. 编辑完成后保存更改
-
-#### 2.5.3 批量处理
-
-1. 在文件树中选择多个文件
-2. 使用批量处理功能
-3. 设置处理参数
-4. 执行批量处理
-
-### 2.6 快捷键
-
-- Ctrl + O：打开文件
-
-- Ctrl + S：保存文件
-
-- Ctrl + Z：撤销
-
-- Ctrl + Y：重做
-
-- Ctrl + C：复制
-
-- Ctrl + V：粘贴
-
-- Ctrl + X：剪切
-
-### 2.7 注意事项
-
-1. 建议在处理大文件前先备份
-2. 批量处理时注意选择正确的目标目录
-3. 编辑前建议先查看图像信息
-4. 定期保存工作进度
-            """;
-
-        // Convert markdown to HTML using a simple converter
-        String htmlContent = convertMarkdownToHtml(markdownContent);
-
-        // Load HTML content
-        webEngine.loadContent(htmlContent);
-
-        // 设置WebView宽高自适应
-        webView.setPrefWidth(600);
-        webView.setPrefHeight(400);
-
-        // Create scene and show stage
+        webEngine.loadContent(convertMarkdownToHtml(markdownContent));
+        javafx.scene.image.Image Appicon = new Image(getClass().getResourceAsStream("/icon2/EIMP.png"));
+        helpStage.getIcons().add(Appicon);
         Scene scene = new Scene(webView, 600, 400);
-
-        helpStage.setMinWidth(578);
-        helpStage.setMinHeight(389);
-
         helpStage.setScene(scene);
         helpStage.show();
     }
 
     private String convertMarkdownToHtml(String markdown) {
-        // Enhanced markdown to HTML conversion with clear heading levels
-        return "<html><head><style>" +
-               "html, body { width: 100vw; height: 100vh; margin: 0; padding: 0; overflow-x: hidden; overflow-y: auto; }" +
-               "body { font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; line-height: 1.6; color: #333; background: #f8f9fa; padding-left: 32px; box-sizing: border-box; width: 100%; }" +
-               // h1: 主标题，最大，带下边框
-               "h1 { color: #1a365d; margin-top: 0; margin-bottom: 32px; font-size: 2.5em; font-weight: 800; border-bottom: 3px solid #2B579A; padding-bottom: 16px; letter-spacing: -0.5px; }" +
-               // h2: 二级标题，稍小，带细下边框
-               "h2 { color: #2B579A; margin-top: 40px; margin-bottom: 24px; font-size: 2em; font-weight: 700; border-bottom: 2px solid #e9ecef; padding-bottom: 12px; }" +
-               // h3: 三级标题，再小，带左边框
-               "h3 { color: #1A4B7A; margin-top: 32px; margin-bottom: 16px; font-size: 1.5em; font-weight: 600; padding-left: 12px; border-left: 4px solid #2B579A; }" +
-               // h4: 四级标题，最小，使用不同颜色和字重区分
-               "h4 { color: #205080; margin-top: 24px; margin-bottom: 12px; font-size: 1.2em; font-weight: 500; padding-left: 16px; }" +
-               // 无序列表样式
-               "ul { margin-left: 20px; padding-left: 0; list-style-type: none; }" +
-               "li { margin: 8px 0; padding-left: 20px; position: relative; }" +
-               "li:before { content: '•'; color: #2B579A; position: absolute; left: 0; }" +
-               // 有序列表样式
-               "ol { margin: 12px 0 12px 20px; padding-left: 20px; counter-reset: item; }" +
-               "ol li { display: block; margin: 8px 0; padding-left: 12px; color: #444; position: relative; }" +
-               "ol li:before { content: counter(item) '.'; counter-increment: item; color: #2B579A; position: absolute; left: -20px; font-weight: 500; }" +
-               // 嵌套列表的样式
-               "ol ol { margin-left: 30px; }" +
-               "ol ol li:before { content: counter(item, lower-alpha) '.'; }" +
-               "ol ol ol li:before { content: counter(item, decimal) '.'; }" +
-               // 其他样式
-               "code { background: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 0.95em; color: #495057; }" +
-               "strong { color: #2B579A; }" +
-               "</style></head><body>" +
-               markdown
-                   // 先替换h4，再h3，再h2，再h1，避免正则覆盖
-                   .replaceAll("#### (.*)", "<h4>$1</h4>")
-                   .replaceAll("### (.*)", "<h3>$1</h3>")
-                   .replaceAll("## (.*)", "<h2>$1</h2>")
-                   .replaceAll("# (.*)", "<h1>$1</h1>")
-                   // 处理列表项，确保数字列表被正确转换为<ol>
-                   .replaceAll("(?m)^\\d+\\. \\d+\\.(.*)", "<li>$1</li>")  // 处理重复的数字
-                   .replaceAll("(?m)^\\d+\\. (.*?)(?=(?:\\d+\\.|$))", "<li>$1</li>")
-                   .replaceAll("(?s)(<li>.*?</li>\\s*){2,}", "<ol>$0</ol>")
-                   // 处理其他格式
-                   .replaceAll("(?m)^- \\*\\*(.*)\\*\\*", "<ul><li><strong>$1</strong></li></ul>")
-                   .replaceAll("(?m)^- `(.*)`", "<ul><li><code>$1</code></li></ul>")
-                   .replaceAll("(?m)^- (.*)", "<ul><li>$1</li></ul>") +
-               "</body></html>";
-    }
+        MutableDataSet options = new MutableDataSet();
+        Parser parser = Parser.builder(options).build();
+        HtmlRenderer renderer = HtmlRenderer.builder(options).build();
 
+        String htmlContent = renderer.render(parser.parse(markdown));
+
+        return "<html><head>"
+                + "<style>"
+                + "body { font-family: Microsoft YaHei; padding: 25px; }"
+                + "h1 { color: #2B579A; }"
+                + "</style>"
+                + "</head><body>"
+                + htmlContent
+                + "</body></html>";
+    }
 
 
     /**
@@ -398,9 +354,9 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
 
     private void intPaneColor()
     {
-        f=false;//true表示日间，false表示夜间
+        f=true;//true表示日间，false表示夜间
         root.getStylesheets().setAll(//初始化为日间模式
-                getClass().getResource("/css/Main_Night.css").toExternalForm());
+                getClass().getResource("/css/Main_Sun.css").toExternalForm());
 
         LightButton.setOnAction(e->{//按钮控制日间模式或夜间模式的切换
             if(f)
@@ -1298,6 +1254,7 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
                             target = new File(out);
                         }
                         Files.copy(file.toPath(), target.toPath());
+                        SlideWindow.flushSlideWindows(null,new ImageUtil(target));      //幻灯片同步
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1326,12 +1283,17 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
      */
     @FXML
     public void deleteImage() {
+        List<String> oldPaths = new ArrayList<>();
+        boolean flag=false;
         File choose;
         for (ThumbnailPanel image : previewFlowPane.getNewSelected()) {
             choose = image.getImageUtil().getFile();
             if (choose.exists() && choose.isFile()) {
                 if (Desktop.isDesktopSupported())  {
-                    Desktop.getDesktop().moveToTrash(choose);
+                    if(Desktop.getDesktop().moveToTrash(choose)){
+                        oldPaths.add(choose.getAbsolutePath());
+                        flag=true;
+                    }
                 }
                 boolean isDeleted = choose.delete();  // 返回删除结果
                 if (isDeleted) {
@@ -1342,6 +1304,10 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
             }
         }
         menu.close();
+        // 如果幻灯片窗口存在则刷新
+        if(flag){
+            SlideWindow.flushSlideWindows(oldPaths,previewFlowPane.getNewSelected().get(0).getImageUtil().getDirectory().getAbsolutePath());
+        }
         if (!Search_Path.getText().isEmpty()) {
             updateFlowPaneOfSearch();
         } else {
