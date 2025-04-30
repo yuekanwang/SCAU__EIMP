@@ -144,12 +144,7 @@ public class WindowMainController implements Initializable {
     @FXML
     public Button SearchButton;//搜索键
 
-    // 当前文件夹
-    private File currentDirectory;
-    // 后退文件栈
-    private Stack<File> backStack = new Stack<>();
-    // 前进文件栈
-    private Stack<File> forwardStack = new Stack<>();
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -182,8 +177,6 @@ public class WindowMainController implements Initializable {
             if(e.getCode() == KeyCode.DELETE)
                 Delete_Button.fire();//触发按钮的点击
         });
-        Left_Button.setOnAction(e->goBack());
-        Right_Button.setOnAction(e->goForward());
 
 /*        @FXML
         public Button About_Button;//有下角"关于"
@@ -196,12 +189,6 @@ public class WindowMainController implements Initializable {
         public Button Flushed_Button;//刷新按钮
 
         public Button Help_Button;//帮助按钮*/
-    }
-
-    private void goBack() {
-    }
-
-    private void goForward() {
     }
 
     private void HelpWindow() {//帮助窗口
@@ -492,7 +479,6 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
 
         // 读取文件系统的根目录 -- 桌面目录
         File root = FileSystemView.getFileSystemView().getRoots()[0];
-        currentDirectory = new File(root.getPath());
         // 读取文件
         File[] allFiles = root.listFiles();
         // 读取目录
@@ -529,8 +515,6 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
 
         File_URL.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
-                previewFlowPane.clearSelected();
-                previewFlowPane.setIsShift(false);
                 goPath();
             }
         });
@@ -881,18 +865,6 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
         setupResizeHandler(leftBottomResize, WindowMainController.ResizeDirection.LEFT_BOTTOM);
         // 右下角调整
         setupResizeHandler(rightBottomResize, WindowMainController.ResizeDirection.RIGHT_BOTTOM);
-    }
-
-    public Stack<File> getBackStack() {
-        return backStack;
-    }
-
-    public File getCurrentDirectory() {
-        return currentDirectory;
-    }
-
-    public Stack<File> getForwardStack() {
-        return forwardStack;
     }
 
     /**
