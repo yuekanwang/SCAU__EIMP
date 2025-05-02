@@ -142,14 +142,17 @@ public class WindowMainController implements Initializable {
     public Button Left_Button;//路径后退按钮
     @FXML
     public Button Right_Button;//路径前进按钮
+    // 存储前进后退和当前文件
+    private File currentDirectory;
+    private Stack<File> backStack = new Stack<>();
+    private Stack<File> forwardStack = new Stack<>();
+
     @FXML
     public TextField File_URL;//文件路径条
     @FXML
     public TextField Search_Path;//搜索条
     @FXML
     public Button SearchButton;//搜索键
-
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -200,9 +203,39 @@ public class WindowMainController implements Initializable {
     }
 
     private void goBack() {
+        if (!backStack.isEmpty()) {
+            forwardStack.push(currentDirectory);
+            currentDirectory = backStack.pop();
+            File_URL.setText(currentDirectory.getAbsolutePath());
+            updateTipsLabelText();
+            previewFlowPane.clearSelected();
+            previewFlowPane.setIsShift(false);
+            String path = File_URL.getText();
+            if (path == null) {
+                return;
+            }
+            //System.out.println(path);
+            File file = new File(path);
+            previewFlowPane.update(file);
+        }
     }
 
     private void goForward() {
+        if (!forwardStack.isEmpty()) {
+            backStack.push(currentDirectory);
+            currentDirectory = forwardStack.pop();
+            File_URL.setText(currentDirectory.getAbsolutePath());
+            updateTipsLabelText();
+            previewFlowPane.clearSelected();
+            previewFlowPane.setIsShift(false);
+            String path = File_URL.getText();
+            if (path == null) {
+                return;
+            }
+            //System.out.println(path);
+            File file = new File(path);
+            previewFlowPane.update(file);
+        }
     }
 
 
@@ -435,6 +468,7 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
 
         // 读取文件系统的根目录 -- 桌面目录
         File root = FileSystemView.getFileSystemView().getRoots()[0];
+        currentDirectory = new File(String.valueOf(root));
         // 读取文件
         File[] allFiles = root.listFiles();
         // 读取目录
@@ -464,6 +498,9 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
                 previewFlowPane.update(((FileTreeItem) newValue).getDirectory());
                 File_URL.setText(((FileTreeItem) newValue).getDirectory().getAbsolutePath());
                 updateTipsLabelText();
+                backStack.push(currentDirectory);
+                forwardStack.clear();
+                currentDirectory = ((FileTreeItem) newValue).getDirectory();
                 previewFlowPane.clearSelected();
                 previewFlowPane.setIsShift(false);
             }
@@ -491,7 +528,7 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
             return;
         }
 
-        System.out.println(path);
+        //System.out.println(path);
         File file = new File(path);
         previewFlowPane.update(file);
     }
