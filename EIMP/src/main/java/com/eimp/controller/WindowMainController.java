@@ -207,7 +207,6 @@ public class WindowMainController implements Initializable {
             forwardStack.push(currentDirectory);
             currentDirectory = backStack.pop();
             File_URL.setText(currentDirectory.getAbsolutePath());
-            updateTipsLabelText();
             previewFlowPane.clearSelected();
             previewFlowPane.setIsShift(false);
             String path = File_URL.getText();
@@ -217,6 +216,7 @@ public class WindowMainController implements Initializable {
             //System.out.println(path);
             File file = new File(path);
             previewFlowPane.update(file);
+            updateTipsLabelText();
         }
     }
 
@@ -225,7 +225,6 @@ public class WindowMainController implements Initializable {
             backStack.push(currentDirectory);
             currentDirectory = forwardStack.pop();
             File_URL.setText(currentDirectory.getAbsolutePath());
-            updateTipsLabelText();
             previewFlowPane.clearSelected();
             previewFlowPane.setIsShift(false);
             String path = File_URL.getText();
@@ -235,6 +234,7 @@ public class WindowMainController implements Initializable {
             //System.out.println(path);
             File file = new File(path);
             previewFlowPane.update(file);
+            updateTipsLabelText();
         }
     }
 
