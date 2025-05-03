@@ -1,7 +1,11 @@
 package com.eimp.component;
 
+import com.eimp.controller.WindowSlideController;
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -10,29 +14,62 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 import net.coobird.thumbnailator.Thumbnails;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 /**
  * 可滚动的缩略图栏组件
  */
 public class ThumbnailGallery extends ScrollPane {
+    /**
+     * 线程池
+     */
+    private final ExecutorService executorService = Executors.newFixedThreadPool(4);
+    /**
+     * 图片缓存
+     */
+    private final Map<File, Image> thumbnailCache = new ConcurrentHashMap<>();
+    /**
+     * 占位列表
+     */
+    private final List<StackPane> placeholderPanes = new ArrayList<>();
+    /**
+     * 初始索引
+     */
+    private int initIndex;
     private final HBox thumbnailsContainer;
     private ImageView selectedThumbnail;
     private int thumbnailSize = 100;
     private int containerSize = 110;
+    /**
+     * 矩形圆角
+     */
     private static final double CORNER_RADIUS = 8;
+    /**
+     * 缩略图栏选中回调
+     */
     private Consumer<Integer> selectionHandler;
-    public ThumbnailGallery() {
+
+    /**
+     *
+     * @param idx 初始索引
+     */
+    public ThumbnailGallery(int idx) {
         thumbnailsContainer = new HBox(10);
         thumbnailsContainer.setAlignment(Pos.CENTER);
         thumbnailsContainer.getStyleClass().add("thumbnails-container");
-
+        initIndex = idx;
         this.setContent(thumbnailsContainer);
         this.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         this.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -48,24 +85,73 @@ public class ThumbnailGallery extends ScrollPane {
     }
 
     /**
-     * 添加图片到缩略图栏
+     * 线程池异步加载添加图片到缩略图栏
      *
      * @param imageFile 图片文件
      */
     public void addImage(File imageFile) {
-        try {
-            // 使用Thumbnailator生成缩略图
-            BufferedImage thumbnail = Thumbnails.of(imageFile)
-                    .size(thumbnailSize, thumbnailSize)
-                    .asBufferedImage();
+        // 创建占位容器
+        StackPane placeholder = createPlaceholder();
+        int insertIndex = placeholderPanes.size();
+        placeholderPanes.add(placeholder);
 
-            Image fxImage = SwingFXUtils.toFXImage(thumbnail, null);
-            StackPane thumbnailContainer =  createThumbnailView(fxImage);
+        Platform.runLater(() ->
+                thumbnailsContainer.getChildren().add(placeholder)
+        );
 
-            thumbnailsContainer.getChildren().add(thumbnailContainer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        executorService.execute(() -> {
+            try {
+                Image thumbnail = thumbnailCache.computeIfAbsent(imageFile, file -> {
+                    try {
+                        BufferedImage buffered = Thumbnails.of(file)
+                                .outputQuality(0.5)
+                                .size(thumbnailSize, thumbnailSize)
+                                .asBufferedImage();
+                        return SwingFXUtils.toFXImage(buffered, null);
+                    } catch (IOException e) {
+                        return null;
+                    }
+                });
+
+                Platform.runLater(() -> {
+                    replacePlaceholder(insertIndex, thumbnail);
+                    if (insertIndex == initIndex) updateSelectedThumbnail(initIndex);
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+
+    }
+
+    /**
+     * 替换占位图,
+     * @param index 占位索引
+     * @param image 加载好的图片
+     */
+    private void replacePlaceholder(int index, Image image) {
+        if (index >= placeholderPanes.size()) return;
+
+        StackPane thumbnailPane = createThumbnailView(image);
+        placeholderPanes.set(index, thumbnailPane);
+        thumbnailsContainer.getChildren().set(index, thumbnailPane);
+    }
+
+    /**
+     * 创建占位图
+     * @return 占位图
+     */
+    private StackPane createPlaceholder() {
+        Rectangle rect = new Rectangle(thumbnailSize, thumbnailSize);
+        rect.setArcWidth(CORNER_RADIUS);
+        rect.setArcHeight(CORNER_RADIUS);
+        rect.setFill(Color.TRANSPARENT);
+        Label label = new Label("加载中");
+        label.setStyle("-fx-text-fill: white;");
+        StackPane placeholder = new StackPane(rect,label);
+        placeholder.getStyleClass().add("thumbnail-placeholder");
+        return placeholder;
     }
 
     /**
@@ -114,7 +200,15 @@ public class ThumbnailGallery extends ScrollPane {
         // 设置当前选中状态（仅边框颜色）
         containerPane.getStyleClass().add("thumbnail-selected");
         int idx = thumbnailsContainer.getChildren().indexOf(containerPane);
-        if(fireEvent&&selectionHandler != null) {
+        // 自动跟随
+        double nodeMinX = containerPane.getBoundsInParent().getMinX();
+        double nodeMaxX = containerPane.getBoundsInParent().getMaxX();
+        double X = (nodeMinX+nodeMaxX)/2;
+        if(X < this.getWidth()/2) X = 0;
+        else if(X > thumbnailsContainer.getWidth()-this.getWidth()/2) X = thumbnailsContainer.getWidth();
+        this.setHvalue(X/thumbnailsContainer.getWidth());
+
+        if(fireEvent && selectionHandler != null) {
             selectionHandler.accept(idx);
         }
     }
@@ -149,6 +243,7 @@ public class ThumbnailGallery extends ScrollPane {
      */
     public void clear() {
         thumbnailsContainer.getChildren().clear();
+        placeholderPanes.clear();
         selectedThumbnail = null;
     }
 }

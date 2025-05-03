@@ -34,7 +34,6 @@ public class ImageUtil {
     private String lastModifiedTime = DEFAULT_VALUE;
     // 访问时间
     private String lastAccessTime = DEFAULT_VALUE;
-
     public ImageUtil(File file) {
         this.file = file;
         this.fileName = file.getName();

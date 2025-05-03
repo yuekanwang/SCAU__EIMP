@@ -90,15 +90,15 @@ public class SlideWindow extends Application {
 
                 break;
             case CLICK:
-                // 添加淡入效果
-                controller.rootPane.setOpacity(0.5);
+//                // 添加淡入效果
+//                controller.rootPane.setOpacity(0.5);
                 stage.show();
                 //导入所选图片的信息工具
                 controller.importImage(SlideWindow.imageUtil);
-                FadeTransition fadeIn = new FadeTransition(Duration.millis(500), controller.rootPane);
-                fadeIn.setFromValue(0.5);
-                fadeIn.setToValue(1);
-                fadeIn.play();
+//                FadeTransition fadeIn = new FadeTransition(Duration.millis(500), controller.rootPane);
+//                fadeIn.setFromValue(0.5);
+//                fadeIn.setToValue(1);
+//                fadeIn.play();
                 break;
         }
 

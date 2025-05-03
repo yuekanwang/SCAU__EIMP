@@ -2,10 +2,7 @@ package com.eimp.controller;
 import com.eimp.CropWindow;
 import com.eimp.SlideWindow;
 import com.eimp.component.*;
-import com.eimp.util.FileUtil;
-import com.eimp.util.ImageUtil;
-import com.eimp.util.SortOrder;
-import com.eimp.util.SortUtil;
+import com.eimp.util.*;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
@@ -36,14 +33,23 @@ import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import net.coobird.thumbnailator.Thumbnails;
 import org.controlsfx.control.Notifications;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 
 public class WindowSlideController implements Initializable {
@@ -224,7 +230,58 @@ public class WindowSlideController implements Initializable {
         this.setUpWindowControls();
         this.setUpFullScreenListener();
     }
+    /**
+     * 缓存JavaFX的Image对象
+      */
+    public static final ConcurrentHashMap<String, Image> imageCache = new ConcurrentHashMap<>();
+    /**
+     * 导入图片及所在文件夹
+     * @param imageUtil 导入的图片信息工具
+     */
+    public void importImage(ImageUtil imageUtil) {
+        this.imageUtil = imageUtil;
 
+        File directory = imageUtil.getDirectory();
+        File[] images = directory.listFiles(FileUtil::isSupportImageFormat);
+        if (images != null) {
+            imageUtilList.setAll(
+                    Arrays.stream(imageUtil.getDirectory().listFiles(FileUtil::isSupportImageFormat))
+                            .map(ImageUtil::new)
+                            .collect(Collectors.toList())
+            );
+        }
+        this.preLoadImages();
+        this.setUpZoomScaleListener();
+        this.setUpRotationListener();
+        this.initButtonStatus();
+        this.setUpPageButtonListener();
+        this.setUpMovementConstraints();
+        this.initImageListOrder(imageUtil);
+        this.updateMainImageView();
+        this.initThumbnailGallery(); // 逐步加载缩略图
+    }
+    /**
+     * 线程池
+     */
+    private final ExecutorService executorService = Executors.newFixedThreadPool(4);
+
+    /**
+     * 线程池异步预加载图片
+     */
+    private void preLoadImages(){
+        imageUtilList.stream().map(ImageUtil::getAbsolutePath).collect(Collectors.toList()).forEach(imagePath->{
+            executorService.execute(() -> {
+                try (InputStream is = Files.newInputStream(Path.of(imagePath))) {
+                    Image image = new Image(is);
+                    imageCache.put(imagePath, image);
+                } catch (IOException e) {
+                    System.err.println("加载JavaFX Image失败: " + imagePath);
+                    e.printStackTrace();
+                }
+            });
+        });
+        executorService.shutdown();
+    }
     /**
      * 初始化缩略图栏
      */
@@ -233,7 +290,7 @@ public class WindowSlideController implements Initializable {
         thumbnailGalleryContainer.setOnMouseExited(e->{
             thumbnailGallery.setVisible(false);
         });
-        thumbnailGallery = new ThumbnailGallery();
+        thumbnailGallery = new ThumbnailGallery(currentIndex.get());
         thumbnailGallery.setVisible(false);
         thumbnailGalleryContainer.getChildren().add(thumbnailGallery);
         thumbnailGallery.setThumbnailSize(60);
@@ -252,6 +309,7 @@ public class WindowSlideController implements Initializable {
                 e.printStackTrace();
             }
         });
+
     }
 
     /**
@@ -393,31 +451,7 @@ public class WindowSlideController implements Initializable {
 
     }
 
-    /**
-     * 导入图片及所在文件夹
-     * @param imageUtil 导入的图片信息工具
-     */
-    public void importImage(ImageUtil imageUtil) {
-        this.imageUtil = imageUtil;
 
-        File directory = imageUtil.getDirectory();
-        File[] images = directory.listFiles(FileUtil::isSupportImageFormat);
-        if (images != null) {
-            for (File image : images) {
-                ImageUtil imageFile = new ImageUtil(image);
-                this.imageUtilList.add(imageFile);
-            }
-        }
-
-        this.setUpZoomScaleListener();
-        this.setUpRotationListener();
-        this.initButtonStatus();
-        this.setUpPageButtonListener();
-        this.setUpMovementConstraints();
-        this.initImageListOrder(imageUtil);
-        this.initThumbnailGallery();
-        this.updateMainImageView();
-    }
 
     /**
      * 显示图片信息面板
@@ -653,16 +687,54 @@ public class WindowSlideController implements Initializable {
      * 更新当前窗口显示的图片及相关信息
      */
     private void updateMainImageView() {
-        this.image = new Image(imageUtil.getURL());
-        this.originalWidth = this.image.getWidth();
-        this.originalHeight = this.image.getHeight();
-        ImageInfoWindow.updateImageInfo(oldImageAbsolutePath,this.imageUtil);
-        this.updateWindowInfo();
-        this.initImageScale();
-        this.mainImageView.setImage(this.image);
-        this.updateCursor();
-        this.banCompressButton();
-        this.updateThumbnailGallery();
+        if(WindowSlideController.imageCache.containsKey(imageUtil.getAbsolutePath())){
+            this.image = WindowSlideController.imageCache.get(imageUtil.getAbsolutePath());
+        }else{
+            this.image = new Image(imageUtil.getURL(),true);
+            ProgressBar progressBar = new ProgressBar(0);
+            imagePane.getChildren().add(progressBar);
+            progressBar.progressProperty().bind(image.progressProperty()); // 绑定进度
+            image.progressProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal.doubleValue() == 1.0) {
+                    imagePane.getChildren().remove(progressBar);
+                    WindowSlideController.imageCache.put(imageUtil.getAbsolutePath(), image);
+                    mainImageView.setImage(image);
+                    originalWidth = image.getWidth();
+                    originalHeight = image.getHeight();
+                    ImageInfoWindow.updateImageInfo(oldImageAbsolutePath, imageUtil);
+                    updateWindowInfo();
+                    initImageScale();
+                    updateCursor();
+                    banCompressButton();
+                    if(thumbnailGallery!=null) {
+                        updateThumbnailGallery();
+                    }
+                }
+            });
+            // 设置图片加载失败的处理
+            image.errorProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal) {
+                    System.err.println("加载失败: " + image.getException());
+                    showNotification("图片加载失败");
+                    // 1秒后关闭窗口
+                    Timeline timeline = new Timeline(
+                            new KeyFrame(Duration.seconds(1), event -> this.stage.close())
+                    );
+                    timeline.play();
+                }
+            });
+        }
+        mainImageView.setImage(image);
+        originalWidth = image.getWidth();
+        originalHeight = image.getHeight();
+        ImageInfoWindow.updateImageInfo(oldImageAbsolutePath, imageUtil);
+        updateWindowInfo();
+        initImageScale();
+        updateCursor();
+        banCompressButton();
+        if(thumbnailGallery!=null) {
+            updateThumbnailGallery();
+        }
     }
 
     /**
@@ -949,25 +1021,6 @@ public class WindowSlideController implements Initializable {
         Bounds stackVisibleBounds = imagePane.getLayoutBounds();
         return  (int)imageBounds.getWidth() >= (int)stackVisibleBounds.getWidth() && (int)imageBounds.getHeight() >= (int)stackVisibleBounds.getHeight();
     }
-    //    private void addEdgeBounceEffect() {
-//        final double SPRING_CONSTANT = 0.05;
-//        final double FRICTION = 0.9;
-//
-//        imageView.translateXProperty().addListener((obs, old, newVal) -> {
-//            Bounds imgBounds = imageView.getBoundsInParent();
-//            Bounds viewport = container.getBoundsInLocal();
-//
-//            if (imgBounds.getWidth() > viewport.getWidth()) {
-//                double overflow = (imgBounds.getWidth() - viewport.getWidth())/2;
-//                if (Math.abs(newVal.doubleValue()) > overflow) {
-//                    double velocity = (newVal.doubleValue() - old.doubleValue()) * FRICTION;
-//                    animateRebound(overflow * Math.signum(newVal.doubleValue()), velocity, true);
-//                }
-//            }
-//        });
-//
-//        // Y轴同理
-//    }
     /**
      * 更新鼠标状态
      */

@@ -36,3 +36,9 @@
     -fx-border-radius: 3;
     -fx-effect: dropshadow(three-pass-box, greenyellow, 15, 0, 0, 0) !important;
 }
+.thumbnail-placeholder {
+    -fx-background-color: #3c3f41;
+    -fx-border-color: #555555;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}

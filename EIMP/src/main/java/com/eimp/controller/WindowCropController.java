@@ -3,7 +3,6 @@ package com.eimp.controller;
 import com.eimp.CropWindow;
 import com.eimp.SlideWindow;
 import com.eimp.component.CropRectMasker;
-import com.eimp.component.ImageInfoWindow;
 import com.eimp.util.FileUtil;
 import com.eimp.util.ImageUtil;
 import com.eimp.util.ZoomUtil;
@@ -22,6 +21,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -46,8 +46,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import com.madgag.gif.fmsware.*;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
 public class WindowCropController implements Initializable {
@@ -185,15 +183,52 @@ public class WindowCropController implements Initializable {
         this.imageUtil = imageUtil;
         this.outPath=imageUtil.getDirectory().getAbsolutePath();
         this.outDirectory.setText(outPath);
+        this.image = WindowSlideController.imageCache.get(imageUtil.getAbsolutePath());
+        if(image == null){
+            this.asyncLoadImage();
+            return;
+        }
+        this.initImageView();
+    }
 
-        this.image = new Image(imageUtil.getURL());
+    /**
+     * 初始化图片视图大小和选框,安装图片放缩工具
+     */
+    private void initImageView(){
         this.initMainImageView();
-
         // 给图片安装放缩工具包
         this.zoomUtil = new ZoomUtil(this.stage,this.mainImageView,this.imagePane,this.zoomOut,this.zoomIn,this.zoomScale,null);
         this.zoomUtil.updateZoomUtil(this.scaleInteger,100);
 
         this.initCropRect();
+    }
+
+    /**
+     * 异步加载图片
+     */
+    private void asyncLoadImage(){
+        this.image = new Image(imageUtil.getURL(),true);
+        ProgressBar progressBar = new ProgressBar(0);
+        imagePane.getChildren().add(progressBar);
+        progressBar.progressProperty().bind(image.progressProperty()); // 绑定进度
+        image.progressProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal.doubleValue() == 1.0) {
+                imagePane.getChildren().remove(progressBar);
+                this.initImageView();
+            }
+        });
+        // 设置图片加载失败的处理
+        image.errorProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                System.err.println("加载失败: " + image.getException());
+                showNotification("图片加载失败",false);
+                // 1秒后关闭窗口
+                Timeline timeline = new Timeline(
+                        new KeyFrame(Duration.seconds(1), event -> this.stage.close())
+                );
+                timeline.play();
+            }
+        });
     }
 
     /**
@@ -551,88 +586,6 @@ public class WindowCropController implements Initializable {
                 .darkStyle()
                 .show();
     }
-
-
-//    /**
-//     * 裁剪功能
-//     */
-//    @FXML
-//    private void crop(){
-//        if (mainImageView.getImage() == null) return;
-//        // 计算实际裁剪区域（考虑缩放）
-//        double scaleX =originalWidth / cropRectPane.getWidth();
-//        double scaleY =originalHeight / cropRectPane.getHeight();
-//        double x = cropRect.getLayoutX() * scaleX;
-//        double y = cropRect.getLayoutY() * scaleY;
-//        double width = cropRect.getWidth() * scaleX;
-//        double height = cropRect.getHeight() * scaleY;
-//        if(width > originalWidth || height > originalHeight || x < 0 || y< 0 || x > rectPaneW || y > rectPaneH || x+rectW>rectPaneW || y+rectH>rectPaneH){
-//            Notifications.create()
-//                .text("BUG")
-//                .hideAfter(Duration.seconds(1))
-//                .position(Pos.CENTER)
-//                .owner(this.stage)
-//                .darkStyle()
-//                .show();
-//            return;
-//        }
-//        // 创建裁剪后的图像
-//        PixelReader reader = mainImageView.getImage().getPixelReader();
-//        WritableImage croppedImage = new WritableImage(reader, (int)x, (int)y, (int)width, (int)height);
-//
-//        // 保存裁剪后的图像
-//        boolean success = saveImage(croppedImage, imageUtil.getFileName());
-//        if(success){
-//            Notifications.create()
-//                    .text("裁剪成功")
-//                    .hideAfter(Duration.seconds(1))
-//                    .position(Pos.CENTER)
-//                    .owner(this.stage)
-//                    .darkStyle()
-//                    .show();
-//            // 创建一个Timeline，在3秒后执行操作
-//            Timeline timeline = new Timeline(
-//                    new KeyFrame(Duration.seconds(1), event -> {
-//                        this.stage.close();
-//                    })
-//            );
-//            timeline.play();
-//
-//        }else{
-//            Notifications.create()
-//                    .text("BUG")
-//                    .hideAfter(Duration.seconds(1))
-//                    .position(Pos.CENTER)
-//                    .owner(this.stage)
-//                    .darkStyle()
-//                    .show();
-//        }
-//    }
-//
-//    /**
-//     * 保存裁剪后的图像
-//     * @param croppedImage 裁剪后的图像
-//     * @param filename 原文件名
-//     * @return 保存结果
-//     */
-//    private boolean saveImage(WritableImage croppedImage,String filename){
-//        filename = this.outPath +"\\" + filename.substring(0, filename.lastIndexOf(".")) +"-副本.png";
-//        File file = new File(filename);
-//        if(file.exists()){
-//            filename=filename.substring(0,filename.lastIndexOf("."))+"-副本.png";
-//        }
-//        // 使用ImageWriter保存图像
-//        // TODO 目前只能保存png格式 ,jpg jpeg,gif,bmp格式保存存在问题
-//        try {
-//            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(croppedImage, null);
-//            if(ImageIO.write(bufferedImage,"png",new File(filename))){
-//                return true;
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
 
     /**
      * 输出尺寸标签
@@ -1407,16 +1360,3 @@ public class WindowCropController implements Initializable {
         rightBottomResizeRect.setOnMouseDragged(e->handleResize(e, ResizeDirection.RIGHT_BOTTOM));
     }
 }
-
-// 加载图片
-//        FileChooser fileChooser = new FileChooser();
-//        fileChooser.setTitle("选择图片");
-//        File file = fileChooser.showOpenDialog(stage);
-//        if (file != null) {
-//            try {
-//                Image image = new Image(new FileInputStream(file));
-//                mainImageView.setImage(image);
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//        }

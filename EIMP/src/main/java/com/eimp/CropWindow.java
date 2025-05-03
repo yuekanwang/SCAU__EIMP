@@ -40,7 +40,7 @@ public class CropWindow extends Application {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle("图像裁剪");
         stage.show();
-        controller.importImage(CropWindow.imageUtil);
+        Platform.runLater(()->controller.importImage(CropWindow.imageUtil));
     }
 
     public static void main(ImageUtil imageUtil) {
