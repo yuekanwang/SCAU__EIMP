@@ -119,8 +119,10 @@ public class ThumbnailPanel extends BorderPane {
                 MAIN_WINDOWS_CONTROLLER.setFlagMenu(false);
                 menu.close();
                 menu.show(MAIN_WINDOWS_CONTROLLER.imagePreviewPane, event.getScreenX(), event.getScreenY());
-                parent.clearSelected();
-                parent.addSelected(this);
+                if (!this.isSelected) {
+                    parent.clearSelected();
+                    parent.addSelected(this);
+                }
             }
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                 parent.clearSelected();
@@ -272,7 +274,7 @@ public class ThumbnailPanel extends BorderPane {
      */
     public void selected() {
         if (MAIN_WINDOWS_CONTROLLER.getF()) {
-            this.setStyle("-fx-background-color: rgba(220, 216, 254, 0.9)");
+            this.setStyle("-fx-background-color: rgba(196, 193, 227, 0.8)");
         } else {
             this.setStyle("-fx-background-color: rgba(130, 130, 130, 0.8)");
         }
@@ -423,9 +425,5 @@ public class ThumbnailPanel extends BorderPane {
         PreviewFlowPane parent = (PreviewFlowPane) this.getParent();
         parent.update();
         MAIN_WINDOWS_CONTROLLER.imagePreviewPane.setFocusTraversable(true);
-    }
-
-    public void updateHighlight(String newValue) {
-
     }
 }

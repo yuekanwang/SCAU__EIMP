@@ -118,7 +118,6 @@ public class PreviewFlowPane extends FlowPane {
         // 过滤匹配
         for (ThumbnailPanel pane : list) {
             String fileName = pane.getImageUtil().getFileName();
-            pane.updateHighlight(newValue);  // 更新高亮
             if (fileName.contains(newValue))  {
                 thumbnailPanels.add(pane);
             }

@@ -3,6 +3,7 @@ package com.eimp.controller;
 import com.eimp.App;
 import com.eimp.SlideWindow;
 import com.eimp.component.*;
+import javafx.geometry.HPos;
 import javafx.scene.image.Image;
 import com.eimp.util.ImageUtil;
 import com.eimp.util.SortOrder;
@@ -24,25 +25,27 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import javafx.util.Pair;
 import org.controlsfx.control.Notifications;
 
 import javax.swing.filechooser.FileSystemView;
-import javax.swing.text.html.ImageView;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.List;
+import java.util.regex.Pattern;
+
 import javafx.scene.web.WebView;
 import javafx.scene.web.WebEngine;
-import javafx.scene.layout.VBox;
-import javafx.scene.control.ScrollPane;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 
 import com.vladsch.flexmark.html.HtmlRenderer;
@@ -372,7 +375,6 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
                 + htmlContent
                 + "</body></html>";
     }
-
 
     /**
      * 初始化界面主题的设置和控制
@@ -710,8 +712,10 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
                 for (ThumbnailPanel pane : previewFlowPane.getThumbnailPanels()) {
                     if (pane.isContains(x, y)) {
                         flagMenu = false;
-                        previewFlowPane.clearSelected();
-                        previewFlowPane.addSelected(previewFlowPane.getThumbnailPanels().get(previewFlowPane.getThumbnailPanels().indexOf(pane)));
+                        if (!pane.getSelected()) {
+                            previewFlowPane.clearSelected();
+                            previewFlowPane.addSelected(previewFlowPane.getThumbnailPanels().get(previewFlowPane.getThumbnailPanels().indexOf(pane)));
+                        }
                         menu.show(imagePreviewPane, event.getScreenX(), event.getScreenY());
                         break;
                     }
@@ -858,6 +862,18 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
         setupResizeHandler(leftBottomResize, WindowMainController.ResizeDirection.LEFT_BOTTOM);
         // 右下角调整
         setupResizeHandler(rightBottomResize, WindowMainController.ResizeDirection.RIGHT_BOTTOM);
+    }
+
+    public String getTextName() {
+        return textName;
+    }
+
+    public int getFirstCode() {
+        return firstCode;
+    }
+
+    public int getNumCode() {
+        return numCode;
     }
 
     /**
@@ -1256,9 +1272,13 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
      */
     @FXML
     public void copyAddress() {
-        copyAddr = previewFlowPane.getDirectory().getAbsolutePath() +
-                previewFlowPane.getNewSelected().getLast().getImageUtil().getFileName();
+        copyAddr = null;
+        for (ThumbnailPanel image : previewFlowPane.getNewSelected()) {
+            copyAddr += previewFlowPane.getDirectory().getAbsolutePath() +
+                    image.getImageUtil().getFileName() + "\n";
+        }
         // 将字符串存入剪贴板
+        clipboard.clear();
         content.putString(copyAddr);
         clipboard.setContent(content);
         menu.close();
@@ -1358,10 +1378,139 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
     @FXML
     public void renameImage() {
         if (!previewFlowPane.getNewSelected().isEmpty()) {
-            ThumbnailPanel image = previewFlowPane.getNewSelected().getLast();
-            image.startReName();
+            if (previewFlowPane.getNewSelected().size() == 1) {
+                ThumbnailPanel image = previewFlowPane.getNewSelected().getLast();
+                image.startReName();
+            } else {
+                renameMore();
+            }
         }
         menu.close();
+    }
+
+    private boolean renameFlag = false;
+
+    // 多选重命名
+    public void renameMore() {
+        showDialog();
+        if (renameFlag) {
+            for (ThumbnailPanel pane : previewFlowPane.getNewSelected()) {
+                String formatted = String.format("%0" + numCode + "d", firstCode);
+                int lastDotIndex = pane.getImageUtil().getFileName().lastIndexOf('.');
+                String extension = null;
+                if (lastDotIndex > 0 && lastDotIndex < pane.getImageUtil().getFileName().length() - 1) {
+                    extension = pane.getImageUtil().getFileName().substring(lastDotIndex);
+                }
+                // 获取图片地址
+                Path oldPath = Paths.get(pane.getImageUtil().getAbsolutePath());
+                Path newPath = oldPath.resolveSibling(textName + formatted + extension);
+                try {
+                    // 替换文件
+                    Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING);
+                    firstCode++;
+                } catch (IOException e) {
+
+                }
+            }
+            if (!Search_Path.getText().isEmpty()) {
+                updateFlowPaneOfSearch();
+            } else {
+                updateFlowPane();
+            }
+            updateTipsLabelText();
+        }
+        renameFlag = false;
+    }
+
+    // 重命名前缀
+    private String textName = null;
+    // 重命名起始编号
+    private int firstCode = 0;
+    // 重命名编号位数
+    private int numCode = 0;
+
+    private void showDialog() {
+        Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setTitle("重命名");
+
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+
+        // 创建前缀输入框
+        Label label1 = new Label("前缀:");
+        TextField textField1 = new TextField();
+        textField1.setPromptText("请输入前缀");
+
+        // 创建起始编号输入框
+        Label label2 = new Label("起始编号:");
+        TextField textField2 = new TextField();
+        textField2.setPromptText("请输入起始编号");
+
+        // 创建编号位数输入框
+        Label label3 = new Label("编号位数:");
+        TextField textField3 = new TextField();
+        textField3.setPromptText("请输入编号位数");
+
+        // 创建确认按钮
+        Button submitButton = new Button("确认");
+        submitButton.setOnAction(e -> {
+            try {
+                textName = textField1.getText();
+                // 检测非法字符
+                String regex = "[\\\\/:*?\"<>|]";
+                if (Pattern.compile(regex).matcher(textName).find())  {
+                    showError("存在非法字符！");
+                    return;
+                }
+                firstCode = Integer.parseInt(textField2.getText());
+                numCode = Integer.parseInt(textField3.getText());
+                int max = 0;
+                for (int i = 0; i < numCode; i++) {
+                    max *= 10;
+                    max += 9;
+                }
+                if (previewFlowPane.getNewSelected().size() > max) {
+                    showError("图片数量过多！");
+                    return;
+                }
+                //System.out.println(textName);
+                //System.out.println(firstCode);
+                //System.out.println(numCode);
+                renameFlag = true;
+                dialog.close();
+            } catch (NumberFormatException ex) {
+                // 处理非数字输入的情况
+                showError("请输入有效的数字！");
+            }
+        });
+
+        gridPane.add(label1, 0, 0);
+        gridPane.add(textField1, 1, 0);
+        gridPane.add(label2, 0, 1);
+        gridPane.add(textField2, 1, 1);
+        gridPane.add(label3, 0, 2);
+        gridPane.add(textField3, 1, 2);
+        // 添加列约束，使按钮居中
+        ColumnConstraints columnConstraints = new ColumnConstraints();
+        columnConstraints.setHalignment(HPos.CENTER); // 设置列的水平对齐方式为居中
+        columnConstraints.setHgrow(Priority.ALWAYS); // 设置列的增长优先级为总是
+        gridPane.getColumnConstraints().add(columnConstraints);
+        // 添加提交按钮到GridPane，并设置跨列
+        GridPane.setColumnSpan(submitButton, 2); // 设置按钮跨越两列
+        gridPane.add(submitButton, 0, 3);
+
+        Scene dialogScene = new Scene(gridPane);
+        dialog.setScene(dialogScene);
+        dialog.showAndWait();
+    }
+
+    // 错误显示
+    private void showError(String errorInfo) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setContentText("重命名失败: " + errorInfo);
+        alert.show();
     }
 
     /**
@@ -1373,7 +1522,6 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
         ImageInfoWindow.main(previewFlowPane.getNewSelected().getLast().getImageUtil(),340,250,this.stage);
         menu.close();
     }
-
 
     /**
      * 压缩图片
