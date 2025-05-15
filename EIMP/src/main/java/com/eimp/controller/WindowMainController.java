@@ -511,6 +511,7 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
         File_URL.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 goPath();
+                updateTipsLabelText();
             }
         });
 
