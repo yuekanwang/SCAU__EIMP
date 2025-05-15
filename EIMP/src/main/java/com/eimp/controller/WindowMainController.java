@@ -534,6 +534,9 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
         //System.out.println(path);
         File file = new File(path);
         previewFlowPane.update(file);
+        backStack.push(currentDirectory);
+        forwardStack.clear();
+        currentDirectory = file;
     }
 
     /**
