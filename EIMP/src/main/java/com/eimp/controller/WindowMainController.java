@@ -1253,9 +1253,9 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
             } else {
                 content.putString(text);
             }
+            clipboard.clear();
+            clipboard.setContent(content);
         }
-        clipboard.clear();
-        clipboard.setContent(content);
         menu.close();
     }
 
@@ -1276,13 +1276,19 @@ EIMP (Enhanced Image Management and Processing) 是一款功能强大的图像�
      */
     @FXML
     public void copyAddress() {
-        copyAddr = null;
+        boolean flag = false;
+        copyAddr = previewFlowPane.getDirectory().getAbsolutePath() + previewFlowPane.getNewSelected().getFirst().getImageUtil().getFileName();
         for (ThumbnailPanel image : previewFlowPane.getNewSelected()) {
-            copyAddr += previewFlowPane.getDirectory().getAbsolutePath() +
-                    image.getImageUtil().getFileName() + "\n";
+            if (!flag) {
+                flag = true;
+                continue;
+            }
+            copyAddr += "\n" + previewFlowPane.getDirectory().getAbsolutePath() +
+                    image.getImageUtil().getFileName();
         }
         // 将字符串存入剪贴板
         clipboard.clear();
+        content.clear();
         content.putString(copyAddr);
         clipboard.setContent(content);
         menu.close();
